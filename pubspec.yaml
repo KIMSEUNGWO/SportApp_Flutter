@@ -1,0 +1,59 @@
+name: flutter_sport
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  http: ^1.2.1
+  intl: ^0.19.0 # DateFormat
+  carousel_slider: ^4.2.1 # 배너 스와이프
+  flutter_svg: ^2.0.10+1 # SVG 파일 열기
+  shared_preferences: ^2.2.3 # 휴대폰 저장공간 사용
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/banners/
+    - assets/icons/
+    - assets/groupImages/
+
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard-Thin.otf
+          weight: 100
+        - asset: assets/fonts/Pretendard-ExtraLight.otf
+          weight: 200
+        - asset: assets/fonts/Pretendard-Light.otf
+          weight: 300
+        - asset: assets/fonts/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/fonts/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: assets/fonts/Pretendard-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Pretendard-ExtraBold.otf
+          weight: 800
+        - asset: assets/fonts/Pretendard-Black.otf
+          weight: 900
+    - family : Tmoney
+      fonts :
+        - asset: assets/fonts/TmoneyRoundWindRegular.otf
+          weight: 500
+        - asset : assets/fonts/TmoneyRoundWindExtraBold.otf
+          weight: 600
