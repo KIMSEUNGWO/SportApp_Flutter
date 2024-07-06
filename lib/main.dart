@@ -3,7 +3,15 @@ import 'package:flutter_sport/widgets/mainPage.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
 
+import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+
 void main() {
+  const String channelId = '2005763087';
+
+  WidgetsFlutterBinding.ensureInitialized();
+  LineSDK.instance.setup(channelId).then((_) => {
+    print('LineSDK Prepared')
+  });
   runApp(const App());
 }
 
@@ -13,6 +21,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // initialRoute: '/',
+      // routes: {
+      //   '/' : (c) => const Main(),
+      //   '/detail' : (c) => const LoginPageWidget(),
+      // },
       home: const Main(),
       theme: ThemeData(
         fontFamily: 'Pretendard',

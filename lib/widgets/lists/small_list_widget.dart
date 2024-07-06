@@ -11,8 +11,19 @@ class SmallListWidget extends StatelessWidget {
   final String sportType;
   final String region;
   final int personCount;
+  final EdgeInsets? padding;
 
-  const SmallListWidget({super.key, required this.id, required this.image, required this.title, required this.intro, required this.sportType, required this.region, required this.personCount});
+  const SmallListWidget({
+    super.key,
+    required this.id,
+    required this.image,
+    required this.title,
+    required this.intro,
+    required this.sportType,
+    required this.region,
+    required this.personCount,
+    this.padding
+  });
 
 
 

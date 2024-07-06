@@ -7,11 +7,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/common/local_storage.dart';
+import 'package:flutter_sport/models/region_data.dart';
 import 'package:flutter_sport/widgets/chating/oneToOneMessage_widget.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 import 'package:flutter_sport/widgets/notification/notifications_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_sport/widgets/pages/login_page.dart';
 import 'package:flutter_sport/widgets/pages/recently_visit_group.dart';
+import 'package:flutter_sport/widgets/pages/region_settings.dart';
 import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -31,6 +35,25 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin {
   final double margin = 20;
 
+  Region region = Region.ALL;
+
+  onChangeRegion(Region data) {
+    setState(() {
+      region = data;
+    });
+    LocalStorage.saveByRegion(data);
+  }
+
+  _initRegion() async {
+    region = await LocalStorage.findByRegion();
+  }
+
+  @override
+  void initState() {
+    _initRegion();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -42,12 +65,48 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
           elevation: 0,
           toolbarHeight: 50,
           floating: true,
-          flexibleSpace: FlexibleSpaceBar(
-            centerTitle: false,
-            titlePadding: const EdgeInsets.only(left: 20, bottom: 10),
-            title: Image.asset('assets/logo.jpg', ),
+          title: GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RegionSettingsWidget(changeRegion : onChangeRegion),));
+            },
+            child: Row(
+              children: [
+                Text(region.ko,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24,
+                    color: Color(0xFF2B2828)
+                  ),
+                ),
+                SizedBox(width: 3,),
+                Icon(Icons.arrow_forward_ios,
+                  color: Color(0xFF2B2828),
+                  size: 21,
+                )
+              ],
+            ),
           ),
+          // flexibleSpace: FlexibleSpaceBar(
+          //   centerTitle: false,
+          //   titlePadding: const EdgeInsets.only(left: 20, bottom: 10),
+          //   title: Image.asset('assets/logo.jpg', ),
+          // ),
           actions: [
+
+            // 로그인 되어있지 않을 때
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                onPressed: () {
+                  showModalBottomSheet(context: context, builder: (context) {
+                    return LoginPageWidget();
+                  },);
+                },
+                icon: const Icon(Icons.login, size: 30,),
+              ),
+            ),
+
+            // 로그인 되었을 때
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: IconButton(

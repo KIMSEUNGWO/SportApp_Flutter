@@ -1,23 +1,57 @@
 PODS:
   - Flutter (1.0.0)
+  - flutter_line_sdk (2.3.8):
+    - Flutter
+    - LineSDKSwift (~> 5.3)
+  - flutter_secure_storage (6.0.0):
+    - Flutter
+  - LineSDKSwift (5.11.1):
+    - LineSDKSwift/Core (= 5.11.1)
+  - LineSDKSwift/Core (5.11.1)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - flutter_line_sdk (from `.symlinks/plugins/flutter_line_sdk/ios`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - LineSDKSwift
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  flutter_line_sdk:
+    :path: ".symlinks/plugins/flutter_line_sdk/ios"
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_line_sdk: 266c756b2223ca2645a7c302f8c4101e3e2b8e12
+  flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
+  LineSDKSwift: a3396147600cd9f2548fea88f31f49d928384bcb
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 
-PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
+PODFILE CHECKSUM: 18ed7070f43aeaff66ec280cf1aad142b372afc7
 
 COCOAPODS: 1.15.2

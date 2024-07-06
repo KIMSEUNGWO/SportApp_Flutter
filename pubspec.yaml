@@ -20,6 +20,9 @@ dev_dependencies:
   carousel_slider: ^4.2.1 # 배너 스와이프
   flutter_svg: ^2.0.10+1 # SVG 파일 열기
   shared_preferences: ^2.2.3 # 휴대폰 저장공간 사용
+  url_launcher: ^6.3.0
+  flutter_line_sdk: ^2.3.8 # Line SDK
+  flutter_secure_storage: ^9.2.2 # Flutter Secure Storage
   flutter_lints: ^3.0.0
 
 flutter:

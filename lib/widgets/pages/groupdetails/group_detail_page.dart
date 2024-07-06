@@ -18,6 +18,13 @@ class GroupDetailWidget extends StatefulWidget {
 
 class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTickerProviderStateMixin {
 
+  final Map<Tab, Widget> tabList = {
+    Tab(text: '홈') : GroupDetailHomeWidget(),
+    Tab(text: '게시판') : GroupDetailBoardWidget(),
+    Tab(text: '모임',) : GroupDetailMeetingWidget(),
+    Tab(text: '채팅') : GroupDetailChatWidget()
+  };
+  late TabController _tabController;
   bool isLiked = false;
 
   toggleLike() {
@@ -40,14 +47,11 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
     );
   }
 
-
-  late TabController _tabController;
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 4,
+      length: tabList.length,
       vsync: this,
       initialIndex: 0
     );
@@ -98,14 +102,8 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
               indicatorWeight: 2.5,
               labelStyle: TextStyle(
                 fontSize: 18,
-
               ),
-              tabs: [
-                Tab(text: '홈'),
-                Tab(text: '게시판'),
-                Tab(text: '모임',),
-                Tab(text: '채팅'),
-              ],
+              tabs: tabList.keys.toList(),
             ),
           ),
         ),
@@ -113,12 +111,7 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
       body: TabBarView(
         controller: _tabController,
         physics: NeverScrollableScrollPhysics(),
-        children: [
-          GroupDetailHomeWidget(),
-          GroupDetailBoardWidget(),
-          GroupDetailMeetingWidget(),
-          GroupDetailChatWidget(),
-        ]
+        children: tabList.values.toList(),
       ),
     );
   }

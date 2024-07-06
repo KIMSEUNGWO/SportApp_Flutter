@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/widgets/pages/login_page.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/my_group_page.dart';
 import 'package:flutter_sport/widgets/pages/profile_page.dart';
@@ -30,6 +31,7 @@ class _MainState extends State<Main> {
     _pageController.dispose();
     super.dispose();
   }
+
 
 
   @override
