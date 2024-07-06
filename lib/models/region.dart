@@ -22,10 +22,7 @@ class FindRegion {
           .forEach((region) => result.addAll(region.getRegionChildList()));
     }
 
-    result.sort((a, b) {
-      int parentCompareResult = a.parent.compareTo(b.parent, langType);
-      return (parentCompareResult == 0) ? a.compareTo(b, langType) : parentCompareResult;
-    });
+    result.sort((a, b) => a.compareTo(b, langType));
 
     return result;
   }

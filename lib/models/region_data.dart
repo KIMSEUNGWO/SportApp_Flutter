@@ -1,5 +1,3 @@
-
-
 import 'package:flutter_sport/common/language_enum.dart';
 
 enum RegionParent {
@@ -69,19 +67,12 @@ enum RegionParent {
   OKINAWA("오키나와현", "Okinawa", "沖縄県"),
   FUKUOKA("후쿠오카현", "Fukuoka", "福岡県");
   
-  final String ko;
-  final String en;
-  final String jp;
+  final String ko, en, jp;
 
   const RegionParent(this.ko, this.en, this.jp);
-  
 
   bool isStartWith(LanguageType langType, String word) {
-    return switch (langType) {
-      LanguageType.JP => jp.startsWith(word),
-      LanguageType.KO => ko.startsWith(word),
-      LanguageType.EN => en.toLowerCase().startsWith(word.toLowerCase())
-    };
+    return _getRegion(langType).toLowerCase().startsWith(word);
   }
 
   List<Region> getRegionChildList() {
@@ -101,7 +92,6 @@ enum RegionParent {
   }
 
 }
-
 
 
 enum Region {
@@ -131,19 +121,13 @@ enum Region {
   MEGURO("메구로구", "Meguro", "目黒区", RegionParent.TOKYO),
   ALL("전체", "All", "전체일본어", RegionParent.ALL);
   
-  final String ko;
-  final String en;
-  final String jp;
+  final String ko, en, jp;
   final RegionParent parent;
 
   const Region(this.ko, this.en, this.jp, this.parent);
 
   bool isStartWith(LanguageType langType, String word) {
-    return switch (langType) {
-      LanguageType.JP => jp.startsWith(word),
-      LanguageType.KO => ko.startsWith(word),
-      LanguageType.EN => en.toLowerCase().startsWith(word.toLowerCase())
-    };
+    return _getRegion(langType).toLowerCase().startsWith(word);
   }
 
   String _getRegion(LanguageType langType) {
@@ -161,7 +145,10 @@ enum Region {
   }
 
   int compareTo(Region o2, LanguageType langType) {
-    return _getRegion(langType).compareTo(o2._getRegion(langType));
+    int parentCompareResult = parent.compareTo(o2.parent, langType);
+    return (parentCompareResult == 0)
+        ? _getRegion(langType).compareTo(o2._getRegion(langType))
+        : parentCompareResult;
   }
 
   static Region findByName(String? regionName) {
