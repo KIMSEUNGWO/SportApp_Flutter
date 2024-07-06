@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/models/component.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class GroupDetailBoardWidget extends StatefulWidget {
   const GroupDetailBoardWidget({super.key});
@@ -14,7 +14,7 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
 
   int count = 0;
 
-  final List<String> boardMenus = ['전체', '공지사항', '가입인사', '자유글', '어쩌구', '저쩌구', '이것저것', '이것저것', '이것저것'];
+  final List<String> boardMenus = ['all', 'notice', 'sayHello', 'free'];
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +36,13 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
                           borderRadius: BorderRadius.circular(10),
                           color: const Color(0xFFEAEAEA),
                         ),
-                        child: Text(menu,
+                        child: Text('groupBoardMenus',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF433F3F),
                           ),
-                        ),
+                        ).tr(gender: menu),
                       )),
                   const SizedBox(width: 13,) ,
                 ],

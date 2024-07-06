@@ -20,6 +20,7 @@ import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MainPage extends StatefulWidget {
 
@@ -132,7 +133,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
           },
         ),
         const InfinityBanner(),
-        const Menus(),
+        Menus(),
         const SliverToBoxAdapter(child: SizedBox(height: 40,),),
         SliverToBoxAdapter(
           child: Container(
@@ -143,22 +144,22 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('최근 본 모임',
+                    Text('recentlySearchGroups',
                       style: TextStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.w500
                       ),
-                    ),
+                    ).tr(),
                     GestureDetector(
                       onTap: () => Navigator.push(context, MaterialPageRoute(
                           builder: (context) => RecentlyVisitPages(),)
                       ),
-                      child: Text('더 보기',
+                      child: Text('more',
                         style: TextStyle(
                           fontSize: 15,
                           color: Theme.of(context).colorScheme.secondary
                         ),
-                      ),
+                      ).tr(),
                     )
                   ],
                 ),
@@ -198,14 +199,34 @@ class Menus extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Menu(page: SoccerPage(), assetSvg: 'assets/icons/soccer.svg', label: '풋볼'),
-            Menu(page: SoccerPage(), assetSvg: 'assets/icons/baseball.svg', label: '야구'),
-            Menu(page: SoccerPage(), assetSvg: 'assets/icons/tennis.svg', label: '테니스'),
-            Menu(page: SoccerPage(), assetSvg: 'assets/icons/badminton.svg', label: '배드민턴'),
-            Menu(page: SoccerPage(), assetSvg: 'assets/icons/basketball.svg', label: '농구'),
+            Menu(
+              page: SoccerPage(),
+              assetSvg: 'assets/icons/soccer.svg',
+              label: Text('sportTitle').tr(gender: 'soccer'),
+            ),
+            Menu(
+              page: SoccerPage(),
+              assetSvg: 'assets/icons/baseball.svg',
+              label: Text('sportTitle').tr(gender: 'baseball'),
+            ),
+            Menu(
+              page: SoccerPage(),
+              assetSvg: 'assets/icons/tennis.svg',
+              label: Text('sportTitle').tr(gender: 'tennis'),
+            ),
+            Menu(
+              page: SoccerPage(),
+              assetSvg: 'assets/icons/badminton.svg',
+              label: Text('sportTitle').tr(gender: 'badminton'),
+            ),
+            Menu(
+              page: SoccerPage(),
+              assetSvg: 'assets/icons/basketball.svg',
+              label: Text('sportTitle').tr(gender: 'basketball'),
+            ),
           ],
         ),
       ),
@@ -218,7 +239,7 @@ class Menu extends StatelessWidget {
 
   final Widget page;
   final String assetSvg;
-  final String label;
+  final Text label;
 
   const Menu({super.key, required this.page, required this.assetSvg, required this.label});
 
@@ -236,7 +257,9 @@ class Menu extends StatelessWidget {
         children: [
           SvgPicture.asset(assetSvg),
           const SizedBox(height: 6,),
-          Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),)
+          label
+          // Text('sportTitle', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),)
+          //     .tr(gender: label),
         ],
       ),
     );

@@ -4,15 +4,27 @@ import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
 
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-void main() {
+void main() async {
   const String channelId = '2005763087';
 
   WidgetsFlutterBinding.ensureInitialized();
-  LineSDK.instance.setup(channelId).then((_) => {
-    print('LineSDK Prepared')
-  });
-  runApp(const App());
+  // LINE Login API 연동
+  LineSDK.instance.setup(channelId).then((_) => print('LineSDK Prepared'));
+
+  // 언어팩
+  await EasyLocalization.ensureInitialized();
+
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: [Locale('ko', 'KR'), Locale('ja', 'JP')],
+      path: 'assets/translations',
+      fallbackLocale: Locale('ko', 'KR'),
+      child: const App(),
+    )
+  );
 }
 
 class App extends StatelessWidget {
@@ -21,11 +33,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // initialRoute: '/',
-      // routes: {
-      //   '/' : (c) => const Main(),
-      //   '/detail' : (c) => const LoginPageWidget(),
-      // },
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       home: const Main(),
       theme: ThemeData(
         fontFamily: 'Pretendard',

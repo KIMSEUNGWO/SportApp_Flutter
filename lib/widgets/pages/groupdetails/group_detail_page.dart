@@ -5,6 +5,7 @@ import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_chat_page.
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_home_page.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_meeting_page.dart';
 
+import 'package:easy_localization/easy_localization.dart';
 
 class GroupDetailWidget extends StatefulWidget {
 
@@ -19,10 +20,10 @@ class GroupDetailWidget extends StatefulWidget {
 class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTickerProviderStateMixin {
 
   final Map<Tab, Widget> tabList = {
-    Tab(text: '홈') : GroupDetailHomeWidget(),
-    Tab(text: '게시판') : GroupDetailBoardWidget(),
-    Tab(text: '모임',) : GroupDetailMeetingWidget(),
-    Tab(text: '채팅') : GroupDetailChatWidget()
+    Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(),
+    Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(),
+    Tab(text: 'groupMenus'.tr(gender: 'group')) : GroupDetailMeetingWidget(),
+    Tab(text: 'groupMenus'.tr(gender: 'chat')) : GroupDetailChatWidget()
   };
   late TabController _tabController;
   bool isLiked = false;
@@ -127,21 +128,21 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
                 // Chat 탭 처리
                 Navigator.of(context).pop();
               },
-              child: Text('모임 신고하기', style: const TextStyle(color: Colors.red),),
+              child: Text('notifyGroup', style: const TextStyle(color: Colors.red),).tr(),
             ),
             CupertinoActionSheetAction(
               onPressed: () {
                 // Chat 탭 처리
                 Navigator.of(context).pop();
               },
-              child: Text('모임 공유하기'),
+              child: Text('shareGroup').tr(),
             ),
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('취소'),
+            child: Text('cancel').tr(),
           ),
         );
       },

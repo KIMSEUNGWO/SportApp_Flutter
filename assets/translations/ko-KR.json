@@ -1,0 +1,59 @@
+{
+  "mainAppBarMenus" : {
+    "notification" : "알림",
+    "oneToOneMessage" : "1:1 메세지"
+  },
+
+  "EmptyNotification" : "알림이 없습니다.",
+
+  "bottomAppBarMenus" : {
+    "home" : "홈",
+    "search" : "검색",
+    "myGroups" : "내 모임",
+    "profile" : "프로필"
+  },
+
+  "sportTitle" : {
+    "soccer" : "축구",
+    "baseball" : "야구",
+    "tennis" : "테니스",
+    "badminton" : "배드민턴",
+    "basketball" : "농구"
+  },
+
+  "recentlySearchGroups" : "최근 본 모임",
+  "mostActiveGroups" : "가장 활발한 모임 \uD83D\uDD25",
+  "newGroups" : "새로 만들어진 모임 \uD83D\uDD30",
+
+  "more" : "더 보기",
+
+  "recentlyChat" : "최근대화",
+
+  "notifyGroup" : "모임 신고하기",
+  "shareGroup" : "모임 공유하기",
+  "cancel" : "닫기",
+
+  "joinGroup" : "참여하기",
+
+  "time" : {
+    "minutes" : "{}분 전",
+    "hours" : "{}시간 전",
+    "days" : "{}일 전"
+  },
+  "person" : "멤버 {}명",
+
+  "groupMenus" : {
+    "home" : "홈",
+    "board" : "게시판",
+    "group" : "모임",
+    "chat" : "채팅"
+  },
+
+  "groupBoardMenus" : {
+    "all" : "전체",
+    "notice" : "공지사항",
+    "sayHello" : "가입인사",
+    "free" : "자유글"
+  }
+
+}

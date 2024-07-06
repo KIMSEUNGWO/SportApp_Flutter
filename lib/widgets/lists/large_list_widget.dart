@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
 class LargeListWidget extends StatelessWidget {
 
   final int id;
@@ -69,7 +71,7 @@ class LargeListWidget extends StatelessWidget {
                     children: [
                       Text(region, style: detailStyle,),
                       dot(),
-                      Text('멤버 $personCount명', style: detailStyle),
+                      Text('person', style: detailStyle,).tr(args: [personCount.toString()]),
                       ...extraWidget
                     ],
                   ),

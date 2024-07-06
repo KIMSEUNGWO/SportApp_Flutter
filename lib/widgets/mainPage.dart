@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/widgets/pages/login_page.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/my_group_page.dart';
 import 'package:flutter_sport/widgets/pages/profile_page.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
+
+import 'package:easy_localization/easy_localization.dart';
 
 class Main extends StatefulWidget {
   const Main({super.key});
@@ -56,19 +57,19 @@ class _MainState extends State<Main> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             BottomNavigator(
-              title: '홈', icon: Icons.home,
+              title: 'bottomAppBarMenus'.tr(gender: 'home'), icon: Icons.home,
               callback: () => onChangePage(0), isPressed: _currentIndex == 0,
             ),
             BottomNavigator(
-              title: '검색', icon: Icons.search,
+              title: 'bottomAppBarMenus'.tr(gender: 'search'), icon: Icons.search,
               callback: () => onChangePage(1), isPressed: _currentIndex == 1,
             ),
             BottomNavigator(
-              title: '내 모임', icon: Icons.chat_bubble,
+              title: 'bottomAppBarMenus'.tr(gender: 'myGroups'), icon: Icons.chat_bubble,
               callback: () => onChangePage(2), isPressed: _currentIndex == 2,
             ),
             BottomNavigator(
-              title: '프로필', icon: Icons.person,
+              title: 'bottomAppBarMenus'.tr(gender: 'profile'), icon: Icons.person,
               callback: () => onChangePage(3), isPressed: _currentIndex == 3,
             ),
           ],

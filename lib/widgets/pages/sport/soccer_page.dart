@@ -6,6 +6,8 @@ import 'package:flutter_sport/widgets/lists/large_list_widget.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
 class SoccerPage extends StatelessWidget {
   const SoccerPage({super.key});
 
@@ -35,12 +37,18 @@ class SoccerPage extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text('가장 활발한 모임 🔥',
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF565360),
-                    ),
+                  child: Row(
+                    children: [
+                      Text('recentlySearchGroups',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF565360),
+                        ),
+                      ).tr(),
+                      SizedBox(width: 5,),
+                      Text('🔥', style: TextStyle(fontSize: 19),)
+                    ],
                   ),
                 ),
                 SizedBox(height: 10,),
@@ -58,13 +66,13 @@ class SoccerPage extends StatelessWidget {
                         title: '모임제목모임제목모임제목모임제목모임제목모임제목',
                         region: '시부야구',
                         personCount: 3,
-                        extraInfo: Text('최근대화',
+                        extraInfo: Text('recentlyChat',
                           style: TextStyle(
                             color: Color(0xFFF34C4C),
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
                           ),
-                        ),
+                        ).tr(),
                       );
                     },
                   ),
@@ -78,12 +86,18 @@ class SoccerPage extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text('새로 만들어진 모임 🔰',
-                    style: TextStyle(
-                      fontSize: 19,
-                      color: Color(0xFF565360),
-                      fontWeight: FontWeight.w500,
-                    ),
+                  child: Row(
+                    children: [
+                      Text('recentlySearchGroups',
+                        style: TextStyle(
+                          fontSize: 19,
+                          color: Color(0xFF565360),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ).tr(),
+                      SizedBox(width: 5,),
+                      Text('🔰', style: TextStyle(fontSize: 19),)
+                    ],
                   ),
                 ),
                 SizedBox(height: 10,),

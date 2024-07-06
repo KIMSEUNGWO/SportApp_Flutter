@@ -1,0 +1,58 @@
+{
+  "mainAppBarMenus" : {
+    "notification" : "お知らせ",
+    "oneToOneMessage" : "1:1 メッセージ"
+  },
+
+  "EmptyNotification" : "新着がありません。",
+
+  "bottomAppBarMenus" : {
+    "home" : "ホーム",
+    "search" : "検索",
+    "myGroups" : "グループ",
+    "profile" : "プローフィル"
+  },
+
+  "sportTitle" : {
+    "soccer" : "サッカー",
+    "baseball" : "ベースボール",
+    "tennis" : "テニス",
+    "badminton" : "バドミントン",
+    "basketball" : "バスケ"
+  },
+
+  "recentlySearchGroups" : "最近見たグループ",
+  "mostActiveGroups" : "燃えるグループ \uD83D\uDD25",
+  "newGroups" : "新しいグループ \uD83D\uDD30",
+
+  "more" : "すべて見る",
+
+  "recentlyChat" : "最近会話",
+
+  "notifyGroup" : "グループを通報する",
+  "shareGroup" : "グループを共有する",
+  "cancel" : "閉じる",
+
+  "joinGroup" : "参加する",
+
+  "time" : {
+    "minutes" : "{}分前",
+    "hours" : "{}時間前",
+    "days" : "{}日前"
+  },
+  "person" : "{}人",
+
+  "groupMenus" : {
+    "home" : "ホーム",
+    "board" : "コミュニティ",
+    "group" : "グループ",
+    "chat" : "メッセージ"
+  },
+
+  "groupBoardMenus" : {
+    "all" : "すべて",
+    "notice" : "お知らせ",
+    "sayHello" : "加入人事",
+    "free" : "自由掲示板"
+  }
+}
