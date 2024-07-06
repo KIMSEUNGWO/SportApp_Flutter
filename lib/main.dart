@@ -19,9 +19,9 @@ void main() async {
 
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('ko', 'KR'), Locale('ja', 'JP')],
+      supportedLocales: const [Locale('ko', 'KR'), Locale('ja', 'JP')],
       path: 'assets/translations',
-      fallbackLocale: Locale('ko', 'KR'),
+      fallbackLocale: const Locale('ko', 'KR'),
       child: const App(),
     )
   );
@@ -36,7 +36,7 @@ class App extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: const Main(),
+      home: Main(),
       theme: ThemeData(
         fontFamily: 'Pretendard',
         colorScheme: ColorScheme.light(

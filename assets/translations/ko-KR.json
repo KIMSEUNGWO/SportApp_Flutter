@@ -4,7 +4,12 @@
     "oneToOneMessage" : "1:1 메세지"
   },
 
-  "EmptyNotification" : "알림이 없습니다.",
+  "alert" : {
+    "placeholder_groupSearch" : "모임을 검색해보세요.",
+    "placeholder_regionSearch" : "지역을 입력해주세요.",
+    "emptyNotification" : "알림이 없습니다.",
+    "requireLogin" : "로그인이 필요합니다."
+  },
 
   "bottomAppBarMenus" : {
     "home" : "홈",
@@ -24,6 +29,7 @@
   "recentlySearchGroups" : "최근 본 모임",
   "mostActiveGroups" : "가장 활발한 모임 \uD83D\uDD25",
   "newGroups" : "새로 만들어진 모임 \uD83D\uDD30",
+  "activateIn" : "{}에서 활동중인 모임",
 
   "more" : "더 보기",
 
@@ -38,7 +44,8 @@
   "time" : {
     "minutes" : "{}분 전",
     "hours" : "{}시간 전",
-    "days" : "{}일 전"
+    "days" : "{}일 전",
+    "months" : "{}달 전"
   },
   "person" : "멤버 {}명",
 

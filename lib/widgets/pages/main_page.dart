@@ -72,7 +72,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
             },
             child: Row(
               children: [
-                Text(region.ko,
+                Text(region.getLocaleName(EasyLocalization.of(context)!.locale),
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 24,
@@ -133,7 +133,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
           },
         ),
         const InfinityBanner(),
-        Menus(),
+        Menus(region : region),
         const SliverToBoxAdapter(child: SizedBox(height: 40,),),
         SliverToBoxAdapter(
           child: Container(
@@ -192,7 +192,10 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
 }
 
 class Menus extends StatelessWidget {
-  const Menus({super.key,});
+
+  final Region region;
+
+  const Menus({super.key, required this.region});
 
   @override
   Widget build(BuildContext context) {
@@ -203,29 +206,29 @@ class Menus extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Menu(
-              page: SoccerPage(),
+              page: SoccerPage(region : region, label : 'soccer'),
               assetSvg: 'assets/icons/soccer.svg',
-              label: Text('sportTitle').tr(gender: 'soccer'),
+              label: 'soccer',
             ),
             Menu(
-              page: SoccerPage(),
+              page: SoccerPage(region : region, label : 'baseball'),
               assetSvg: 'assets/icons/baseball.svg',
-              label: Text('sportTitle').tr(gender: 'baseball'),
+              label: 'baseball',
             ),
             Menu(
-              page: SoccerPage(),
+              page: SoccerPage(region : region, label : 'tennis'),
               assetSvg: 'assets/icons/tennis.svg',
-              label: Text('sportTitle').tr(gender: 'tennis'),
+              label: 'tennis',
             ),
             Menu(
-              page: SoccerPage(),
+              page: SoccerPage(region : region, label : 'badminton'),
               assetSvg: 'assets/icons/badminton.svg',
-              label: Text('sportTitle').tr(gender: 'badminton'),
+              label: 'badminton',
             ),
             Menu(
-              page: SoccerPage(),
+              page: SoccerPage(region : region, label : 'basketball'),
               assetSvg: 'assets/icons/basketball.svg',
-              label: Text('sportTitle').tr(gender: 'basketball'),
+              label: 'basketball',
             ),
           ],
         ),
@@ -239,7 +242,7 @@ class Menu extends StatelessWidget {
 
   final Widget page;
   final String assetSvg;
-  final Text label;
+  final String label;
 
   const Menu({super.key, required this.page, required this.assetSvg, required this.label});
 
@@ -257,9 +260,7 @@ class Menu extends StatelessWidget {
         children: [
           SvgPicture.asset(assetSvg),
           const SizedBox(height: 6,),
-          label
-          // Text('sportTitle', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),)
-          //     .tr(gender: label),
+          Text('sportTitle').tr(gender: label),
         ],
       ),
     );

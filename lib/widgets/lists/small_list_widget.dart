@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
 
 class SmallListWidget extends StatelessWidget {
 
@@ -25,7 +27,10 @@ class SmallListWidget extends StatelessWidget {
     this.padding
   });
 
-
+  final TextStyle detailStyle = const TextStyle(
+    color: Color(0xFF707072),
+    fontSize: 12,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +46,11 @@ class SmallListWidget extends StatelessWidget {
             Container(
               width: 70, height: 70,
               margin: const EdgeInsets.only(right: 15),
-              child: image,
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
+              child: image,
             ),
             Expanded(
               child: Column(
@@ -78,7 +83,6 @@ class SmallListWidget extends StatelessWidget {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFFDFDFDF)
-
                         ),
                         child: Text(sportType,
                           style: const TextStyle(
@@ -87,30 +91,10 @@ class SmallListWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(' · ',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(region,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(' · ',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text('$personCount명',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 12,
-                        ),
-                      )
+                      dot(),
+                      Text(region, style: detailStyle),
+                      dot(),
+                      Text('person'.tr(args: [personCount.toString()]), style: detailStyle)
                     ],
                   )
                 ],
@@ -121,5 +105,9 @@ class SmallListWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Text dot() {
+    return Text(' · ', style: detailStyle,);
   }
 }

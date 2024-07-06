@@ -4,6 +4,8 @@ import 'package:flutter_sport/models/component.dart';
 import 'package:flutter_sport/models/notification.dart';
 import 'package:flutter_sport/widgets/notification/notification_widget.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
 class NotificationsWidget extends StatefulWidget {
   const NotificationsWidget({super.key});
 
@@ -36,13 +38,13 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('알림'),
+        title: Text('mainAppBarMenus').tr(gender: 'notification'),
         flexibleSpace: Container(color: Colors.white,),
       ),
       body: isLoading
         ? const Center(child: CircularProgressIndicator(),)
         : notifications.isEmpty
-            ? const EmptyElement(message: '알림이 없습니다.')
+            ? EmptyElement(message: 'alert'.tr(gender: 'emptyNotification'))
             : makeNotifies(notifications)
       ,
       // body: FutureBuilder(

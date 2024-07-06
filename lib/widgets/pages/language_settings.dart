@@ -10,7 +10,7 @@ class LanguageSettingsWidget extends StatefulWidget {
 
 class _LanguageSettingsWidgetState extends State<LanguageSettingsWidget> {
 
-  onChangeLanguage(BuildContext context, Locale locale) {
+  onChangeLanguage(BuildContext context, Locale locale) async {
     EasyLocalization.of(context)?.setLocale(locale);
     Navigator.pop(context);
   }

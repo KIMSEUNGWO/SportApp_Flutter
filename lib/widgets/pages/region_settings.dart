@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sport/models/region.dart';
 import 'package:flutter_sport/models/region_data.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
 class RegionSettingsWidget extends StatefulWidget {
 
   final Function(Region data) changeRegion;
@@ -26,6 +28,9 @@ class _RegionSettingsWidgetState extends State<RegionSettingsWidget> {
 
   @override
   Widget build(BuildContext context) {
+
+    Locale locale = EasyLocalization.of(context)!.locale;
+
     return Scaffold(
       appBar: AppBar(
         title: Container(
@@ -39,11 +44,11 @@ class _RegionSettingsWidgetState extends State<RegionSettingsWidget> {
               Expanded(
                 child: TextField(
                   onChanged: (word) {
-                    onChangedResult(FindRegion.findAll(word));
+                    onChangedResult(FindRegion.findAll(word, locale));
                   },
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: '지역을 입력해주세요.',
+                    hintText: 'alert'.tr(gender: 'placeholder_regionSearch'),
                     hintStyle: TextStyle(
                       color: Color(0xFF908E9B),
                     ),
@@ -72,12 +77,7 @@ class _RegionSettingsWidgetState extends State<RegionSettingsWidget> {
           return Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             padding: EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              border: Border(
-
-              ),
-            ),
-            child: FindResultRegionWidget(region: find[index], changeRegion : widget.changeRegion),
+            child: FindResultRegionWidget(locale: locale, region: find[index], changeRegion : widget.changeRegion),
           );
         },
       )
@@ -88,10 +88,10 @@ class _RegionSettingsWidgetState extends State<RegionSettingsWidget> {
 class FindResultRegionWidget extends StatefulWidget {
 
   final Region region;
+  final Locale locale;
   final Function(Region data) changeRegion;
 
-  const FindResultRegionWidget({super.key, required this.region, required this.changeRegion});
-
+  const FindResultRegionWidget({super.key, required this.region, required this.locale, required this.changeRegion});
 
   @override
   State<FindResultRegionWidget> createState() => _FindResultRegionWidgetState();
@@ -100,8 +100,8 @@ class FindResultRegionWidget extends StatefulWidget {
 class _FindResultRegionWidgetState extends State<FindResultRegionWidget> {
   @override
   Widget build(BuildContext context) {
-    String name = widget.region.ko;
-    String fullName = widget.region.getFullName();
+    String name = widget.region.getLocaleName(widget.locale);
+    String fullName = widget.region.getFullName(widget.locale);
     return GestureDetector(
       onTap: () {
         widget.changeRegion(Region.findByName(widget.region.name));

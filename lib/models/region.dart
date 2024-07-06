@@ -1,11 +1,13 @@
 
 
+import 'dart:ui';
+
 import 'package:flutter_sport/common/language_enum.dart';
 import 'package:flutter_sport/models/region_data.dart';
 
 class FindRegion {
 
-  static List<Region> findAll(String word) {
+  static List<Region> findAll(String word, Locale locale) {
     if (word.isEmpty) return List.empty();
 
     LanguageType langType = LanguageType.getLangType(word);
@@ -22,7 +24,7 @@ class FindRegion {
           .forEach((region) => result.addAll(region.getRegionChildList()));
     }
 
-    result.sort((a, b) => a.compareTo(b, langType));
+    result.sort((a, b) => a.compareTo(b, locale));
 
     return result;
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
 class OneToOneMessageWidget extends StatelessWidget {
   const OneToOneMessageWidget({super.key});
 
@@ -7,7 +9,7 @@ class OneToOneMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('1:1 메시지'),
+        title: Text('mainAppBarMenus').tr(gender: 'oneToOneMessage'),
       ),
     );
   }

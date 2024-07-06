@@ -1,8 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter_sport/common/language_enum.dart';
 
 enum RegionParent {
 
-  ALL("전체", "All", "전체일본어"),
+  ALL("전체", "All", "全国"),
 
   // 홋카이도 지방
   HOKKAIDO("홋카이도", "Hokkaido", "北海道"),
@@ -119,7 +121,7 @@ enum Region {
   BUNKYO("분쿄구", "Bunkyo", "文京区", RegionParent.TOKYO),
   MINATO("미나토구", "Minato", "港区", RegionParent.TOKYO),
   MEGURO("메구로구", "Meguro", "目黒区", RegionParent.TOKYO),
-  ALL("전체", "All", "전체일본어", RegionParent.ALL);
+  ALL("전체", "All", "全国", RegionParent.ALL);
   
   final String ko, en, jp;
   final RegionParent parent;
@@ -144,7 +146,9 @@ enum Region {
         .toList();
   }
 
-  int compareTo(Region o2, LanguageType langType) {
+  int compareTo(Region o2, Locale locale) {
+    LanguageType langType = LanguageType.getType(locale);
+
     int parentCompareResult = parent.compareTo(o2.parent, langType);
     return (parentCompareResult == 0)
         ? _getRegion(langType).compareTo(o2._getRegion(langType))
@@ -159,10 +163,15 @@ enum Region {
         );
   }
 
-  String getFullName() {
+  String getLocaleName(Locale locale) {
+    return _getRegion(LanguageType.getType(locale));
+  }
+
+  String getFullName(Locale locale) {
+    LanguageType langType = LanguageType.getType(locale);
     return (this == Region.ALL)
-        ? '($ko)'
-        : '(${parent.ko} $ko)';
+        ? '(${getLocaleName(locale)})'
+        : '(${parent._getRegion(langType)} ${getLocaleName(locale)})';
   }
   
 }

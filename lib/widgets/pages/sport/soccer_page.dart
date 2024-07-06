@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/models/region_data.dart';
 import 'package:flutter_sport/widgets/lists/large_list_widget.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
@@ -9,14 +10,21 @@ import 'package:flutter_sport/widgets/pages/search_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SoccerPage extends StatelessWidget {
-  const SoccerPage({super.key});
+
+  final Region region;
+  final String label;
+
+  const SoccerPage({super.key, required this.region, required this.label});
+
 
   @override
   Widget build(BuildContext context) {
+    Locale locale = EasyLocalization.of(context)!.locale;
+    String translationRegionTitle = region.getLocaleName(locale);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('풋볼'),
+        title: Text('sportTitle').tr(gender: label),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -134,22 +142,12 @@ class SoccerPage extends StatelessWidget {
           SliverToBoxAdapter(
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Text('시부야',
-                    style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w600
-                    ),
-                  ),
-                  Text('에서 활동 중인 모임',
-                    style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w500
-                    ),
-                  ),
-                ],
-              ),
+              child : Text('activateIn',
+                style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.w500
+                ),
+              ).tr(args: [translationRegionTitle]),
             ),
           ),
           SliverPadding(

@@ -57,19 +57,19 @@ class _MainState extends State<Main> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             BottomNavigator(
-              title: 'bottomAppBarMenus'.tr(gender: 'home'), icon: Icons.home,
+              title: 'home', icon: Icons.home,
               callback: () => onChangePage(0), isPressed: _currentIndex == 0,
             ),
             BottomNavigator(
-              title: 'bottomAppBarMenus'.tr(gender: 'search'), icon: Icons.search,
+              title: 'search', icon: Icons.search,
               callback: () => onChangePage(1), isPressed: _currentIndex == 1,
             ),
             BottomNavigator(
-              title: 'bottomAppBarMenus'.tr(gender: 'myGroups'), icon: Icons.chat_bubble,
+              title: 'myGroups', icon: Icons.chat_bubble,
               callback: () => onChangePage(2), isPressed: _currentIndex == 2,
             ),
             BottomNavigator(
-              title: 'bottomAppBarMenus'.tr(gender: 'profile'), icon: Icons.person,
+              title: 'profile', icon: Icons.person,
               callback: () => onChangePage(3), isPressed: _currentIndex == 3,
             ),
           ],
@@ -106,7 +106,8 @@ class BottomNavigator extends StatelessWidget {
       child: Column(
         children: [
           Icon(icon, size: 35, color: isPressed ? pressedColor : defaultColor,),
-          Text(title, style: TextStyle(color: isPressed ? pressedColor : defaultColor),)
+          Text('bottomAppBarMenus', style: TextStyle(color: isPressed ? pressedColor : defaultColor),)
+            .tr(gender: title),
         ],
       ),
     );

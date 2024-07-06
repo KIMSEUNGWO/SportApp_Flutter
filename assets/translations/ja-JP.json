@@ -4,13 +4,20 @@
     "oneToOneMessage" : "1:1 メッセージ"
   },
 
+  "alert" : {
+    "placeholder_groupSearch" : "グループを検索",
+    "placeholder_regionSearch" : "地域を 入力してください。",
+    "emptyNotification" : "新着がありません。",
+    "requireLogin" : "ログインが必要です。"
+  },
+
   "EmptyNotification" : "新着がありません。",
 
   "bottomAppBarMenus" : {
     "home" : "ホーム",
     "search" : "検索",
     "myGroups" : "グループ",
-    "profile" : "プローフィル"
+    "profile" : "マイページ"
   },
 
   "sportTitle" : {
@@ -22,8 +29,9 @@
   },
 
   "recentlySearchGroups" : "最近見たグループ",
-  "mostActiveGroups" : "燃えるグループ \uD83D\uDD25",
-  "newGroups" : "新しいグループ \uD83D\uDD30",
+  "mostActiveGroups" : "燃えるグループ",
+  "newGroups" : "新しいグループ",
+  "activateIn" : "{}活動している グループ",
 
   "more" : "すべて見る",
 
@@ -38,7 +46,8 @@
   "time" : {
     "minutes" : "{}分前",
     "hours" : "{}時間前",
-    "days" : "{}日前"
+    "days" : "{}日前",
+    "months" : "{}달 전"
   },
   "person" : "{}人",
 
