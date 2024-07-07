@@ -1,7 +1,13 @@
 
+import 'dart:convert';
+
+import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
+import 'package:http/http.dart' as http;
 
 class ApiService {
+
+  static const String server = "http://localhost:8080";
 
   static Future<List<Notifications>> getTestNotification(int count) async {
     List<Notifications> instances = [];
@@ -10,7 +16,28 @@ class ApiService {
       instances.add(noty);
     }
     return instances;
+  }
+
+  static Future<bool> login({required String userId, required String provider, required String accessToken}) async {
+    final uri = Uri.parse('$server/social/login');
+    final response = await http.post(uri,
+        headers: {"Content-Type" : "application/json"},
+        body: jsonEncode({
+          "socialId" : userId,
+          "provider" : provider,
+          "accessToken" : accessToken
+        })
+    );
+
+    if (response.statusCode == 200) {
+      String accessToken = jsonDecode(response.body)['accessToken'];
+      SecureStorage.saveAccessToken(accessToken);
+      return true;
+    }
+    return false;
 
   }
+
+
 
 }

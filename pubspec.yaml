@@ -25,6 +25,7 @@ dev_dependencies:
   flutter_secure_storage: ^9.2.2 # Flutter Secure Storage
   easy_localization: ^3.0.7 # 언어팩
   flutter_lints: ^3.0.0
+  flutter_riverpod: ^2.5.1
 
 flutter:
   uses-material-design: true

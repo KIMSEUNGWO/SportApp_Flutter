@@ -1,19 +1,26 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
-import 'package:flutter_sport/models/user.dart';
+import 'package:flutter_sport/api/api_service.dart';
 
 
 class LineAPI {
 
-  static void login() async {
+  static Future<bool> login() async {
     try {
       final result = await LineSDK.instance.login(
         scopes: ["profile", "openid", "email"]
       );
-      print('Access Token : ' + result.accessToken.value);
+
+      return ApiService.login(
+        userId: result.userProfile!.userId,
+        provider: 'LINE',
+        accessToken : result.accessToken.value
+      );
+
     } on PlatformException catch(e) {
       print('LINE API : PlatformException !!!');
       print(e);
+      return false;
     }
 
   }

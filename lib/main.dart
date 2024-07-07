@@ -5,6 +5,7 @@ import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
 
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   const String channelId = '2005763087';
@@ -16,13 +17,12 @@ void main() async {
   // 언어팩
   await EasyLocalization.ensureInitialized();
 
-
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('ko', 'KR'), Locale('ja', 'JP')],
       path: 'assets/translations',
       fallbackLocale: const Locale('ko', 'KR'),
-      child: const App(),
+      child: const ProviderScope(child: App()),
     )
   );
 }

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/local_storage.dart';
+import 'package:flutter_sport/models/login_notifier.dart';
 import 'package:flutter_sport/models/region_data.dart';
 import 'package:flutter_sport/widgets/chating/oneToOneMessage_widget.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MainPage extends StatefulWidget {
 
@@ -93,35 +95,40 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
           //   title: Image.asset('assets/logo.jpg', ),
           // ),
           actions: [
-
-            // 로그인 되어있지 않을 때
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: IconButton(
-                onPressed: () {
-                  showModalBottomSheet(context: context, builder: (context) {
-                    return LoginPageWidget();
-                  },);
-                },
-                icon: const Icon(Icons.login, size: 30,),
-              ),
+            Consumer(
+              builder: (context, ref, child) {
+                final isLogin = ref.watch(loginProvider);
+                if (!isLogin) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: IconButton(
+                      onPressed: () {
+                        showModalBottomSheet(context: context, builder: (context) {
+                          return LoginPageWidget();
+                        },);
+                      },
+                      icon: const Icon(Icons.login, size: 30,),
+                    ),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: IconButton(
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsWidget(),)),
+                      icon: const Icon(Icons.notifications_none, size: 30,),
+                    ),
+                  );
+                }
+              },
             ),
 
-            // 로그인 되었을 때
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: IconButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsWidget(),)),
-                icon: const Icon(Icons.notifications_none, size: 30,),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: IconButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OneToOneMessageWidget(),)),
-                icon: const Icon(Icons.send, size: 30),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 20),
+            //   child: IconButton(
+            //     onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OneToOneMessageWidget(),)),
+            //     icon: const Icon(Icons.send, size: 30),
+            //   ),
+            // ),
           ],
         ),
         CupertinoSliverRefreshControl(
