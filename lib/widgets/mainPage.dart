@@ -62,7 +62,9 @@ class _MainState extends State<Main> {
             ),
             BottomNavigator(
               title: 'search', icon: Icons.search,
-              callback: () => onChangePage(1), isPressed: _currentIndex == 1,
+              // callback: () => onChangePage(1),
+              callback: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(),)),
+              isPressed: _currentIndex == 1,
             ),
             BottomNavigator(
               title: 'myGroups', icon: Icons.chat_bubble,

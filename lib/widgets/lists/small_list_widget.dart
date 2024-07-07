@@ -41,10 +41,10 @@ class SmallListWidget extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 70, height: 70,
+              width: 65, height: 65,
               margin: const EdgeInsets.only(right: 15),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(

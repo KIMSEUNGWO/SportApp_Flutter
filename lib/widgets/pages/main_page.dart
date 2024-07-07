@@ -17,6 +17,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_sport/widgets/pages/login_page.dart';
 import 'package:flutter_sport/widgets/pages/recently_visit_group.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
+import 'package:flutter_sport/widgets/pages/search_page.dart';
 import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -95,12 +96,19 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
           //   title: Image.asset('assets/logo.jpg', ),
           // ),
           actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchPage(),)),
+                icon: const Icon(Icons.search, size: 30,),
+              ),
+            ),
             Consumer(
               builder: (context, ref, child) {
                 final isLogin = ref.watch(loginProvider);
                 if (!isLogin) {
                   return Padding(
-                    padding: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.only(right: 20),
                     child: IconButton(
                       onPressed: () {
                         showModalBottomSheet(context: context, builder: (context) {
@@ -112,7 +120,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
                   );
                 } else {
                   return Padding(
-                    padding: const EdgeInsets.only(right: 10),
+                    padding: const EdgeInsets.only(right: 20),
                     child: IconButton(
                       onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsWidget(),)),
                       icon: const Icon(Icons.notifications_none, size: 30,),
