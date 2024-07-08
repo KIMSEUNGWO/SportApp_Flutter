@@ -14,7 +14,7 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
 
   int count = 0;
 
-  final List<String> boardMenus = ['all', 'notice', 'sayHello', 'free'];
+  final List<String> boardMenus = ['all', 'notice', 'firstComment', 'openBoard'];
 
   @override
   Widget build(BuildContext context) {

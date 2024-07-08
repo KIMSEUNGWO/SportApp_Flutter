@@ -7,9 +7,7 @@ class LineAPI {
 
   static Future<bool> login() async {
     try {
-      final result = await LineSDK.instance.login(
-        scopes: ["profile", "openid", "email"]
-      );
+      final result = await LineSDK.instance.login();
 
       return ApiService.login(
         userId: result.userProfile!.userId,

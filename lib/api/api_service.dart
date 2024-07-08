@@ -1,8 +1,10 @@
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
+import 'package:flutter_sport/models/user/profile.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -19,8 +21,8 @@ class ApiService {
   }
 
   static Future<bool> login({required String userId, required String provider, required String accessToken}) async {
-    final uri = Uri.parse('$server/social/login');
-    final response = await http.post(uri,
+
+    final response = await http.post(Uri.parse('$server/social/login'),
         headers: {"Content-Type" : "application/json"},
         body: jsonEncode({
           "socialId" : userId,
@@ -30,12 +32,29 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      String accessToken = jsonDecode(response.body)['accessToken'];
       SecureStorage.saveAccessToken(accessToken);
+      print('LINE LOGIN SUCCESS !!!');
       return true;
+    } else if (response.statusCode == 400 || response.statusCode == 403 ) {
+      String message = jsonDecode(response.body)['message'];
+      print('ERROR : $message');
+      return false;
     }
     return false;
+  }
 
+  static Future<UserProfile> getProfile() async {
+    final response = await http.get(Uri.parse('$server/user/profile'),
+      headers: {
+        "Content-Type" : "application/json; charset=utf-8",
+        ""
+        "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+      },
+    );
+    final decodedResponse = utf8.decode(response.bodyBytes);
+    final json = jsonDecode(decodedResponse);
+
+    return UserProfile.fromJson(json);
   }
 
 

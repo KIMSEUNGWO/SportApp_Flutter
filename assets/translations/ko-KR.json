@@ -59,8 +59,8 @@
   "groupBoardMenus" : {
     "all" : "전체",
     "notice" : "공지사항",
-    "sayHello" : "가입인사",
-    "free" : "자유글"
+    "firstComment": "가입인사",
+    "openBoard": "자유글"
   }
 
 }

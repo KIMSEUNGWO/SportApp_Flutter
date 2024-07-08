@@ -61,7 +61,7 @@
   "groupBoardMenus" : {
     "all" : "すべて",
     "notice" : "お知らせ",
-    "sayHello" : "加入人事",
-    "free" : "自由掲示板"
+    "firstComment": "加入人事",
+    "openBoard": "自由掲示板"
   }
 }

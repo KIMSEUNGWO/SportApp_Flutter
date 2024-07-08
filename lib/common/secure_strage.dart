@@ -47,8 +47,6 @@ class SecureStorage {
     try {
       final accessToken = await storage.read(key: Constant.ACCESS_TOKEN);
       print('[SECURE_STORAGE] readAccessToken: $accessToken');
-      final refreshToken = await storage.read(key: Constant.REFRESH_TOKEN);
-      print('[SECURE_STORAGE] readRefreshToken: $refreshToken');
       return accessToken;
     } catch (e) {
       print("[ERROR] [SECURE_STORAGE] AccessToken 불러오기 실패: $e");
