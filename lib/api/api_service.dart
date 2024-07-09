@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_sport/api/error_handler.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
 import 'package:flutter_sport/models/user/profile.dart';
@@ -10,6 +11,21 @@ import 'package:http/http.dart' as http;
 class ApiService {
 
   static const String server = "http://localhost:8080";
+  static const Map<String, String>  headers = {
+    "Content-Type" : "application/json",
+    "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"
+  };
+
+  static Future<bool> _checkAccessToken() async {
+    final response = await http.get(Uri.parse('$server/accessToken'),
+      headers: {
+      "Content-Type" : "application/json",
+      "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
+      "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+      },
+    );
+    return response.statusCode == 200;
+  }
 
   static Future<List<Notifications>> getTestNotification(int count) async {
     List<Notifications> instances = [];
@@ -23,7 +39,7 @@ class ApiService {
   static Future<bool> login({required String userId, required String provider, required String accessToken}) async {
 
     final response = await http.post(Uri.parse('$server/social/login'),
-        headers: {"Content-Type" : "application/json"},
+        headers: headers,
         body: jsonEncode({
           "socialId" : userId,
           "provider" : provider,
@@ -31,30 +47,62 @@ class ApiService {
         })
     );
 
+    final result = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
-      SecureStorage.saveAccessToken(accessToken);
+      SecureStorage.saveAccessToken(result['accessToken']);
+      SecureStorage.saveRefreshToken(result['refreshToken']);
       print('LINE LOGIN SUCCESS !!!');
       return true;
-    } else if (response.statusCode == 400 || response.statusCode == 403 ) {
-      String message = jsonDecode(response.body)['message'];
-      print('ERROR : $message');
-      return false;
     }
     return false;
   }
 
-  static Future<UserProfile> getProfile() async {
+  static Future<bool> _refreshingAccessToken() async {
+    final response = await http.post(Uri.parse('$server/social/token'),
+        headers: {
+          "Authorization" : "Bearer ${await SecureStorage.readRefreshToken()}",
+        ...headers}
+    );
+
+    final result = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      SecureStorage.saveAccessToken(result['accessToken']);
+      SecureStorage.saveRefreshToken(result['refreshToken']);
+      print('Refreshing AccessToken');
+      return true;
+    }
+    return false;
+  }
+
+  static Future<UserProfile?> getProfile() async {
+    print('getProfile');
+
+    final isValid = await _checkAccessToken();
+    if (!isValid) {
+      final refresh = await _refreshingAccessToken();
+      if (!refresh) {
+        return null;
+      }
+    }
+
     final response = await http.get(Uri.parse('$server/user/profile'),
       headers: {
         "Content-Type" : "application/json; charset=utf-8",
-        ""
+        "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
         "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
       },
     );
+
     final decodedResponse = utf8.decode(response.bodyBytes);
     final json = jsonDecode(decodedResponse);
 
-    return UserProfile.fromJson(json);
+    if (response.statusCode == 200) {
+      print('성공');
+      return UserProfile.fromJson(json);
+    }
+    return null;
   }
 
 
