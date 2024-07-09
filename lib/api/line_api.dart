@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_sport/api/api_service.dart';
+import 'package:flutter_sport/common/secure_strage.dart';
 
 
 class LineAPI {
@@ -26,6 +27,7 @@ class LineAPI {
   static void logout() async {
     try {
       await LineSDK.instance.logout();
+      SecureStorage.removeAllByToken();
     } on PlatformException catch (e) {
       print(e.message);
     }

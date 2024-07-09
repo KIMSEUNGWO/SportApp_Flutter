@@ -32,6 +32,12 @@ class SecureStorage {
     }
   }
 
+  static void removeAllByToken() {
+    storage.delete(key: Constant.ACCESS_TOKEN);
+    storage.delete(key: Constant.REFRESH_TOKEN);
+    print('[SECURE_STORAGE] deleteAllByToken !!');
+  }
+
   // 에세스 토큰 저장
   static Future<void> saveAccessToken(String accessToken) async {
     try {

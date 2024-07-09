@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/widgets/initPage.dart';
 import 'package:flutter_sport/widgets/mainPage.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
@@ -36,7 +37,7 @@ class App extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: Main(),
+      home: InitPage(),
       theme: ThemeData(
         fontFamily: 'Pretendard',
         colorScheme: ColorScheme.light(

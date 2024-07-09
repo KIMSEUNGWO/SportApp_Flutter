@@ -60,6 +60,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return CustomScrollView(
       physics: AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),

@@ -10,6 +10,7 @@ class MyGroupPage extends StatefulWidget {
 class _MyGroupPageState extends State<MyGroupPage> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       child: Text('asdfa'),
     );

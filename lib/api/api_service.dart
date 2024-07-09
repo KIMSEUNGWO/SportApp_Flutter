@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_sport/api/error_handler.dart';
+import 'package:flutter_sport/api/line_api.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
 import 'package:flutter_sport/models/user/profile.dart';
@@ -25,6 +26,24 @@ class ApiService {
       },
     );
     return response.statusCode == 200;
+  }
+
+  static Future<bool> _refreshingAccessToken() async {
+    final response = await http.post(Uri.parse('$server/social/token'),
+        headers: {
+          "Authorization" : "Bearer ${await SecureStorage.readRefreshToken()}",
+          ...headers}
+    );
+
+    final result = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      SecureStorage.saveAccessToken(result['accessToken']);
+      SecureStorage.saveRefreshToken(result['refreshToken']);
+      print('Refreshing AccessToken');
+      return true;
+    }
+    return false;
   }
 
   static Future<List<Notifications>> getTestNotification(int count) async {
@@ -58,24 +77,6 @@ class ApiService {
     return false;
   }
 
-  static Future<bool> _refreshingAccessToken() async {
-    final response = await http.post(Uri.parse('$server/social/token'),
-        headers: {
-          "Authorization" : "Bearer ${await SecureStorage.readRefreshToken()}",
-        ...headers}
-    );
-
-    final result = jsonDecode(response.body);
-
-    if (response.statusCode == 200) {
-      SecureStorage.saveAccessToken(result['accessToken']);
-      SecureStorage.saveRefreshToken(result['refreshToken']);
-      print('Refreshing AccessToken');
-      return true;
-    }
-    return false;
-  }
-
   static Future<UserProfile?> getProfile() async {
     print('getProfile');
 
@@ -103,6 +104,17 @@ class ApiService {
       return UserProfile.fromJson(json);
     }
     return null;
+  }
+
+  static Future<bool> readUser() async {
+    final isValid = await _checkAccessToken();
+    if (isValid) return true;
+
+    final refresh = await _refreshingAccessToken();
+    if (refresh) {
+      return true;
+    }
+    return false;
   }
 
 

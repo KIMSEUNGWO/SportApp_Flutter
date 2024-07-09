@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class LanguageSettingsWidget extends StatefulWidget {
-  LanguageSettingsWidget({super.key});
+import '../../models/login_notifier.dart';
 
-  @override
-  State<LanguageSettingsWidget> createState() => _LanguageSettingsWidgetState();
-}
+class LanguageSettingsWidget extends ConsumerWidget {
 
-class _LanguageSettingsWidgetState extends State<LanguageSettingsWidget> {
+  const LanguageSettingsWidget({super.key});
 
   onChangeLanguage(BuildContext context, Locale locale) async {
     EasyLocalization.of(context)?.setLocale(locale);
@@ -16,8 +15,7 @@ class _LanguageSettingsWidgetState extends State<LanguageSettingsWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-
+  Widget build(BuildContext context, WidgetRef ref) {
     Locale locale = EasyLocalization.of(context)!.locale;
 
     return Scaffold(
