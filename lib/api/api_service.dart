@@ -1,14 +1,14 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 
-import 'package:flutter_sport/api/error_handler.dart';
-import 'package:flutter_sport/api/line_api.dart';
+import 'package:flutter/src/services/text_input.dart';
+import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:http/http.dart' as http;
+
 
 class ApiService {
 
@@ -19,19 +19,25 @@ class ApiService {
   };
 
   static Future<bool> _checkAccessToken() async {
+    final accessToken = await SecureStorage.readAccessToken();
+    if (accessToken == null) return false;
     final response = await http.get(Uri.parse('$server/accessToken'),
       headers: {
       "Content-Type" : "application/json",
       "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
-      "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+      "Authorization" : "Bearer $accessToken"
       },
     );
     return response.statusCode == 200;
   }
   static Future<bool> _refreshingAccessToken() async {
+
+    final refreshToken = await SecureStorage.readRefreshToken();
+    if (refreshToken == null) return false;
+
     final response = await http.post(Uri.parse('$server/social/token'),
         headers: {
-          "Authorization" : "Bearer ${await SecureStorage.readRefreshToken()}",
+          "Authorization" : "Bearer refreshToken",
           ...headers}
     );
 
@@ -55,7 +61,7 @@ class ApiService {
     return instances;
   }
 
-  static Future<bool> login({required String userId, required String provider, required String accessToken}) async {
+  static Future<ResultType> login({required String userId, required String provider, required String accessToken}) async {
 
     final response = await http.post(Uri.parse('$server/social/login'),
         headers: headers,
@@ -66,15 +72,14 @@ class ApiService {
         })
     );
 
-    final result = jsonDecode(response.body);
-
+    final json = jsonDecode(response.body);
+    ResultType resultType = ResultType.findBy(json['result']);
     if (response.statusCode == 200) {
-      SecureStorage.saveAccessToken(result['accessToken']);
-      SecureStorage.saveRefreshToken(result['refreshToken']);
+      SecureStorage.saveAccessToken(json['data']['accessToken']);
+      SecureStorage.saveRefreshToken(json['data']['accessToken']);
       print('LINE LOGIN SUCCESS !!!');
-      return true;
     }
-    return false;
+    return resultType;
   }
 
   static Future<UserProfile?> getProfile() async {
@@ -100,7 +105,6 @@ class ApiService {
     final json = jsonDecode(decodedResponse);
 
     if (response.statusCode == 200) {
-      print('성공');
       return UserProfile.fromJson(json);
     }
     return null;
@@ -130,6 +134,62 @@ class ApiService {
 
     final response = await request.send();
     return response.statusCode == 200;
+  }
+
+  static isDistinctNickname(String nickname) async {
+
+    final response = await http.get(Uri.parse('$server/distinct/nickname?nickname=$nickname'),
+      headers: {
+      "Content-Type" : "application/json; charset=utf-8",
+      "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
+      "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+      },
+    );
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['data'];
+    }
+    return false;
+  }
+
+  static Future<bool> register({required String nickname, required String? intro, required String sex, required String birth}) async {
+
+    final response = await http.post(Uri.parse('$server/register'),
+        headers: {
+          "Content-Type" : "application/json; charset=utf-8",
+          "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
+          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+        },
+      body: jsonEncode({
+        "nickname" : nickname,
+        "intro" : intro,
+        "sex" : sex,
+        "birth" : birth
+      })
+    );
+
+    final json = jsonDecode(response.body);
+    if (json['result'] == 'OK') {
+      return true;
+    }
+    return false;
+  }
+
+  static registerClear() async {
+    final response = await http.delete(Uri.parse('$server/register/clear'),
+        headers: {
+          "Content-Type" : "application/json; charset=utf-8",
+          "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
+          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+        },
+    );
+    final json = jsonDecode(response.body);
+
+    if (response.statusCode == 200 && json['data'] == true) {
+      SecureStorage.removeAllByToken();
+    }
   }
 
 }

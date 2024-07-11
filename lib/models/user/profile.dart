@@ -21,13 +21,13 @@ class UserProfile {
 
 
   UserProfile.fromJson(Map<String, dynamic> json) :
-    image = json['image'] == null ? null : Image.network('${ApiService.server}/images/original/profile/${json['image']}', fit: BoxFit.fill,),
-    name = json['name'],
-    intro = json['intro'],
-    sex = json['sex'],
-    birth = json['birth'],
-    groupCount = json['groupCount'],
-    inviteCount = json['inviteCount'],
-    likeCount = json['likeCount'];
+    image = json['data']['image'] == null ? null : Image.network('${ApiService.server}/images/original/profile/${json['data']['image']}', fit: BoxFit.fill,),
+    name = json['data']['name'],
+    intro = json['data']['intro'],
+    sex = json['data']['sex'],
+    birth = json['data']['birth'],
+    groupCount = json['data']['groupCount'],
+    inviteCount = json['data']['inviteCount'],
+    likeCount = json['data']['likeCount'];
 
 }

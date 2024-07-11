@@ -1,12 +1,13 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 
 
 class LineAPI {
 
-  static Future<bool> login() async {
+  static Future<ResultType> login() async {
     try {
       final result = await LineSDK.instance.login();
 
@@ -19,7 +20,7 @@ class LineAPI {
     } on PlatformException catch(e) {
       print('LINE API : PlatformException !!!');
       print(e);
-      return false;
+      return ResultType.ERROR;
     }
 
   }

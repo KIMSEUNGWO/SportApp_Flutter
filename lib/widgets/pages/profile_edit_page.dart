@@ -8,27 +8,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/image_cropper.dart';
+import 'package:flutter_sport/models/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/profile_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:image_cropper/image_cropper.dart';
 
 
-class ProfileEditPage extends StatefulWidget {
+class ProfileEditPage extends ConsumerStatefulWidget {
 
-  UserProfile userProfile;
-  Function(UserProfile) setProfile;
-
-  ProfileEditPage({required this.userProfile, required this.setProfile});
-
+  const ProfileEditPage({super.key});
 
   @override
-  State<ProfileEditPage> createState() => _ProfileEditPageState();
+  ConsumerState<ProfileEditPage> createState() => _ProfileEditPageState();
+
+
 }
 
-class _ProfileEditPageState extends State<ProfileEditPage> {
+class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
 
   int introCurrentCount = 0;
   int introMaxCount = 30;
@@ -47,7 +47,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     if (result) {
       final response = await ApiService.getProfile();
       if (response != null) {
-        widget.setProfile(response);
+        ref.watch(loginProvider.notifier).setProfile(response);
       }
       Navigator.pop(context);
     }
@@ -58,12 +58,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   getPermission() async {
 
     final status = await Permission.photos.status;
-    if (status.isGranted) {
-      print('사진첩 허락됨');
-    } else if (status.isDenied) {
-      print('사진첩 거절됨');
-      Permission.photos.request();
-    }
+    if (status.isDenied) Permission.photos.request();
   }
 
   selectImage() async {
@@ -88,7 +83,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       print(cropper?.path);
       if (cropper != null) {
         setState(() {
-          widget.userProfile.image = Image.file(File(cropper.path), fit: BoxFit.contain,);
+          // TODO 가능하면 안에서 이미지를 변경시키자
+          ref.read(loginProvider.notifier).state?.image = Image.file(File(cropper.path), fit: BoxFit.contain,);
           editProfileImagePath = cropper.path;
         });
       }
@@ -110,7 +106,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   void initState() {
     _textNicknameController = TextEditingController();
     _textIntroController = TextEditingController(
-      text: widget.userProfile.intro ?? ''
+      text: ref.read(loginProvider.notifier).state!.intro ?? ''
     );
     super.initState();
   }
@@ -154,7 +150,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               },
               child: Stack(
                   children: [
-                    (widget.userProfile.image == null)
+                    (ref.read(loginProvider.notifier).state!.image == null)
                         ? EmptyProfileImage()
                         : Container(
                             width: 100, height: 100,
@@ -162,24 +158,19 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                               borderRadius: BorderRadius.circular(100),
                             ),
                             clipBehavior: Clip.hardEdge,
-                            child: widget.userProfile.image
+                            child: ref.read(loginProvider.notifier).state!.image
                           ),
                     Positioned(
                       bottom: 0, right: 0,
-                      child: GestureDetector(
-                        onTap: () {
-
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: Colors.black,
-                          ),
-                          child: Icon(Icons.camera_alt,
-                            color: Colors.white,
-                            size: 20,
-                          ),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.black,
+                        ),
+                        child: Icon(Icons.camera_alt,
+                          color: Colors.white,
+                          size: 20,
                         ),
                       ),
                     ),
@@ -207,7 +198,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                   ),
-                  hintText: widget.userProfile.name
+                  hintText: ref.read(loginProvider.notifier).state!.name
               ),
 
             ),
@@ -232,14 +223,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                 ),
-                hintText: widget.userProfile.intro ?? '자기소개를 적어주세요.',
+                hintText: ref.read(loginProvider.notifier).state!.intro ?? '자기소개를 적어주세요.',
                 counterText: '$introCurrentCount / $introMaxCount',
                 counterStyle: const TextStyle(fontSize: 14),
               ),
             ),
 
             SizedBox(
-              height: 30,
+              height: 10,
             ),
 
             Row(
@@ -256,10 +247,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     SizedBox(height: 15,),
                     Container(
                       width: 150,
-                      height: 65,
+                      height: 55,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Color(0xFFE9F1FA),
+                        borderRadius: BorderRadius.circular(10),
+                        // color: Color(0xFFE9F1FA),
+                        color: Color(0xFFE6E6E6),
                       ),
                       child: Flex(
                         direction: Axis.horizontal,
@@ -267,14 +259,15 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                           Expanded(
                             flex: 1,
                             child: Container(
-                              decoration: (widget.userProfile.sex == 'F') ? myBoxDecoration : youBoxDecoration ,
+                              margin: EdgeInsets.all(5),
+                              decoration: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myBoxDecoration : youBoxDecoration ,
                               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                               child: Center(
                                 child: Text('여자',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
-                                    color: (widget.userProfile.sex == 'F') ? myTextColor : youTextColor,
+                                    color: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myTextColor : youTextColor,
                                   ),
                                 ),
                               ),
@@ -283,13 +276,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                           Expanded(
                             flex: 1,
                             child: Container(
-                              decoration: (widget.userProfile.sex == 'M') ? myBoxDecoration : youBoxDecoration,
+                              margin: EdgeInsets.all(5),
+                              decoration: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myBoxDecoration : youBoxDecoration,
                               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                               child: Center(child: Text('남자',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color: (widget.userProfile.sex == 'M') ? myTextColor : youTextColor,
+                                  color: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myTextColor : youTextColor,
                                 ),
                               )),
                             ),
@@ -313,13 +307,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       ),
                       SizedBox(height: 15,),
                       Container(
-                        height: 65,
+                        height: 55,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Color(0xFFE9F1FA),
+                          borderRadius: BorderRadius.circular(10),
+                          // color: Color(0xFFE9F1FA),
+                          color: Color(0xFFE6E6E6),
                         ),
                         child: Center(
-                          child: Text('${widget.userProfile.birth}',
+                          child: Text('${ref.read(loginProvider.notifier).state!.birth}',
                             style: TextStyle(
                               color: Color(0xFF3E3E3E),
                               fontSize: 18,
@@ -341,13 +336,17 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   BoxDecoration myBoxDecoration = BoxDecoration(
-    borderRadius: BorderRadius.circular(15),
-    color: Color(0xFFD2E7FE),
+    borderRadius: BorderRadius.circular(10),
+    // color: Color(0xFFD2E7FE),
+    color: Color(0xFFFFFFFF),
   );
   BoxDecoration youBoxDecoration = BoxDecoration(
-    borderRadius: BorderRadius.circular(15),
+    borderRadius: BorderRadius.circular(10),
   );
 
-  Color myTextColor = Color(0xFF3E3E3E);
-  Color youTextColor = Color(0xFF7E7E7E);
+  // Color myTextColor = Color(0xFF3E3E3E);
+  // Color youTextColor = Color(0xFF7E7E7E);
+  Color myTextColor = Color(0xFF000000);
+  Color youTextColor = Color(0xFF959595);
 }
+

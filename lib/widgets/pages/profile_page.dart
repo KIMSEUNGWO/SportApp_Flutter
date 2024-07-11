@@ -21,32 +21,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientMixin {
-  UserProfile? userProfile;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    getUserProfile(context);
-  }
-
-  getUserProfile(BuildContext context) async {
-    final result = await ApiService.getProfile();
-    if (result != null) {
-      setState(() {
-        userProfile = result;
-      });
-    }
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  setUserProfile(UserProfile newProfile) {
-    setState(() {
-      userProfile = newProfile;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,17 +41,9 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
           children: [
             Consumer(
               builder: (context, ref, child) {
-                final isLogin = ref.watch(loginProvider);
-                if (isLogin) {
-                  if (isLoading) {
-                    return CircularProgressIndicator();
-                  } else {
-                    if (userProfile != null) {
-                      return buildUserProfile();
-                    } else {
-                      return EmptyProfile(context);
-                    }
-                  }
+                final profile = ref.watch(loginProvider);
+                if (profile != null) {
+                  return buildUserProfile(profile);
                 } else {
                   return EmptyProfile(context);
                 }
@@ -145,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
     );
   }
 
-  Widget buildUserProfile() {
+  Widget buildUserProfile(UserProfile profile) {
     return Container(
       child: Column(
         children: [
@@ -158,13 +124,13 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                          return ProfileEditPage(setProfile : setUserProfile, userProfile : userProfile!);
+                          return ProfileEditPage();
                         },)
                     );
                   },
                   child: Stack(
                       children: [
-                        (userProfile!.image == null)
+                        (profile.image == null)
                             ? EmptyProfileImage()
                             : Container(
                                 width: 100, height: 100,
@@ -172,7 +138,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                                   borderRadius: BorderRadius.circular(100),
                                 ),
                                 clipBehavior: Clip.hardEdge,
-                                child: userProfile!.image
+                                child: profile.image
                               ),
                         Positioned(
                           bottom: 0, right: 0,
@@ -191,18 +157,18 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                         children: [
                           Row(
                             children: [
-                              Text('${userProfile!.name}',
+                              Text('${profile.name}',
                                 style: TextStyle(
                                     fontSize: 21,
                                     fontWeight: FontWeight.w600
                                 ),
                               ),
-                              (userProfile!.sex == 'M')
+                              (profile.sex == 'M')
                                   ? Icon(Icons.male, color: Color(0xFF5278FF),)
                                   : Icon(Icons.female, color: Color(0xFFFF6666),)
                             ],
                           ),
-                          Text('${userProfile!.birth}',
+                          Text('${profile.birth}',
                             style: TextStyle(
                               color: Colors.grey,
                             ),
@@ -210,8 +176,8 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                         ],
                       ),
                       SizedBox(height: 15,),
-                      if (userProfile?.intro != null)
-                        Text('${userProfile?.intro}',
+                      if (profile.intro != null)
+                        Text('${profile.intro}',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 14
@@ -229,15 +195,15 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
               direction: Axis.horizontal,
               children: [
                 ExtraInfoWidget(
-                  count: userProfile!.groupCount,
+                  count: profile.groupCount,
                   title: '내 모임',
                 ),
                 ExtraInfoWidget(
-                  count: userProfile!.inviteCount,
+                  count: profile.inviteCount,
                   title: '초대받은 모임',
                 ),
                 ExtraInfoWidget(
-                  count: userProfile!.likeCount,
+                  count: profile.likeCount,
                   title: '좋아요한 모임',
                 ),
               ],
@@ -262,11 +228,7 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 GestureDetector(
                   onTap: () {
                     showModalBottomSheet(context: context, builder: (context) {
-                      return LoginPageWidget(
-                        then: () {
-                          getUserProfile(context);
-                        },
-                      );
+                      return LoginPageWidget();
                     },);
                   },
                   child: Row(

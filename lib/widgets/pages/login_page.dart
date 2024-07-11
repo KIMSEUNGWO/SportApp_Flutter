@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/models/login_notifier.dart';
+import 'package:flutter_sport/widgets/pages/register_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,10 +14,13 @@ class LoginPageWidget extends ConsumerWidget {
 
   Function()? then;
 
-  onTryLogin(BuildContext context, WidgetRef ref) {
-    ref.read(loginProvider.notifier).login();
-    if (then != null) then!();
-    Navigator.pop(context);
+
+  onTryLogin(BuildContext context, WidgetRef ref) async {
+    final resultType = await ref.read(loginProvider.notifier).login();
+    if (resultType == ResultType.REGISTER) {
+      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterWidget()));
+    }
   }
 
   @override
@@ -27,7 +32,9 @@ class LoginPageWidget extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 30),
         margin: EdgeInsets.only(bottom: 40),
         child: GestureDetector(
-          onTap: () => onTryLogin(context, ref),
+          onTap: () {
+            onTryLogin(context, ref);
+          },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 20),
             decoration: BoxDecoration(

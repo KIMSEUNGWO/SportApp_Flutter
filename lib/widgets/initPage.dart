@@ -8,7 +8,7 @@ class InitPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(loginProvider.notifier).readUser();
+    ref.watch(loginProvider.notifier).readUser();
     return Main();
   }
 }

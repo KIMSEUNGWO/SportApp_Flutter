@@ -106,8 +106,8 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
             ),
             Consumer(
               builder: (context, ref, child) {
-                final isLogin = ref.watch(loginProvider);
-                if (!isLogin) {
+                final profile = ref.watch(loginProvider);
+                if (profile == null) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 20),
                     child: IconButton(
