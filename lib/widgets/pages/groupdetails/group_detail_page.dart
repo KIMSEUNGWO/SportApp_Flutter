@@ -97,8 +97,10 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
             color: Colors.white,
             child: TabBar(
               controller: _tabController,
-              labelColor: Colors.red,
-              indicatorColor: Colors.red,
+              // labelColor: Colors.red,
+              labelColor: Color(0xFF72A8E6),
+              // indicatorColor: Colors.red,
+              indicatorColor: Color(0xFF72A8E6),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorWeight: 2.5,
               labelStyle: TextStyle(

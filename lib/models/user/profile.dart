@@ -1,11 +1,16 @@
 
 
+import 'dart:ui';
+
+import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/dateformat.dart';
+import 'package:flutter/material.dart';
 
 class UserProfile {
 
-  final String? image;
-  final String name;
+  Image? image;
+  String name;
+  String? intro;
   final String sex;
   final String birth;
 
@@ -16,8 +21,9 @@ class UserProfile {
 
 
   UserProfile.fromJson(Map<String, dynamic> json) :
-    image = json['image'],
+    image = json['image'] == null ? null : Image.network('${ApiService.server}/images/original/profile/${json['image']}', fit: BoxFit.fill,),
     name = json['name'],
+    intro = json['intro'],
     sex = json['sex'],
     birth = json['birth'],
     groupCount = json['groupCount'],

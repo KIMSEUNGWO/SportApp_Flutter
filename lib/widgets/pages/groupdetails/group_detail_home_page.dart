@@ -101,7 +101,8 @@ CustomScrollView는 여러 개의 Sliver 위젯을 렌더링해야 하므로 렌
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    // color: Colors.blue,
+                    color: Color(0xFF72A8E6),
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(

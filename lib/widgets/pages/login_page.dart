@@ -8,10 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginPageWidget extends ConsumerWidget {
 
-  const LoginPageWidget({super.key});
+  LoginPageWidget({super.key, this.then});
+
+  Function()? then;
 
   onTryLogin(BuildContext context, WidgetRef ref) {
     ref.read(loginProvider.notifier).login();
+    if (then != null) then!();
     Navigator.pop(context);
   }
 

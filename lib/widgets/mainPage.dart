@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/api/api_service.dart';
+import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/my_group_page.dart';
 import 'package:flutter_sport/widgets/pages/profile_page.dart';

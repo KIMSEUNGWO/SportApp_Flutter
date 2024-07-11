@@ -25,7 +25,10 @@ dev_dependencies:
   flutter_secure_storage: ^9.2.2 # Flutter Secure Storage
   easy_localization: ^3.0.7 # 언어팩
   flutter_lints: ^3.0.0
-  flutter_riverpod: ^2.5.1
+  flutter_riverpod: ^2.5.1 # 전역 저장소
+  permission_handler: ^11.3.1 # 권한 요청
+  image_picker: ^1.1.2 # 갤러리 이미지 선택
+  image_cropper: ^7.1.0 # 이미지 편집
 
 flutter:
   uses-material-design: true

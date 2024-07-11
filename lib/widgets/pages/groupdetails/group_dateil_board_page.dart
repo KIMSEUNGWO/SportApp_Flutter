@@ -34,11 +34,11 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
                         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFFEAEAEA),
+                          color: const Color(0xFFE9F1FA),
                         ),
                         child: Text('groupBoardMenus',
                           style: const TextStyle(
-                            fontSize: 15,
+                            fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF433F3F),
                           ),

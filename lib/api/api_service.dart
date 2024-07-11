@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter_sport/api/error_handler.dart';
 import 'package:flutter_sport/api/line_api.dart';
@@ -27,7 +28,6 @@ class ApiService {
     );
     return response.statusCode == 200;
   }
-
   static Future<bool> _refreshingAccessToken() async {
     final response = await http.post(Uri.parse('$server/social/token'),
         headers: {
@@ -107,16 +107,29 @@ class ApiService {
   }
 
   static Future<bool> readUser() async {
-    final isValid = await _checkAccessToken();
-    if (isValid) return true;
-
-    final refresh = await _refreshingAccessToken();
-    if (refresh) {
-      return true;
-    }
-    return false;
+    if (await _checkAccessToken()) return true;
+    return await _refreshingAccessToken();
   }
 
 
+  static Future<bool> editProfile({required String? profilePath, required String? nickname, required String intro }) async {
+    var request = http.MultipartRequest('POST', Uri.parse('$server/user/edit'));
+    request.headers.addAll({
+      "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
+      "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+    });
+
+    if (profilePath != null) {
+      request.files.add(await http.MultipartFile.fromPath('image', profilePath));
+    }
+    if (nickname != null) {
+      request.fields['nickName'] = nickname;
+    }
+
+    request.fields['intro'] = intro;
+
+    final response = await request.send();
+    return response.statusCode == 200;
+  }
 
 }

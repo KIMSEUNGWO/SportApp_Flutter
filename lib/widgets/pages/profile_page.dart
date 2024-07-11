@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/models/alert.dart';
 import 'package:flutter_sport/models/component.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_sport/models/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/language_settings.dart';
 import 'package:flutter_sport/widgets/pages/login_page.dart';
+import 'package:flutter_sport/widgets/pages/profile_edit_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,6 +39,12 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
     }
     setState(() {
       isLoading = false;
+    });
+  }
+
+  setUserProfile(UserProfile newProfile) {
+    setState(() {
+      userProfile = newProfile;
     });
   }
 
@@ -138,57 +147,78 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
 
   Widget buildUserProfile() {
     return Container(
-      height: 180,
       child: Column(
         children: [
           Container(
             margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Stack(
-                    children: [
-                      (userProfile!.image == null)
-                          ? EmptyProfileImage()
-                          : Container(
-                        width: 100, height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                        child: Image.network('${ApiService.server}/images/profile/${userProfile!.image}', fit: BoxFit.fill,),
-                      ),
-                      Positioned(
-                        bottom: 0, right: 0,
-                        child: GestureDetector(
-                          onTap: () => print('Edit Profile'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                          return ProfileEditPage(setProfile : setUserProfile, userProfile : userProfile!);
+                        },)
+                    );
+                  },
+                  child: Stack(
+                      children: [
+                        (userProfile!.image == null)
+                            ? EmptyProfileImage()
+                            : Container(
+                                width: 100, height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                                child: userProfile!.image
+                              ),
+                        Positioned(
+                          bottom: 0, right: 0,
                           child: SvgPicture.asset('assets/icons/edit.svg', width: 30,),
                         ),
-                      ),
-                    ]
+                      ]
+                  ),
                 ),
                 const SizedBox(width: 20,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text('${userProfile!.name}',
-                          style: TextStyle(
-                              fontSize: 21,
-                              fontWeight: FontWeight.w600
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text('${userProfile!.name}',
+                                style: TextStyle(
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.w600
+                                ),
+                              ),
+                              (userProfile!.sex == 'M')
+                                  ? Icon(Icons.male, color: Color(0xFF5278FF),)
+                                  : Icon(Icons.female, color: Color(0xFFFF6666),)
+                            ],
                           ),
-                        ),
-                        (userProfile!.sex == 'M')
-                            ? Icon(Icons.male, color: Color(0xFF5278FF),)
-                            : Icon(Icons.female, color: Color(0xFFFF6666),)
-                      ],
-                    ),
-                    Text('${userProfile!.birth}',
-                      style: TextStyle(
-                        color: Colors.grey,
+                          Text('${userProfile!.birth}',
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 15,),
+                      if (userProfile?.intro != null)
+                        Text('${userProfile?.intro}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -232,7 +262,11 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 GestureDetector(
                   onTap: () {
                     showModalBottomSheet(context: context, builder: (context) {
-                      return LoginPageWidget();
+                      return LoginPageWidget(
+                        then: () {
+                          getUserProfile(context);
+                        },
+                      );
                     },);
                   },
                   child: Row(
@@ -276,20 +310,22 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
     );
   }
 
-  Container EmptyProfileImage() {
-    return Container(
-      width: 100, height: 100,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        color: Color(0xFFB1ACAC),
-      ),
-      clipBehavior: Clip.hardEdge,
-      child: Icon(Icons.person, size: 100, color: Color(0xFF979696),),
-    );
-  }
+
 
   @override
   bool get wantKeepAlive => true;
+}
+
+Container EmptyProfileImage() {
+  return Container(
+    width: 100, height: 100,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(100),
+      color: Color(0xFFB1ACAC),
+    ),
+    clipBehavior: Clip.hardEdge,
+    child: Icon(Icons.person, size: 100, color: Color(0xFF979696),),
+  );
 }
 
 
