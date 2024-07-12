@@ -173,6 +173,14 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                       region: '신주쿠구',
                       personCount: 3,
                     ),
+                    SmallListWidget(
+                      id: 2,
+                      title: 'ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ',
+                      intro: 'ㅁㄴㅇㄹㅁㄹㄹ',
+                      sportType: '야구',
+                      region: '신주쿠구',
+                      personCount: 3,
+                    ),
                   ],
                 ),
               ],
@@ -380,6 +388,8 @@ class _InfinityBannerState extends State<InfinityBanner> {
                   onPageChanged: (index, reason) {
                     onBannerChanged(index + 1);
                   },
+                  enlargeCenterPage: true,
+                  enlargeFactor: 0.2
                 ),
                 items: banners.toList(),
               ),
@@ -429,12 +439,9 @@ class BannerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final double screenSize = MediaQuery.of(context).size.width;
-
     return Container(
       padding: const EdgeInsets.only(left: 20),
-      width: min(screenSize - (2 * margin) - 30, 470),
+      // width: min(screenSize - (2 * margin) - 30, 470),
       height: double.infinity,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: color),
       child: Stack(

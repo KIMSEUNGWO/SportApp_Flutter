@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 
 class SmallListWidget extends StatelessWidget {
 
   final int id;
-  final Image image;
+  Image? image;
   final String title;
   final String intro;
   final String sportType;
@@ -15,10 +16,10 @@ class SmallListWidget extends StatelessWidget {
   final int personCount;
   final EdgeInsets? padding;
 
-  const SmallListWidget({
+  SmallListWidget({
     super.key,
     required this.id,
-    required this.image,
+    this.image,
     required this.title,
     required this.intro,
     required this.sportType,
@@ -44,13 +45,14 @@ class SmallListWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 65, height: 65,
-              margin: const EdgeInsets.only(right: 15),
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: image,
+                width: 65, height: 65,
+                margin: const EdgeInsets.only(right: 15),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  color: Color(0xFFE4E4E4),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: image ?? Center(child: SvgPicture.asset('assets/icons/emptyGroupImage.svg', width: 40, height: 40, color: Color(0xFF878181),))
             ),
             Expanded(
               child: Column(
@@ -94,6 +96,7 @@ class SmallListWidget extends StatelessWidget {
                       dot(),
                       Text(region, style: detailStyle),
                       dot(),
+                      Icon(Icons.people_alt, size: 17, color: Color(0xFF707072),),
                       Text('person'.tr(args: [personCount.toString()]), style: detailStyle)
                     ],
                   )

@@ -48,7 +48,7 @@
     "days" : "{}일 전",
     "months" : "{}달 전"
   },
-  "person" : "멤버 {}명",
+  "person" : "{}명",
 
   "groupMenus" : {
     "home" : "홈",

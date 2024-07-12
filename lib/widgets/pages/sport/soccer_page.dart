@@ -25,6 +25,7 @@ class SoccerPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        scrolledUnderElevation: 0,
         title: Text('sportTitle').tr(gender: label),
         actions: [
           Padding(
