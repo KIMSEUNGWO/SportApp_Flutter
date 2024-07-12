@@ -5,17 +5,18 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/image_cropper.dart';
+import 'package:flutter_sport/models/alert.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
-import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/profile_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:image_cropper/image_cropper.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+import '../../api/error_handler.dart';
 
 
 class ProfileEditPage extends ConsumerStatefulWidget {
@@ -33,37 +34,45 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   int introCurrentCount = 0;
   int introMaxCount = 30;
   String? editProfileImagePath;
+  late Image? editImage;
 
   late TextEditingController _textNicknameController;
   late TextEditingController _textIntroController;
 
-  editProfile() async {
-    bool result = await ApiService.editProfile(
+  editProfile(BuildContext context) async {
+    ErrorCode result = await ApiService.editProfile(
       profilePath: editProfileImagePath,
       nickname: _textNicknameController.text,
       intro: _textIntroController.text
     );
 
-    if (result) {
+    if (result == ErrorCode.OK) {
       final response = await ApiService.getProfile();
       if (response != null) {
         ref.watch(loginProvider.notifier).setProfile(response);
       }
       Navigator.pop(context);
+      return;
+    } else if (result == ErrorCode.MAX_UPLOAD_SIZE_EXCEEDED) {
+      setState(() {
+        editImage = ref.read(loginProvider.notifier).state?.image;
+      });
+      Alert.message(context: context, text: Text('이미지 용량이 초과되었습니다.'), onPressed: (){});
     }
 
 
   }
 
-  getPermission() async {
-
+  Future<PermissionStatus> getPermission() async {
     final status = await Permission.photos.status;
-    if (status.isDenied) Permission.photos.request();
+    if (status.isDenied) {
+      return Permission.photos.request();
+    }
+    return PermissionStatus.granted;
   }
 
   selectImage() async {
-    getPermission();
-    final status = await Permission.photos.status;
+    final status = await getPermission();
     if (status.isGranted) {
       getImage();
     } else {
@@ -78,13 +87,11 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
 
     if (image != null) {
       // 선택한 이미지 경로 사용
-      print('이미지 경로: ${image.path}');
       final cropper = await ImageCroppers().getCropper(image, context);
-      print(cropper?.path);
       if (cropper != null) {
         setState(() {
           // TODO 가능하면 안에서 이미지를 변경시키자
-          ref.read(loginProvider.notifier).state?.image = Image.file(File(cropper.path), fit: BoxFit.contain,);
+          editImage = Image.file(File(cropper.path), fit: BoxFit.contain,);
           editProfileImagePath = cropper.path;
         });
       }
@@ -108,6 +115,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     _textIntroController = TextEditingController(
       text: ref.read(loginProvider.notifier).state!.intro ?? ''
     );
+    editImage = ref.read(loginProvider.notifier).state!.image;
     super.initState();
   }
 
@@ -121,215 +129,224 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: false,
-        title: Text('프로필 수정'),
+        title: Text('profile').tr(gender: 'editProfile'),
         actions: [
           GestureDetector(
-            onTap: () => editProfile(),
+            onTap: () => editProfile(context),
             child: Container(
               margin: EdgeInsets.only(right: 20),
-              child: Text('저장',
+              child: Text('save',
                 style: TextStyle(
                     fontSize: 21,
                     fontWeight: FontWeight.w500
                 ),
-              ),
+              ).tr(),
             ),
           ),
         ],
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GestureDetector(
-              onTap: () {
-                selectImage();
-              },
-              child: Stack(
-                  children: [
-                    (ref.read(loginProvider.notifier).state!.image == null)
-                        ? EmptyProfileImage()
-                        : Container(
-                            width: 100, height: 100,
+      body: SingleChildScrollView(
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            decoration: BoxDecoration(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    selectImage();
+                  },
+                  child: Stack(
+                      children: [
+                        (editImage == null)
+                            ? EmptyProfileImage()
+                            : Container(
+                                width: 100, height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                                child: editImage
+                              ),
+                        Positioned(
+                          bottom: 0, right: 0,
+                          child: Container(
+                            padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
+                              color: Colors.black,
                             ),
-                            clipBehavior: Clip.hardEdge,
-                            child: ref.read(loginProvider.notifier).state!.image
+                            child: Icon(Icons.camera_alt,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                           ),
-                    Positioned(
-                      bottom: 0, right: 0,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.black,
                         ),
-                        child: Icon(Icons.camera_alt,
-                          color: Colors.white,
-                          size: 20,
-                        ),
+                      ]
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text('user',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ).tr(gender: 'nickname'),
+                TextField(
+                  controller: _textNicknameController,
+                  style: TextStyle(
+                    fontSize: 21,
+                  ),
+                  decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                       ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                      ),
+                      hintText: ref.read(loginProvider.notifier).state!.name
+                  ),
+
+                ),
+                SizedBox(height: 30,),
+                Text('user',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ).tr(gender: 'introduce'),
+                TextFormField(
+                  controller: _textIntroController,
+
+                  keyboardType: TextInputType.multiline,
+                  onChanged: (text) => validLengthText(text),
+                  maxLines: null,
+                  style: const TextStyle(fontSize: 17),
+                  decoration: InputDecoration(
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                     ),
-                  ]
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Text('닉네임',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            TextField(
-              controller: _textNicknameController,
-              style: TextStyle(
-                fontSize: 21,
-              ),
-              decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                    ),
+                    hintText: ref.read(loginProvider.notifier).state!.intro ?? '자기소개를 적어주세요.',
+                    counterText: '$introCurrentCount / $introMaxCount',
+                    counterStyle: const TextStyle(fontSize: 14),
                   ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
-                  ),
-                  hintText: ref.read(loginProvider.notifier).state!.name
-              ),
-
-            ),
-            SizedBox(height: 30,),
-            Text('자기소개',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            TextFormField(
-              controller: _textIntroController,
-
-              keyboardType: TextInputType.multiline,
-              onChanged: (text) => validLengthText(text),
-              maxLines: null,
-              style: const TextStyle(fontSize: 17),
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+
+                SizedBox(
+                  height: 10,
                 ),
-                hintText: ref.read(loginProvider.notifier).state!.intro ?? '자기소개를 적어주세요.',
-                counterText: '$introCurrentCount / $introMaxCount',
-                counterStyle: const TextStyle(fontSize: 14),
-              ),
-            ),
 
-            SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text('성별',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 15,),
-                    Container(
-                      width: 150,
-                      height: 55,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        // color: Color(0xFFE9F1FA),
-                        color: Color(0xFFE6E6E6),
-                      ),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              margin: EdgeInsets.all(5),
-                              decoration: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myBoxDecoration : youBoxDecoration ,
-                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                              child: Center(
-                                child: Text('여자',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myTextColor : youTextColor,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('user',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ).tr(gender: 'sex'),
+                        SizedBox(height: 15,),
+                        Container(
+                          width: 150,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            // color: Color(0xFFE9F1FA),
+                            color: Color(0xFFE6E6E6),
+                          ),
+                          child: Flex(
+                            direction: Axis.horizontal,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  decoration: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myBoxDecoration : youBoxDecoration ,
+                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                  child: Center(
+                                    child: Text('female',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myTextColor : youTextColor,
+                                      ),
+                                    ).tr(),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              margin: EdgeInsets.all(5),
-                              decoration: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myBoxDecoration : youBoxDecoration,
-                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                              child: Center(child: Text('남자',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myTextColor : youTextColor,
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  decoration: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myBoxDecoration : youBoxDecoration,
+                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                  child: Center(
+                                    child: Text('male',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myTextColor : youTextColor,
+                                      ),
+                                    ).tr()
+                                  ),
                                 ),
-                              )),
-                            ),
+                              ),
+                            ],
                           ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 15,),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('user',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ).tr(gender: 'birthday'),
+                          SizedBox(height: 15,),
+                          Container(
+                            height: 55,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              // color: Color(0xFFE9F1FA),
+                              color: Color(0xFFE6E6E6),
+                            ),
+                            child: Center(
+                              child: Text('${ref.read(loginProvider.notifier).state!.birth}',
+                                style: TextStyle(
+                                  color: Color(0xFF3E3E3E),
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(width: 15,),
 
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('생년월일',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 15,),
-                      Container(
-                        height: 55,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          // color: Color(0xFFE9F1FA),
-                          color: Color(0xFFE6E6E6),
-                        ),
-                        child: Center(
-                          child: Text('${ref.read(loginProvider.notifier).state!.birth}',
-                            style: TextStyle(
-                              color: Color(0xFF3E3E3E),
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                  ],
                 ),
 
               ],
             ),
-
-          ],
+          ),
         ),
       ),
     );

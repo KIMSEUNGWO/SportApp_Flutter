@@ -11,9 +11,13 @@ class ErrorHandler {
 }
 
 enum ErrorCode {
+  OK,
+
   TOKEN_EXPIRED,
 
   ACCESS_TOKEN_REQUIRE,
+
+  MAX_UPLOAD_SIZE_EXCEEDED,
 
   INVALID_ERROR;
 

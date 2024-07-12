@@ -25,7 +25,8 @@
     "baseball" : "ベースボール",
     "tennis" : "テニス",
     "badminton" : "バドミントン",
-    "basketball" : "バスケ"
+    "basketball" : "バスケ",
+    "running" : "ランニング"
   },
 
   "recentlySearchGroups" : "最近見たグループ",
@@ -63,5 +64,43 @@
     "notice" : "お知らせ",
     "firstComment": "加入人事",
     "openBoard": "自由掲示板"
-  }
+  },
+
+  "user" : {
+    "nickname" : "別名",
+    "introduce" : "自己紹介",
+    "sex" : "性別",
+    "birthday" : "誕生日"
+  },
+
+  "male" : "男",
+  "female" : "女",
+
+  "profile" : {
+    "editProfile" : "プローフィル 修正",
+    "myGroup" : "マイグループ",
+    "inviteGroup" : "招待",
+    "favoriteGroup" : "興味"
+  },
+
+  "signup" : {
+    "signup" : "会員登録",
+    "nicknameHintText" : "別名を書いてください。",
+    "nicknameErrorMessage" : "別名は2~8字内でお願いします。",
+    "nicknameDistinct" : "重複確認",
+    "isDistinctNickname" : "この別名はもう使っています。",
+    "isEnableNickname" : "この別名は使用可能です。",
+
+    "introHintText" : "自己紹介を書いてください。",
+
+    "alert-nickname" : "別名をもう一度書いてください。",
+    "alert-nickname-distinct" : "他の人が先に別名を登録しました、他の別名を書いてください。",
+    "alert-sex" : "性別を選択してください。",
+    "alert-birthday" : "誕生日を選択してください。"
+
+  },
+
+  "save" : "保存",
+  "complete" : "完了",
+  "goToLogin" : "ログイン"
 }

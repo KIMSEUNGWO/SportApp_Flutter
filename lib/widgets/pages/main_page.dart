@@ -199,36 +199,81 @@ class Menus extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        child: Column(
           children: [
-            Menu(
-              page: SoccerPage(label : 'soccer'),
-              assetSvg: 'assets/icons/soccer.svg',
-              label: 'soccer',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Menu(
+                  page: SoccerPage(label : 'soccer'),
+                  assetSvg: 'assets/icons/soccer.svg',
+                  label: 'soccer',
+                ),
+                Menu(
+                  page: SoccerPage(label : 'baseball'),
+                  assetSvg: 'assets/icons/baseball.svg',
+                  label: 'baseball',
+                ),
+                Menu(
+                  page: SoccerPage(label : 'badminton'),
+                  assetSvg: 'assets/icons/badminton.svg',
+                  label: 'badminton',
+                ),
+              ],
             ),
-            Menu(
-              page: SoccerPage(label : 'baseball'),
-              assetSvg: 'assets/icons/baseball.svg',
-              label: 'baseball',
-            ),
-            Menu(
-              page: SoccerPage(label : 'tennis'),
-              assetSvg: 'assets/icons/tennis.svg',
-              label: 'tennis',
-            ),
-            Menu(
-              page: SoccerPage(label : 'badminton'),
-              assetSvg: 'assets/icons/badminton.svg',
-              label: 'badminton',
-            ),
-            Menu(
-              page: SoccerPage(label : 'basketball'),
-              assetSvg: 'assets/icons/basketball.svg',
-              label: 'basketball',
+            SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Menu(
+                  page: SoccerPage(label : 'tennis'),
+                  assetSvg: 'assets/icons/tennis.svg',
+                  label: 'tennis',
+                ),
+                Menu(
+                  page: SoccerPage(label : 'basketball'),
+                  assetSvg: 'assets/icons/basketball.svg',
+                  label: 'basketball',
+                ),
+                Menu(
+                  page: SoccerPage(label : 'running'),
+                  assetSvg: 'assets/icons/trainers.svg',
+                  label: 'running',
+                ),
+              ],
             ),
           ],
         ),
+        // child: Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //   children: [
+        //     Menu(
+        //       page: SoccerPage(label : 'soccer'),
+        //       assetSvg: 'assets/icons/soccer.svg',
+        //       label: 'soccer',
+        //     ),
+        //     Menu(
+        //       page: SoccerPage(label : 'baseball'),
+        //       assetSvg: 'assets/icons/baseball.svg',
+        //       label: 'baseball',
+        //     ),
+        //     Menu(
+        //       page: SoccerPage(label : 'tennis'),
+        //       assetSvg: 'assets/icons/tennis.svg',
+        //       label: 'tennis',
+        //     ),
+        //     Menu(
+        //       page: SoccerPage(label : 'badminton'),
+        //       assetSvg: 'assets/icons/badminton.svg',
+        //       label: 'badminton',
+        //     ),
+        //     Menu(
+        //       page: SoccerPage(label : 'basketball'),
+        //       assetSvg: 'assets/icons/basketball.svg',
+        //       label: 'basketball',
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }
@@ -253,12 +298,15 @@ class Menu extends StatelessWidget {
             )
         );
       },
-      child: Column(
-        children: [
-          SvgPicture.asset(assetSvg),
-          const SizedBox(height: 6,),
-          Text('sportTitle').tr(gender: label),
-        ],
+      child: SizedBox(
+        width: 100,
+        child: Column(
+          children: [
+            SvgPicture.asset(assetSvg),
+            const SizedBox(height: 6,),
+            Text('sportTitle').tr(gender: label),
+          ],
+        ),
       ),
     );
   }
@@ -326,8 +374,8 @@ class _InfinityBannerState extends State<InfinityBanner> {
                   aspectRatio: 16 / 9, // 슬라이드의 가로세로 비율 조정
                   viewportFraction: 0.88, // 각 슬라이드의 크기 조정 (0.8 = 80%)
                   height: double.infinity,
-                  // autoPlay: true,
-                  // autoPlayInterval: const Duration(seconds: 10),
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 7),
                   scrollDirection: Axis.horizontal,
                   onPageChanged: (index, reason) {
                     onBannerChanged(index + 1);
@@ -391,6 +439,11 @@ class BannerCard extends StatelessWidget {
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: color),
       child: Stack(
         children: [
+          Positioned(
+              top: top ?? 10,
+              right: right ?? 10,
+              child: image
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -448,11 +501,7 @@ class BannerCard extends StatelessWidget {
               )
             ],
           ),
-          Positioned(
-            top: top ?? 10,
-            right: right ?? 10,
-            child: image
-          ),
+
         ]
       ),
     );

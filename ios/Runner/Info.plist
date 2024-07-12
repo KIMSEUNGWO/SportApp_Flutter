@@ -43,6 +43,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>lineauth2</string>
+		<string>https</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

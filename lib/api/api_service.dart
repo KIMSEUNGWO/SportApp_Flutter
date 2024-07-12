@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/src/services/text_input.dart';
 import 'package:flutter_sport/api/api_result.dart';
+import 'package:flutter_sport/api/error_handler.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
 import 'package:flutter_sport/models/user/profile.dart';
@@ -12,7 +13,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  static const String server = "http://localhost:8080";
+  static const String server = "http://172.30.1.53:8080";
   static const Map<String, String>  headers = {
     "Content-Type" : "application/json",
     "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"
@@ -63,7 +64,7 @@ class ApiService {
 
   static Future<ResultType> login({required String userId, required String provider, required String accessToken}) async {
 
-    final response = await http.post(Uri.parse('$server/social/login'),
+    final response = await http.post(Uri.parse('$server/social/login',),
         headers: headers,
         body: jsonEncode({
           "socialId" : userId,
@@ -116,7 +117,7 @@ class ApiService {
   }
 
 
-  static Future<bool> editProfile({required String? profilePath, required String? nickname, required String intro }) async {
+  static Future<ErrorCode> editProfile({required String? profilePath, required String? nickname, required String intro }) async {
     var request = http.MultipartRequest('POST', Uri.parse('$server/user/edit'));
     request.headers.addAll({
       "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
@@ -129,11 +130,13 @@ class ApiService {
     if (nickname != null) {
       request.fields['nickName'] = nickname;
     }
-
     request.fields['intro'] = intro;
 
     final response = await request.send();
-    return response.statusCode == 200;
+
+    final responseBody = await response.stream.bytesToString();
+    final json = jsonDecode(responseBody);
+    return ErrorCode.valueOf(json['result']);
   }
 
   static isDistinctNickname(String nickname) async {

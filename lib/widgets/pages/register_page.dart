@@ -8,6 +8,7 @@ import 'package:flutter_sport/models/alert.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../notifiers/login_notifier.dart';
 
@@ -102,7 +103,7 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                 CupertinoButton(
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text('완료'),
+                    child: Text('complete').tr(),
                   ),
                   onPressed: () {
                     _confirmDate = _selectedDate;
@@ -155,23 +156,23 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
   submit(BuildContext context) async {
     bool isValidNickname = validNicknameLength(_textNicknameController.text);
     if (!isValidNickname) {
-      Alert.message(context: context, text: Text('닉네임을 다시 작성해주세요.'), onPressed: () {},);
+      Alert.message(context: context, text: Text('signup').tr(gender: 'alert-nickname'), onPressed: () {},);
       _textNicknameController.text = '';
       return;
     }
     await tryDistinctNickname();
     if (isDistinct != null && isDistinct!) {
-      Alert.message(context: context, text: Text('누군가 닉네임을 가로챘어요. 다시 설정해주세요.'), onPressed: () {} );
+      Alert.message(context: context, text: Text('signup').tr(gender: 'alert-nickname-distinct'), onPressed: () {} );
       return;
     }
     if (sex != 'M' && sex != 'F') {
-      Alert.message(context: context, text: Text('성별을 다시 선택해주세요.'), onPressed: (){});
+      Alert.message(context: context, text: Text('signup').tr(gender: 'alert-sex'), onPressed: (){});
       setState(() => sex = 'M');
       return;
     }
 
     if (_confirmDate == null) {
-      Alert.message(context: context, text: Text('생년월일을 선택해주세요.'), onPressed: (){});
+      Alert.message(context: context, text: Text('signup').tr(gender: 'alert-birthday'), onPressed: (){});
       return;
     }
     final response = await ref.watch(loginProvider.notifier).register(
@@ -189,242 +190,249 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('회원가입'),
+        title: Text('signup').tr(gender: 'signup'),
         actions: [
           GestureDetector(
             onTap: () => submit(context),
             child: Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Text('완료',
+              child: Text('complete',
                 style: TextStyle(
                   fontSize: 19,
                 ),
-              ),
+              ).tr(),
             ),
           )
         ],
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 30,
-            ),
-            Text('닉네임',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          decoration: BoxDecoration(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 30,
               ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _textNicknameController,
-                    style: TextStyle(
-                      fontSize: 17,
-                    ),
-                    onChanged: (text) {
-                      setState(() {
-                        isDistinct = null;
-                        validNicknameLength(text);
-                      });
-                    },
-                    decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
-                        ),
-                        hintText: '사용할 닉네임을 적어주세요.'
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => distinctNickname(),
-                  child: Container(
-                    width: 100,
-                    height: 50,
-                    margin: EdgeInsets.only(left: 20),
-                    decoration: BoxDecoration(
-                      color: !isLoading ? Color(0xFF72A8E6) : Colors.grey,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: Center(
-                      child: Text('중복확인',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 10,),
-            if (!isValidNicknameLength)
-              Text('닉네임은 2~8자만 가능합니다.',
+              Text('user',
                 style: TextStyle(
-                    color: Color(0xFFFF4F4F)
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
-              ),
-
-            if (isDistinct != null)
-              Text(isDistinct! ? '중복된 닉네임 입니다.' : '사용 가능한 닉네임 입니다.',
-                style: TextStyle(
-                  color: isDistinct! ? Color(0xFFFF4F4F) : Color(0xFF2EA637)
-                ),
-              ),
-            SizedBox(height: 20,),
-            Text('자기소개',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            TextFormField(
-              controller: _textIntroController,
-
-              keyboardType: TextInputType.multiline,
-              onChanged: (text) => validLengthText(text),
-              maxLines: null,
-              style: const TextStyle(fontSize: 17),
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
-                ),
-                hintText: '자기소개를 적어주세요.',
-                counterText: '$introCurrentCount / $introMaxCount',
-                counterStyle: const TextStyle(fontSize: 14),
-              ),
-            ),
-
-            SizedBox(
-              height: 10,
-            ),
-
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('성별',
+              ).tr(gender: 'nickname'),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _textNicknameController,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 17,
+                      ),
+                      onChanged: (text) {
+                        setState(() {
+                          isDistinct = null;
+                          validNicknameLength(text);
+                        });
+                      },
+                      decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                          ),
+                          hintText: 'signup'.tr(gender: 'nicknameHintText')
                       ),
                     ),
-                    SizedBox(height: 15,),
-                    Container(
-                      width: 150,
+                  ),
+                  GestureDetector(
+                    onTap: () => distinctNickname(),
+                    child: Container(
+                      width: 100,
                       height: 50,
+                      margin: EdgeInsets.only(left: 20),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        // color: Color(0xFFE9F1FA),
-                        color: Color(0xFFE6E6E6),
+                        color: !isLoading ? Color(0xFF72A8E6) : Colors.grey,
+                        borderRadius: BorderRadius.circular(10)
                       ),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () => changeSex('F'),
-                              child: Container(
-                                margin: EdgeInsets.all(5),
-                                decoration: (sex == 'F') ? myBoxDecoration : youBoxDecoration ,
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                child: Center(
-                                  child: Text('여자',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: (sex == 'F') ? myTextColor : youTextColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                      child: Center(
+                        child: Text('signup',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () => changeSex('M'),
-                              child: Container(
-                                margin: EdgeInsets.all(5),
-                                decoration: (sex == 'M') ? myBoxDecoration : youBoxDecoration,
-                                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                child: Center(child: Text('남자',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: (sex == 'M') ? myTextColor : youTextColor,
-                                  ),
-                                )),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ).tr(gender: 'nicknameDistinct'),
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(width: 15,),
+                  )
+                ],
+              ),
+              SizedBox(height: 10,),
+              if (!isValidNicknameLength)
+                Text('signup',
+                  style: TextStyle(
+                      color: Color(0xFFFF4F4F)
+                  ),
+                ).tr(gender: 'nicknameErrorMessage', args: ['2', '8']),
 
-                Expanded(
-                  child: Column(
+              if (isDistinct != null)
+                Text(isDistinct! ? 'signup'.tr(gender: 'isDistinctNickname') : 'signup'.tr(gender: 'isEnableNickname'),
+                  style: TextStyle(
+                    color: isDistinct! ? Color(0xFFFF4F4F) : Color(0xFF2EA637)
+                  ),
+                ),
+              SizedBox(height: 20,),
+              Text('user',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ).tr(gender: 'introduce'),
+              TextFormField(
+                controller: _textIntroController,
+
+                keyboardType: TextInputType.multiline,
+                onChanged: (text) => validLengthText(text),
+                maxLines: null,
+                style: const TextStyle(fontSize: 17),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                  ),
+                  hintText: 'signup'.tr(gender: 'introHintText'),
+                  counterText: '$introCurrentCount / $introMaxCount',
+                  counterStyle: const TextStyle(fontSize: 14),
+                ),
+              ),
+
+              SizedBox(
+                height: 10,
+              ),
+
+              Row(
+                children: [
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('생년월일',
+                      Text('user',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
-                      ),
+                      ).tr(gender: 'sex'),
                       SizedBox(height: 15,),
                       Container(
+                        width: 150,
                         height: 50,
-                        padding: EdgeInsets.symmetric(horizontal: 15),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           // color: Color(0xFFE9F1FA),
                           color: Color(0xFFE6E6E6),
                         ),
-                        child: TextField(
-                          controller: _dateController,
-                          readOnly: true,
-                          style: TextStyle(
-                            color: Color(0xFF3E3E3E),
-                            fontSize: 16,
-                          ),
-                          decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFFFFFFF).withOpacity(0)),
+                        child: Flex(
+                          direction: Axis.horizontal,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: () => changeSex('F'),
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  decoration: (sex == 'F') ? myBoxDecoration : youBoxDecoration ,
+                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                  child: Center(
+                                    child: Text('female',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: (sex == 'F') ? myTextColor : youTextColor,
+                                      ),
+                                    ).tr(),
+                                  ),
+                                ),
+                              ),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFFFFFFF).withOpacity(0)),
+                            Expanded(
+                              flex: 1,
+                              child: GestureDetector(
+                                onTap: () => changeSex('M'),
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  decoration: (sex == 'M') ? myBoxDecoration : youBoxDecoration,
+                                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                  child: Center(
+                                    child: Text('male',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: (sex == 'M') ? myTextColor : youTextColor,
+                                      ),
+                                    ).tr()
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          onTap: () => _selectDate(context),
+                          ],
                         ),
-                      )
+                      ),
                     ],
                   ),
-                ),
+                  SizedBox(width: 15,),
 
-              ],
-            ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('user',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ).tr(gender: 'birthday'),
+                        SizedBox(height: 15,),
+                        Container(
+                          height: 50,
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            // color: Color(0xFFE9F1FA),
+                            color: Color(0xFFE6E6E6),
+                          ),
+                          child: TextField(
+                            controller: _dateController,
+                            readOnly: true,
+                            style: TextStyle(
+                              color: Color(0xFF3E3E3E),
+                              fontSize: 16,
+                            ),
+                            decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFFFFFFFF).withOpacity(0)),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFFFFFFFF).withOpacity(0)),
+                              ),
+                            ),
+                            onTap: () => _selectDate(context),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
 
-          ],
+                ],
+              ),
+
+            ],
+          ),
         ),
       ),
     );

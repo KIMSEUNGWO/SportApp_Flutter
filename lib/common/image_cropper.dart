@@ -32,7 +32,9 @@ class ImageCroppers {
             CropAspectRatioPreset.square,
             CropAspectRatioPresetCustom(), // IMPORTANT: iOS supports only one custom aspect ratio in preset list
           ],
-
+        ),
+        WebUiSettings(
+          context: context,
         ),
       ],
     );

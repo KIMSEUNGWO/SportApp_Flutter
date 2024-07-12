@@ -12,6 +12,7 @@ import 'package:flutter_sport/widgets/pages/profile_edit_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -196,15 +197,15 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
               children: [
                 ExtraInfoWidget(
                   count: profile.groupCount,
-                  title: '내 모임',
+                  title: 'profile'.tr(gender: 'myGroup',),
                 ),
                 ExtraInfoWidget(
                   count: profile.inviteCount,
-                  title: '초대받은 모임',
+                  title: 'profile'.tr(gender: 'inviteGroup'),
                 ),
                 ExtraInfoWidget(
                   count: profile.likeCount,
-                  title: '좋아요한 모임',
+                  title: 'profile'.tr(gender: 'favoriteGroup'),
                 ),
               ],
             ),
@@ -233,12 +234,12 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                   },
                   child: Row(
                     children: [
-                      Text('로그인하러 가기',
+                      Text('goToLogin',
                         style: TextStyle(
                             fontSize: 21,
                             fontWeight: FontWeight.w600
                         ),
-                      ),
+                      ).tr(),
                       SizedBox(width: 5,),
                       Icon(Icons.arrow_forward_ios, size: 18,)
                     ],
@@ -306,7 +307,13 @@ class ExtraInfoWidget extends StatelessWidget {
       child: Column(
         children: [
           Text(count.toString(),  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
-          Text(title,),
+          Text(title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              letterSpacing: 1.2,
+            ),
+          ),
         ],
       ),
     );
