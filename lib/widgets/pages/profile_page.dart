@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/models/alert.dart';
 import 'package:flutter_sport/models/component.dart';
-import 'package:flutter_sport/models/login_notifier.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/language_settings.dart';
 import 'package:flutter_sport/widgets/pages/login_page.dart';

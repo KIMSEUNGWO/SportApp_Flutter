@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../models/login_notifier.dart';
+import '../../notifiers/login_notifier.dart';
 
 
 class RegisterWidget extends ConsumerStatefulWidget {
@@ -30,12 +30,11 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
   int nicknameMax = 8;
   String sex = 'M';
   DateTime _selectedDate = DateTime(2000, 1, 1);
-  DateTime? _confirmDate;
+  DateTime? _confirmDate = DateTime(2000, 1, 1);
 
   bool isLoading = false;
   bool? isDistinct;
   bool isValidNicknameLength = true;
-
 
 
   late TextEditingController _textNicknameController;
@@ -175,15 +174,14 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
       Alert.message(context: context, text: Text('생년월일을 선택해주세요.'), onPressed: (){});
       return;
     }
+    final response = await ref.watch(loginProvider.notifier).register(
+        nickname: _textNicknameController.text,
+        intro: _textIntroController.text,
+        sex: sex,
+        birth: DateFormat('yyyy-MM-dd').format(_confirmDate!)
+    );
 
-    final response = await ApiService.register(
-                      nickname: _textNicknameController.text,
-                      intro: _textIntroController.text,
-                      sex: sex,
-                      birth: DateFormat('yyyy-MM-dd').format(_confirmDate!)
-                    );
     if (response) {
-      ref.watch(loginProvider.notifier).readUser();
       Navigator.pop(context);
     }
   }

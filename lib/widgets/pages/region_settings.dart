@@ -5,18 +5,18 @@ import 'package:flutter_sport/models/region.dart';
 import 'package:flutter_sport/models/region_data.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sport/notifiers/region_notifier.dart';
 
-class RegionSettingsWidget extends StatefulWidget {
+class RegionSettingsWidget extends ConsumerStatefulWidget {
 
-  final Function(Region data) changeRegion;
-
-  const RegionSettingsWidget({super.key, required this.changeRegion});
+  const RegionSettingsWidget({super.key});
 
   @override
-  State<RegionSettingsWidget> createState() => _RegionSettingsWidgetState();
+  ConsumerState<RegionSettingsWidget> createState() => _RegionSettingsWidgetState();
 }
 
-class _RegionSettingsWidgetState extends State<RegionSettingsWidget> {
+class _RegionSettingsWidgetState extends ConsumerState<RegionSettingsWidget> {
 
   List<Region> find = [Region.ALL];
 
@@ -27,8 +27,11 @@ class _RegionSettingsWidgetState extends State<RegionSettingsWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-
     Locale locale = EasyLocalization.of(context)!.locale;
 
     return Scaffold(
@@ -77,7 +80,7 @@ class _RegionSettingsWidgetState extends State<RegionSettingsWidget> {
           return Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             padding: EdgeInsets.symmetric(vertical: 10),
-            child: FindResultRegionWidget(locale: locale, region: find[index], changeRegion : widget.changeRegion),
+            child: FindResultRegionWidget(locale: locale, region: find[index]),
           );
         },
       )
@@ -85,26 +88,25 @@ class _RegionSettingsWidgetState extends State<RegionSettingsWidget> {
   }
 }
 
-class FindResultRegionWidget extends StatefulWidget {
+class FindResultRegionWidget extends ConsumerStatefulWidget {
 
   final Region region;
   final Locale locale;
-  final Function(Region data) changeRegion;
 
-  const FindResultRegionWidget({super.key, required this.region, required this.locale, required this.changeRegion});
+  const FindResultRegionWidget({super.key, required this.region, required this.locale});
 
   @override
-  State<FindResultRegionWidget> createState() => _FindResultRegionWidgetState();
+  ConsumerState<FindResultRegionWidget> createState() => _FindResultRegionWidgetState();
 }
 
-class _FindResultRegionWidgetState extends State<FindResultRegionWidget> {
+class _FindResultRegionWidgetState extends ConsumerState<FindResultRegionWidget> {
   @override
   Widget build(BuildContext context) {
     String name = widget.region.getLocaleName(widget.locale);
     String fullName = widget.region.getFullName(widget.locale);
     return GestureDetector(
       onTap: () {
-        widget.changeRegion(Region.findByName(widget.region.name));
+        ref.watch(regionProvider.notifier).changeRegion(Region.findByName(widget.region.name));
         Navigator.pop(context);
       },
       child: Row(

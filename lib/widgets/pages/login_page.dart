@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sport/api/api_result.dart';
-import 'package:flutter_sport/models/login_notifier.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/register_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

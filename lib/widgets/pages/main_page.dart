@@ -7,10 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/common/local_storage.dart';
-import 'package:flutter_sport/models/login_notifier.dart';
-import 'package:flutter_sport/models/region_data.dart';
-import 'package:flutter_sport/widgets/chating/oneToOneMessage_widget.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
+import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 import 'package:flutter_sport/widgets/notification/notifications_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -25,38 +23,17 @@ import 'package:vector_graphics/vector_graphics.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MainPage extends StatefulWidget {
+class MainPage extends ConsumerStatefulWidget {
 
-
-  const MainPage({
-    super.key,
-  });
+  const MainPage({super.key,});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  ConsumerState<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin {
+class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClientMixin {
   final double margin = 20;
 
-  Region region = Region.ALL;
-
-  onChangeRegion(Region data) {
-    setState(() {
-      region = data;
-    });
-    LocalStorage.saveByRegion(data);
-  }
-
-  _initRegion() async {
-    region = await LocalStorage.findByRegion();
-  }
-
-  @override
-  void initState() {
-    _initRegion();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,17 +49,22 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
           floating: true,
           title: GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => RegionSettingsWidget(changeRegion : onChangeRegion),));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RegionSettingsWidget(),));
             },
             child: Row(
               children: [
-                Text(region.getLocaleName(EasyLocalization.of(context)!.locale),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 24,
-                    color: Color(0xFF2B2828)
-                  ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    return Text(ref.watch(regionProvider).getLocaleName(EasyLocalization.of(context)!.locale),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 24,
+                          color: Color(0xFF2B2828)
+                      ),
+                    );
+                  },
                 ),
+
                 SizedBox(width: 3,),
                 Icon(Icons.arrow_forward_ios,
                   color: Color(0xFF2B2828),
@@ -149,7 +131,7 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
           },
         ),
         const InfinityBanner(),
-        Menus(region : region),
+        Menus(),
         const SliverToBoxAdapter(child: SizedBox(height: 40,),),
         SliverToBoxAdapter(
           child: Container(
@@ -209,9 +191,8 @@ class _MainPageState extends State<MainPage> with AutomaticKeepAliveClientMixin 
 
 class Menus extends StatelessWidget {
 
-  final Region region;
 
-  const Menus({super.key, required this.region});
+  const Menus({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -222,27 +203,27 @@ class Menus extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Menu(
-              page: SoccerPage(region : region, label : 'soccer'),
+              page: SoccerPage(label : 'soccer'),
               assetSvg: 'assets/icons/soccer.svg',
               label: 'soccer',
             ),
             Menu(
-              page: SoccerPage(region : region, label : 'baseball'),
+              page: SoccerPage(label : 'baseball'),
               assetSvg: 'assets/icons/baseball.svg',
               label: 'baseball',
             ),
             Menu(
-              page: SoccerPage(region : region, label : 'tennis'),
+              page: SoccerPage(label : 'tennis'),
               assetSvg: 'assets/icons/tennis.svg',
               label: 'tennis',
             ),
             Menu(
-              page: SoccerPage(region : region, label : 'badminton'),
+              page: SoccerPage(label : 'badminton'),
               assetSvg: 'assets/icons/badminton.svg',
               label: 'badminton',
             ),
             Menu(
-              page: SoccerPage(region : region, label : 'basketball'),
+              page: SoccerPage(label : 'basketball'),
               assetSvg: 'assets/icons/basketball.svg',
               label: 'basketball',
             ),

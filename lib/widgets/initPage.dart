@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sport/models/login_notifier.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
+import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/mainPage.dart';
 
 class InitPage extends ConsumerWidget {
@@ -9,6 +10,7 @@ class InitPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(loginProvider.notifier).readUser();
+    ref.watch(regionProvider.notifier).init();
     return Main();
   }
 }

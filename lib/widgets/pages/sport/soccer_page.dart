@@ -3,24 +3,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/lists/large_list_widget.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SoccerPage extends StatelessWidget {
+class SoccerPage extends ConsumerWidget {
 
-  final Region region;
   final String label;
 
-  const SoccerPage({super.key, required this.region, required this.label});
+  const SoccerPage({super.key, required this.label});
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Locale locale = EasyLocalization.of(context)!.locale;
-    String translationRegionTitle = region.getLocaleName(locale);
+    String translationRegionTitle = ref.read(regionProvider.notifier).getLocalName(locale);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

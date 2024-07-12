@@ -6,6 +6,7 @@ import 'package:flutter_sport/api/line_api.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 
 
+
 class UserNotifier extends StateNotifier<UserProfile?> {
   UserNotifier() : super(null);
 
@@ -21,8 +22,18 @@ class UserNotifier extends StateNotifier<UserProfile?> {
     return result;
   }
 
-  void register() async {
-
+  Future<bool> register({required String nickname, required String? intro, required String sex, required String birth}) async {
+    final response = await ApiService.register(
+        nickname: nickname,
+        intro: intro,
+        sex: sex,
+        birth: birth
+    );
+    if (response) {
+      readUser();
+      return true;
+    }
+    return false;
   }
 
   void logout() async {

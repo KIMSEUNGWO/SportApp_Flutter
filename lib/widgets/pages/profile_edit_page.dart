@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/image_cropper.dart';
-import 'package:flutter_sport/models/login_notifier.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/profile_page.dart';
 import 'package:permission_handler/permission_handler.dart';
