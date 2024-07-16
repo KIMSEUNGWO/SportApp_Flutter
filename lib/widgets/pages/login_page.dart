@@ -17,7 +17,7 @@ class LoginPageWidget extends ConsumerWidget {
 
   onTryLogin(BuildContext context, WidgetRef ref) async {
     final resultType = await ref.read(loginProvider.notifier).login();
-    if (resultType == ResultType.REGISTER) {
+    if (resultType == ResultCode.REGISTER) {
       Navigator.pop(context);
       Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterWidget()));
     }

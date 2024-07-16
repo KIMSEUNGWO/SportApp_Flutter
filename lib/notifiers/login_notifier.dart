@@ -14,9 +14,9 @@ class UserNotifier extends StateNotifier<UserProfile?> {
     state = newProfile;
   }
 
-  Future<ResultType> login() async {
+  Future<ResultCode> login() async {
     final result = await LineAPI.login();
-    if (result == ResultType.OK) {
+    if (result == ResultCode.OK) {
       state = await ApiService.getProfile();
     }
     return result;

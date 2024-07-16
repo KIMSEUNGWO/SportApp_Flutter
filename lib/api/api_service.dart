@@ -19,6 +19,20 @@ class ApiService {
     "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"
   };
 
+  static Future<ResponseResult> post({required String uri, Map<String, String>? header, Object? body}) async {
+    Map<String, String> requestHeader = {"Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"};
+    if (header != null) requestHeader.addAll(header);
+
+    final response = await http.post(Uri.parse(uri),
+      headers: requestHeader,
+      body: body
+    );
+
+    final json = jsonDecode(response.body);
+    print(json);
+    return ResponseResult.fromJson(json);
+  }
+
   static Future<bool> _checkAccessToken() async {
     final accessToken = await SecureStorage.readAccessToken();
     if (accessToken == null) return false;
@@ -62,7 +76,7 @@ class ApiService {
     return instances;
   }
 
-  static Future<ResultType> login({required String userId, required String provider, required String accessToken}) async {
+  static Future<ResultCode> login({required String userId, required String provider, required String accessToken}) async {
 
     final response = await http.post(Uri.parse('$server/social/login',),
         headers: headers,
@@ -74,7 +88,7 @@ class ApiService {
     );
 
     final json = jsonDecode(response.body);
-    ResultType resultType = ResultType.findBy(json['result']);
+    ResultCode resultType = ResultCode.valueOf(json['result']);
     if (response.statusCode == 200) {
       SecureStorage.saveAccessToken(json['data']['accessToken']);
       SecureStorage.saveRefreshToken(json['data']['accessToken']);
@@ -117,7 +131,7 @@ class ApiService {
   }
 
 
-  static Future<ErrorCode> editProfile({required String? profilePath, required String? nickname, required String intro }) async {
+  static Future<ResultCode> editProfile({required String? profilePath, required String? nickname, required String intro }) async {
     var request = http.MultipartRequest('POST', Uri.parse('$server/user/edit'));
     request.headers.addAll({
       "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
@@ -136,7 +150,7 @@ class ApiService {
 
     final responseBody = await response.stream.bytesToString();
     final json = jsonDecode(responseBody);
-    return ErrorCode.valueOf(json['result']);
+    return ResultCode.valueOf(json['result']);
   }
 
   static isDistinctNickname(String nickname) async {

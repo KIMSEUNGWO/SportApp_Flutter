@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/api/api_result.dart';
+import 'package:flutter_sport/api/group/group_service.dart';
 import 'package:flutter_sport/models/alert.dart';
 import 'package:flutter_sport/models/region_data.dart';
 import 'package:flutter_sport/models/sport_type.dart';
@@ -40,8 +42,17 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
   _titleError(String text) => setState(() => _titleErrorText = text);
   _introError(String text) => setState(() => _introErrorText = text);
 
-  _submit(BuildContext context) {
+  _submit(BuildContext context) async {
     if (!_valid(context)) return;
+    final ResponseResult result = await ClubService.clubCreate(
+        sportType: sportType!,
+        region: region!,
+        limitPerson: int.parse(_personController.text),
+        title: _titleController.text,
+        intro: _introController.text
+    );
+
+    print(result.resultCode);
   }
 
   bool _valid(BuildContext context) {

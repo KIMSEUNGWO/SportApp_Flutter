@@ -7,7 +7,7 @@ import 'package:flutter_sport/common/secure_strage.dart';
 
 class LineAPI {
 
-  static Future<ResultType> login() async {
+  static Future<ResultCode> login() async {
     try {
       final result = await LineSDK.instance.login();
 
@@ -20,7 +20,7 @@ class LineAPI {
     } on PlatformException catch(e) {
       print('LINE API : PlatformException !!!');
       print(e);
-      return ResultType.ERROR;
+      return ResultCode.UNKOWN;
     }
 
   }

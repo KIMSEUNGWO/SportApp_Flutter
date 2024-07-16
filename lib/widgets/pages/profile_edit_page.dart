@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/image_cropper.dart';
 import 'package:flutter_sport/models/alert.dart';
@@ -40,21 +41,21 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   late TextEditingController _textIntroController;
 
   editProfile(BuildContext context) async {
-    ErrorCode result = await ApiService.editProfile(
+    ResultCode result = await ApiService.editProfile(
       profilePath: editProfileImagePath,
       nickname: _textNicknameController.text,
       intro: _textIntroController.text
     );
     print(result);
 
-    if (result == ErrorCode.OK) {
+    if (result == ResultCode.OK) {
       final response = await ApiService.getProfile();
       if (response != null) {
         ref.watch(loginProvider.notifier).setProfile(response);
       }
       Navigator.pop(context);
       return;
-    } else if (result == ErrorCode.MAX_UPLOAD_SIZE_EXCEEDED) {
+    } else if (result == ResultCode.MAX_UPLOAD_SIZE_EXCEEDED) {
       setState(() {
         editImage = ref.read(loginProvider.notifier).state?.image;
       });
