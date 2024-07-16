@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/models/alert.dart';
 import 'package:flutter_sport/models/region_data.dart';
 import 'package:flutter_sport/models/sport_type.dart';
 
@@ -25,20 +26,74 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
   late TextEditingController _introController;
   late TextEditingController _personController;
 
+  String? _titleErrorText;
+  String? _introErrorText;
+  String? _personErrorText;
+
   SportType? sportType;
   Region? region;
 
-  selectSportType(SportType type) {
-    setState(() {
-      sportType = type;
-    });
+  selectSportType(SportType type) => setState(() => sportType = type);
+  selectRegion(Region? region) => setState(() => this.region = region);
+
+  _personError(String text) => setState(() => _personErrorText = text);
+  _titleError(String text) => setState(() => _titleErrorText = text);
+  _introError(String text) => setState(() => _introErrorText = text);
+
+  _submit(BuildContext context) {
+    if (!_valid(context)) return;
   }
 
-  selectRegion(Region region) {
-    setState(() {
-      this.region = region;
-    });
+  bool _valid(BuildContext context) {
+    if (sportType == null) {
+      Alert.message(context: context, text: Text('스포츠를 선택해주세요.'), onPressed: (){});
+      return false;
+    }
+    if (region == null || region == Region.ALL) {
+      Alert.message(context: context, text: Text('지역을 설정해주세요.'), onPressed: (){});
+      selectRegion(null);
+      return false;
+    }
+    return _personValid() && _titleValid() && _introValid();
   }
+
+  bool _personValid() {
+    final int? person = int.tryParse(_personController.text);
+    if (person == null) {
+      _personError('유효한 숫자를 입력해주세요.');
+      return false;
+    } else if (person < 3) {
+      _personError('3명 이상으로 설정해주세요.');
+      return false;
+    } else if (person > 100) {
+      _personError('100명 이하로 설정해주세요.');
+      return false;
+    }
+    return true;
+  }
+  bool _titleValid() {
+    final title = _titleController.text;
+    if (title.isEmpty) {
+      _titleError('제목을 입력해주세요.');
+      return false;
+    } else if (title.length < 3) {
+      _titleError('제목을 3자 이상 입력해주세요.');
+      return false;
+    } else if (title.length > 20) {
+      _titleError('제목은 20자까지 가능합니다.');
+      return false;
+    }
+    return true;
+  }
+  bool _introValid() {
+    final intro = _introController.text;
+    if (intro.length > 300) {
+      _introError('소개글은 300자 까지 가능합니다.');
+      return false;
+    }
+    return true;
+  }
+
 
   @override
   void initState() {
@@ -62,9 +117,7 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
       appBar: AppBar(
         actions: [
           GestureDetector(
-            onTap: () => {
-              print('asdf')
-            },
+            onTap: () => _submit(context),
             child: Container(
               margin: EdgeInsets.only(right: 20),
               child: Text('등록',
@@ -121,6 +174,7 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
               ),
               const SizedBox(height: 20,),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
                     children: [
@@ -148,19 +202,37 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
                         fontSize: 16,
                       ),
                       decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: BorderSide(
-                              color: Color(0xFFD9D9D9),
-                            ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                            color: Color(0xFFD9D9D9),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: BorderSide(
-                                color: Color(0xFFD9E7F6),
-                                width: 2
-                            ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                            color: Color(0xFFD9E7F6),
+                            width: 2
                           ),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                            color: Color(0xFFFA5252),
+                            width: 2
+                          )
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                              color: Color(0xFFFA5252),
+                              width: 2
+                          )
+                        ),
+                        errorText: _personErrorText,
+                        errorStyle: TextStyle(
+                          color: Color(0xFFFA5252),
+                        )
                       ),
                     ),
                   ),
@@ -186,8 +258,27 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
                       width: 2
                     ),
                   ),
-                  hintText: '제목을 입력해주세요.'
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide(
+                      color: Color(0xFFFA5252),
+                      width: 2
+                    )
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide(
+                        color: Color(0xFFFA5252),
+                        width: 2
+                    ),
+                  ),
+                  hintText: '제목을 입력해주세요.',
+                  errorText: _titleErrorText,
+                  errorStyle: TextStyle(
+                    color: Color(0xFFFA5252),
+                  ),
                 ),
+                maxLength: 20,
               ),
               const SizedBox(height: 20,),
               TextField(
@@ -209,7 +300,25 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
                       width: 2
                     ),
                   ),
-                  hintText: '소개글 입력'
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide(
+                      color: Color(0xFFFA5252),
+                      width: 2
+                    )
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide(
+                      color: Color(0xFFFA5252),
+                      width: 2
+                    ),
+                  ),
+                  hintText: '소개글 입력',
+                  errorText: _introErrorText,
+                  errorStyle: TextStyle(
+                    color: Color(0xFFFA5252),
+                  ),
                 ),
                 maxLines: 8,
                 maxLength: 300,
