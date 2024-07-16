@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/local_storage.dart';
+import 'package:flutter_sport/models/region_data.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 
 class SearchPage extends StatefulWidget {
@@ -156,7 +157,7 @@ class _SearchPageState extends State<SearchPage> {
                     title: '野球団野球団野球団野球団野球団野球団野球団野球団',
                     intro: '新人さんを待っています',
                     sportType: '야구',
-                    region: '신주쿠구',
+                    region: Region.SHINJUKU,
                     personCount: 3,
                   ),
                   SmallListWidget(
@@ -165,7 +166,7 @@ class _SearchPageState extends State<SearchPage> {
                     title: '野球団野球団野球団野球団野球団野球団野球団野球団',
                     intro: '新人さんを待っています',
                     sportType: '야구',
-                    region: '신주쿠구',
+                    region: Region.ITABASHI,
                     personCount: 3,
                   ),
                   SmallListWidget(
@@ -174,7 +175,7 @@ class _SearchPageState extends State<SearchPage> {
                     title: '野球団野球団野球団野球団野球団野球団野球団野球団',
                     intro: '新人さんを待っています',
                     sportType: '야구',
-                    region: '신주쿠구',
+                    region: Region.CHIYODA,
                     personCount: 3,
                   ),
                   SmallListWidget(
@@ -183,7 +184,7 @@ class _SearchPageState extends State<SearchPage> {
                     title: '野球団野球団野球団野球団野球団野球団野球団野球団',
                     intro: '新人さんを待っています',
                     sportType: '야구',
-                    region: '신주쿠구',
+                    region: Region.ITABASHI,
                     personCount: 3,
                   ),
                 ],

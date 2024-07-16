@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/models/region_data.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
@@ -170,7 +171,7 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                       title: '野球団野球団野球団野球団野球団野球団野球団野球団',
                       intro: '新人さんを待っています',
                       sportType: '야구',
-                      region: '신주쿠구',
+                      region: Region.ADACHI,
                       personCount: 3,
                     ),
                     SmallListWidget(
@@ -178,7 +179,7 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                       title: 'ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ',
                       intro: 'ㅁㄴㅇㄹㅁㄹㄹ',
                       sportType: '야구',
-                      region: '신주쿠구',
+                      region: Region.ARAKAWA,
                       personCount: 3,
                     ),
                   ],

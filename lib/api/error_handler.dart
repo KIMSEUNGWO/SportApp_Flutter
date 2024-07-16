@@ -19,7 +19,7 @@ enum ErrorCode {
 
   MAX_UPLOAD_SIZE_EXCEEDED,
 
-  INVALID_ERROR;
+  UNKOWN;
 
   static ErrorCode valueOf(String errorCode) {
     List<ErrorCode> errorCodes = ErrorCode.values;
@@ -27,6 +27,6 @@ enum ErrorCode {
     for (var error in errorCodes) {
       if (error.name == errorCode) return error;
     }
-    return ErrorCode.INVALID_ERROR;
+    return ErrorCode.UNKOWN;
   }
 }

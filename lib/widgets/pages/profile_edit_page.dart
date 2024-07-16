@@ -45,6 +45,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
       nickname: _textNicknameController.text,
       intro: _textIntroController.text
     );
+    print(result);
 
     if (result == ErrorCode.OK) {
       final response = await ApiService.getProfile();

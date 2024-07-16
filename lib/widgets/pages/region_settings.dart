@@ -10,7 +10,10 @@ import 'package:flutter_sport/notifiers/region_notifier.dart';
 
 class RegionSettingsWidget extends ConsumerStatefulWidget {
 
-  const RegionSettingsWidget({super.key});
+  final bool excludeAll;
+  Function(Region)? setRegion;
+
+  RegionSettingsWidget({super.key, this.excludeAll = false, this.setRegion});
 
   @override
   ConsumerState<RegionSettingsWidget> createState() => _RegionSettingsWidgetState();
@@ -18,16 +21,21 @@ class RegionSettingsWidget extends ConsumerStatefulWidget {
 
 class _RegionSettingsWidgetState extends ConsumerState<RegionSettingsWidget> {
 
-  List<Region> find = [Region.ALL];
+  late List<Region> find;
 
   onChangedResult(List<Region> data) {
     setState(() {
-      find = [Region.ALL, ...data];
+      if (widget.excludeAll) {
+        find = data;
+      } else {
+        find = [Region.ALL, ...data];
+      }
     });
   }
 
   @override
   void initState() {
+    find = widget.excludeAll ? [] : [Region.ALL];
     super.initState();
   }
   @override
@@ -80,7 +88,7 @@ class _RegionSettingsWidgetState extends ConsumerState<RegionSettingsWidget> {
           return Container(
             margin: EdgeInsets.symmetric(horizontal: 20),
             padding: EdgeInsets.symmetric(vertical: 10),
-            child: FindResultRegionWidget(locale: locale, region: find[index]),
+            child: FindResultRegionWidget(locale: locale, region: find[index], setRegion: widget.setRegion,),
           );
         },
       )
@@ -90,10 +98,11 @@ class _RegionSettingsWidgetState extends ConsumerState<RegionSettingsWidget> {
 
 class FindResultRegionWidget extends ConsumerStatefulWidget {
 
+  final Function(Region)? setRegion;
   final Region region;
   final Locale locale;
 
-  const FindResultRegionWidget({super.key, required this.region, required this.locale});
+  const FindResultRegionWidget({super.key, required this.region, required this.locale, this.setRegion});
 
   @override
   ConsumerState<FindResultRegionWidget> createState() => _FindResultRegionWidgetState();
@@ -106,7 +115,12 @@ class _FindResultRegionWidgetState extends ConsumerState<FindResultRegionWidget>
     String fullName = widget.region.getFullName(widget.locale);
     return GestureDetector(
       onTap: () {
-        ref.watch(regionProvider.notifier).changeRegion(Region.findByName(widget.region.name));
+        Region r = Region.findByName(widget.region.name);
+        if (widget.setRegion != null && r != Region.ALL) {
+          widget.setRegion!(r);
+        } else {
+          ref.watch(regionProvider.notifier).changeRegion(r);
+        }
         Navigator.pop(context);
       },
       child: Row(

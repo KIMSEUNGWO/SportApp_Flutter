@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/models/region_data.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -12,7 +13,7 @@ class SmallListWidget extends StatelessWidget {
   final String title;
   final String intro;
   final String sportType;
-  final String region;
+  final Region region;
   final int personCount;
   final EdgeInsets? padding;
 
@@ -94,7 +95,7 @@ class SmallListWidget extends StatelessWidget {
                         ),
                       ),
                       dot(),
-                      Text(region, style: detailStyle),
+                      Text(region.getLocaleName(EasyLocalization.of(context)!.locale), style: detailStyle),
                       dot(),
                       Icon(Icons.people_alt, size: 17, color: Color(0xFF707072),),
                       Text('person'.tr(args: [personCount.toString()]), style: detailStyle)

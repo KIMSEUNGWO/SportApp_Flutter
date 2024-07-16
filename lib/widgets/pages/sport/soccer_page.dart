@@ -49,7 +49,7 @@ class SoccerPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: [
-                      Text('recentlySearchGroups',
+                      Text('mostActiveGroups',
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.w500,
@@ -98,7 +98,7 @@ class SoccerPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: [
-                      Text('recentlySearchGroups',
+                      Text('newGroups',
                         style: TextStyle(
                           fontSize: 19,
                           color: Color(0xFF565360),
@@ -164,7 +164,7 @@ class SoccerPage extends ConsumerWidget {
                   title: '野球団野球団野球団野球団野球団野球団野球団野球団',
                   intro: '新人さんを待っています',
                   sportType: '야구',
-                  region: '신주쿠구',
+                  region: Region.TAITO,
                   personCount: 3,
                 );
               },
