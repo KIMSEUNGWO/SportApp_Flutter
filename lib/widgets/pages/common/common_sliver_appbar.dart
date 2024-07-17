@@ -62,7 +62,7 @@ class CustomSliverAppBar extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 20),
                 child: IconButton(
                   onPressed: () {
-                    Alert.requireLogin(context, ref);
+                    Alert.requireLogin(context);
                   },
                   icon: const Icon(Icons.login, size: 30,),
                 ),

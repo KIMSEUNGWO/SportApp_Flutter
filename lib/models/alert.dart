@@ -4,11 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sport/api/api_result.dart';
-import 'package:flutter_sport/notifiers/login_notifier.dart';
-import 'package:flutter_sport/widgets/pages/register_page.dart';
+import 'package:flutter_sport/widgets/pages/login_page.dart';
 
 class Alert {
 
@@ -120,19 +116,12 @@ class Alert {
     );
   }
 
-  static _onTryLogin(BuildContext context, WidgetRef ref) async {
-    Navigator.pop(context);
-    final resultType = await ref.read(loginProvider.notifier).login();
-    if (resultType == ResultCode.REGISTER) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterWidget()));
-    }
-  }
-  static void requireLogin(BuildContext context, WidgetRef ref) {
+  static void requireLogin(BuildContext context) {
     _confirmMessageTemplate(
       context: context,
       onPressedText: '로그인',
       onPressed: () {
-        _onTryLogin(context, ref);
+        _pageMoveToLoginPage(context);
       },
       message: Text('로그인이 필요한 기능입니다.\n지금 로그인 하시겠습니까?',
         style: TextStyle(
@@ -146,4 +135,26 @@ class Alert {
     color: Colors.grey,
     width: 0.2
   );
+
+  static void _pageMoveToLoginPage(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.push(context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => LoginPageWidget(modalContext: context),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(0.0, 1.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+        transitionDuration: Duration(milliseconds: 400),
+      ),
+    );
+  }
 }

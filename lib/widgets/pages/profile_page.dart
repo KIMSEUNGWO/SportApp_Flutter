@@ -11,14 +11,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class ProfilePage extends ConsumerStatefulWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  ConsumerState<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAliveClientMixin {
+class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +221,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
           const SizedBox(width: 20,),
           GestureDetector(
             onTap: () {
-              Alert.requireLogin(context, ref);
+              Alert.requireLogin(context);
             },
             child: Row(
               children: [
