@@ -57,11 +57,11 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
 
   bool _valid(BuildContext context) {
     if (sportType == null) {
-      Alert.message(context: context, text: Text('스포츠를 선택해주세요.'), onPressed: (){});
+      Alert.message(context: context, text: Text('스포츠를 선택해주세요.'));
       return false;
     }
     if (region == null || region == Region.ALL) {
-      Alert.message(context: context, text: Text('지역을 설정해주세요.'), onPressed: (){});
+      Alert.message(context: context, text: Text('지역을 설정해주세요.'));
       selectRegion(null);
       return false;
     }

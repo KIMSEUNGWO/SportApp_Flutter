@@ -59,7 +59,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
       setState(() {
         editImage = ref.read(loginProvider.notifier).state?.image;
       });
-      Alert.message(context: context, text: Text('이미지 용량이 초과되었습니다.'), onPressed: (){});
+      Alert.message(context: context, text: Text('이미지 용량이 초과되었습니다.'));
     }
 
 

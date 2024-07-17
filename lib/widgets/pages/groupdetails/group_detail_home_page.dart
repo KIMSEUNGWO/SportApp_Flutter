@@ -92,7 +92,7 @@ CustomScrollView는 여러 개의 Sliver 위젯을 렌더링해야 하므로 렌
         ),
           GestureDetector(
             onTap: () {
-              Alert.message(context: context, text: const Text('로그인이 필요합니다.'), onPressed: () {});
+              Alert.message(context: context, text: const Text('로그인이 필요합니다.'));
 
             },
             child: Container(

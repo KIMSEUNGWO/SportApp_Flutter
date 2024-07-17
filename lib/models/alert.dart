@@ -8,21 +8,63 @@ import 'package:flutter_sport/widgets/pages/login_page.dart';
 
 class Alert {
 
-  static void message({required BuildContext context, required Text text, required VoidCallback onPressed}) {
-    showCupertinoDialog(
+  static void message({required BuildContext context, required Text text, VoidCallback? onPressed}) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          content: text,
-          actions: [
-            CupertinoDialogAction(
-              child: Text('OK'),
-              onPressed: () {
-                onPressed();
-                Navigator.of(context).pop();
-              },
+        return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-          ],
+            elevation: 0,
+            child: Container(
+              width: 100,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                    child: text,
+                  ),
+
+                  Container(
+                    height: 45,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop(false);
+                                if (onPressed != null) {
+                                  onPressed();
+                                }
+                              },
+                              splashColor: Colors.transparent, // 기본 InkWell 효과 삭제
+                              highlightColor: Colors.grey.withOpacity(0.2), // 누르고있을때 색상
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border(top: alertBorderSide,),
+                                ),
+                                child: Center(
+                                  child: Text('확인'),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+
+                ],
+              ),
+            )
         );
       },
     );
