@@ -214,55 +214,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
 
   Container EmptyProfile(BuildContext context) {
     return Container(
-      height: 180,
-      child: Column(
+      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+      child: Row(
         children: [
-          Container(
-            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+          EmptyProfileImage(),
+          const SizedBox(width: 20,),
+          GestureDetector(
+            onTap: () {
+              Alert.requireLogin(context, ref);
+            },
             child: Row(
               children: [
-                EmptyProfileImage(),
-                const SizedBox(width: 20,),
-                GestureDetector(
-                  onTap: () {
-                    // showModalBottomSheet(context: context, builder: (context) {
-                    //   return LoginPageWidget();
-                    // },);
-                    Alert.requireLogin(context, ref);
-                  },
-                  child: Row(
-                    children: [
-                      Text('goToLogin',
-                        style: TextStyle(
-                            fontSize: 21,
-                            fontWeight: FontWeight.w600
-                        ),
-                      ).tr(),
-                      SizedBox(width: 5,),
-                      Icon(Icons.arrow_forward_ios, size: 18,)
-                    ],
+                Text('goToLogin',
+                  style: TextStyle(
+                      fontSize: 21,
+                      fontWeight: FontWeight.w600
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Flex(
-              direction: Axis.horizontal,
-              children: [
-                ExtraInfoWidget(
-                  count: 0,
-                  title: '내 모임',
-                ),
-                ExtraInfoWidget(
-                  count: 0,
-                  title: '초대받은 모임',
-                ),
-                ExtraInfoWidget(
-                  count: 0,
-                  title: '좋아요한 모임',
-                ),
+                ).tr(),
+                SizedBox(width: 5,),
+                Icon(Icons.arrow_forward_ios, size: 18,)
               ],
             ),
           ),
