@@ -2,9 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_sport/models/club/club_data.dart';
 
 class GroupDetailBoardWidget extends StatefulWidget {
-  const GroupDetailBoardWidget({super.key});
+
+  final ClubDetail club;
+
+  const GroupDetailBoardWidget({super.key, required this.club});
 
   @override
   State<GroupDetailBoardWidget> createState() => _GroupDetailBoardWidgetState();

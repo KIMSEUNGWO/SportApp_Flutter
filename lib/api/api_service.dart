@@ -36,6 +36,7 @@ class ApiService {
       "Content-Type" : "application/json; charset=utf-8",
       "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"
     };
+    if (header != null) requestHeader.addAll(header);
 
     final response = await http.get(Uri.parse(uri), headers: requestHeader);
     final json = jsonDecode(response.body);

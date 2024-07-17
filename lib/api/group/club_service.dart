@@ -52,7 +52,7 @@ class ClubService {
         Navigator.pop(context);
       });
     }
-    print(json);
+    print(response.data);
     return ClubDetail.fromJson(response.data);
   }
 

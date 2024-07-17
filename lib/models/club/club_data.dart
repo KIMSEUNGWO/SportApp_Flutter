@@ -7,25 +7,25 @@ import 'package:flutter_sport/models/club/sport_type.dart';
 class ClubDetail {
 
   final int id;
-  final String? image;
+  final Image? image;
   final String title;
   final String? intro;
-  final SportType sport;
-  final Region region;
+  final SportType? sport;
+  final Region? region;
   final int personCount;
   final bool isInclude;
-  final Authority authority;
+  final Authority? authority;
 
   ClubDetail.fromJson(Map<String, dynamic> json):
-    id = json['data']['id'],
-    image = json['data']['image'],
-    title = json['data']['title'],
-    intro = json['data']['intro'],
-    sport = json['data']['sport'],
-    region = json['data']['region'],
-    personCount = json['data']['personCount'],
-    isInclude = json['data']['isInclude'],
-    authority = json['data']['authority'];
+    id = json['id'],
+    image = json['image'] != null ? Image.network(json['image'], fit: BoxFit.fill,) : null,
+    title = json['title'],
+    intro = json['intro'],
+    sport = SportType.valueOf(json['sport']),
+    region = Region.valueOf(json['region']),
+    personCount = json['personCount'],
+    isInclude = json['include'] != null ? json['include'] : false,
+    authority = Authority.valueOf(json['authority']);
 
 }
 

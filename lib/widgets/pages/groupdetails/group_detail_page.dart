@@ -21,16 +21,17 @@ class GroupDetailWidget extends StatefulWidget {
 
 class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTickerProviderStateMixin {
 
-  final Map<Tab, Widget> tabList = {
-    Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(),
-    Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(),
-    Tab(text: 'groupMenus'.tr(gender: 'group')) : GroupDetailMeetingWidget(),
-    Tab(text: 'groupMenus'.tr(gender: 'chat')) : GroupDetailChatWidget()
+  Map<Tab, Widget> tabList = {
+    Tab(text: 'groupMenus'.tr(gender: 'home')) : SizedBox(),
+    Tab(text: 'groupMenus'.tr(gender: 'board')) : SizedBox(),
+    Tab(text: 'groupMenus'.tr(gender: 'group')) : SizedBox(),
+    Tab(text: 'groupMenus'.tr(gender: 'chat')) : SizedBox()
   };
   late TabController _tabController;
   bool isLiked = false;
 
   late ClubDetail club;
+  bool isLoading = true;
 
   toggleLike() {
     setState(() {
@@ -54,10 +55,16 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
 
 
   readClub() async {
-    final result = await ClubService.clubData(context: context, clubId: widget.id);
-    if (result == null) {
-     print('없음~~~');
-    }
+    club = await ClubService.clubData(context: context, clubId: widget.id);
+    setState(() {
+      isLoading = false;
+    });
+    tabList = {
+      Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(club : club),
+      Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(club : club),
+      Tab(text: 'groupMenus'.tr(gender: 'group')) : GroupDetailMeetingWidget(club : club),
+      Tab(text: 'groupMenus'.tr(gender: 'chat')) : GroupDetailChatWidget(club : club)
+    };
   }
   @override
   void initState() {
@@ -78,10 +85,62 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Stack(
+        children: [
+          Scaffold(
+          appBar: AppBar(
+            actions: const [
+              Padding(
+                padding: EdgeInsets.only(right: 15),
+                child: Icon(Icons.favorite,
+                  size: 30,
+                  color: Colors.grey,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 20),
+                child: Icon(Icons.more_horiz_outlined, size: 30, ),
+              )
+            ],
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(40.0),
+              child: Container(
+                color: Colors.white,
+                child: TabBar(
+                  controller: _tabController,
+                  // labelColor: Colors.red,
+                  labelColor: Color(0xFF72A8E6),
+                  // indicatorColor: Colors.red,
+                  indicatorColor: Color(0xFF72A8E6),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorWeight: 2.5,
+                  labelStyle: TextStyle(
+                    fontSize: 18,
+                  ),
+                  tabs: tabList.keys.toList(),
+                ),
+              ),
+            ),
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(tabList.length, (index) => SizedBox()),
+          ),
+        ),
+          Positioned(
+            child: Center(
+              child: CupertinoActivityIndicator(radius: 15,),
+            ) 
+          ),
+        ]
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text('그룹명들어갈자리그룹명들어갈자리', overflow: TextOverflow.ellipsis,),
+        title: Text(club.title, overflow: TextOverflow.ellipsis,),
         actions: [
           GestureDetector(
             onTap: () => toggleLike(),

@@ -1,8 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/models/club/club_data.dart';
 
 class GroupDetailMeetingWidget extends StatefulWidget {
-  const GroupDetailMeetingWidget({super.key});
+
+  final ClubDetail club;
+
+  const GroupDetailMeetingWidget({super.key, required this.club});
 
   @override
   State<GroupDetailMeetingWidget> createState() => _GroupDetailMeetingWidgetState();
