@@ -126,89 +126,142 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('모임 생성'),
+        scrolledUnderElevation: 0,
         actions: [
           GestureDetector(
             onTap: () => _submit(context),
             child: Container(
               margin: EdgeInsets.only(right: 20),
               child: Text('등록',
-                style: TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.w500
+                style: const TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.w500
                 ),
               ),
             ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SelectSportTypeWidget(select: selectSportType, sportType: sportType),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
 
-              const SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, size: 25,),
-                      SizedBox(width: 5,),
-                      Text('지역',
-                        style: TextStyle(
-                            fontSize: 17
-                        ),
-                      )
-                    ],
-                  ),
+          final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return RegionSettingsWidget(excludeAll: true, setRegion: selectRegion,);
-                      },));
-                    },
-                    child: Row(
+          return SingleChildScrollView(
+            child: GestureDetector(
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: Container(
+                decoration: const BoxDecoration(),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15 + keyboardHeight),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SelectSportTypeWidget(select: selectSportType, sportType: sportType),
+
+                    const SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(region?.getLocaleName(EasyLocalization.of(context)!.locale) ?? '',
-                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                        Row(
+                          children: [
+                            Icon(Icons.location_on, size: 25,),
+                            SizedBox(width: 5,),
+                            Text('지역',
+                              style: TextStyle(
+                                  fontSize: 17
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(width: 20,),
-                        Icon(Icons.arrow_forward_ios, size: 20,)
+
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                              return RegionSettingsWidget(excludeAll: true, setRegion: selectRegion,);
+                            },));
+                          },
+                          child: Row(
+                            children: [
+                              Text(region?.getLocaleName(EasyLocalization.of(context)!.locale) ?? '',
+                                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                              ),
+                              SizedBox(width: 20,),
+                              Icon(Icons.arrow_forward_ios, size: 20,)
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 20,),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.people_alt, size: 25,),
-                      const SizedBox(width: 5,),
-                      Text('인원 수',
-                        style: TextStyle(
-                            fontSize: 17
+                    const SizedBox(height: 20,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.people_alt, size: 25,),
+                            const SizedBox(width: 5,),
+                            Text('인원 수',
+                              style: TextStyle(
+                                  fontSize: 17
+                              ),
+                            ),
+                            const SizedBox(width: 10,),
+                            Text('(3 ~ 100명)')
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: 10,),
-                      Text('(3 ~ 100명)')
-                    ],
-                  ),
-                  SizedBox(width: 30,),
-                  Expanded(
-                    child: TextField(
-                      controller: _personController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        CustomRangeTextInputFormatter(max: 100),
+                        SizedBox(width: 30,),
+                        Expanded(
+                          child: TextField(
+                            controller: _personController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              CustomRangeTextInputFormatter(max: 100),
+                            ],
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFD9D9D9),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide(
+                                      color: Color(0xFFD9E7F6),
+                                      width: 2
+                                  ),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Color(0xFFFA5252),
+                                        width: 2
+                                    )
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    borderSide: BorderSide(
+                                        color: Color(0xFFFA5252),
+                                        width: 2
+                                    )
+                                ),
+                                errorText: _personErrorText,
+                                errorStyle: TextStyle(
+                                  color: Color(0xFFFA5252),
+                                )
+                            ),
+                          ),
+                        ),
                       ],
+                    ),
+                    const SizedBox(height: 20,),
+                    TextField(
+                      controller: _titleController,
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -222,123 +275,83 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
                           borderSide: BorderSide(
-                            color: Color(0xFFD9E7F6),
-                            width: 2
+                              color: Color(0xFFD9E7F6),
+                              width: 2
                           ),
                         ),
                         errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                            color: Color(0xFFFA5252),
-                            width: 2
-                          )
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(
+                                color: Color(0xFFFA5252),
+                                width: 2
+                            )
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
                           borderSide: BorderSide(
                               color: Color(0xFFFA5252),
                               width: 2
-                          )
+                          ),
                         ),
-                        errorText: _personErrorText,
+                        hintText: '제목을 입력해주세요.',
+                        errorText: _titleErrorText,
                         errorStyle: TextStyle(
                           color: Color(0xFFFA5252),
-                        )
+                        ),
                       ),
+                      maxLength: 20,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20,),
-              TextField(
-                controller: _titleController,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                        color: Color(0xFFD9D9D9),
+                    const SizedBox(height: 20,),
+                    TextField(
+                      controller: _introController,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                            color: Color(0xFFD9D9D9),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                              color: Color(0xFFD9E7F6),
+                              width: 2
+                          ),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide(
+                                color: Color(0xFFFA5252),
+                                width: 2
+                            )
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(
+                              color: Color(0xFFFA5252),
+                              width: 2
+                          ),
+                        ),
+                        hintText: '소개글 입력',
+                        errorText: _introErrorText,
+                        errorStyle: TextStyle(
+                          color: Color(0xFFFA5252),
+                        ),
+                      ),
+                      maxLines: 8,
+                      maxLength: 300,
                     ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: Color(0xFFD9E7F6),
-                      width: 2
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: Color(0xFFFA5252),
-                      width: 2
-                    )
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                        color: Color(0xFFFA5252),
-                        width: 2
-                    ),
-                  ),
-                  hintText: '제목을 입력해주세요.',
-                  errorText: _titleErrorText,
-                  errorStyle: TextStyle(
-                    color: Color(0xFFFA5252),
-                  ),
-                ),
-                maxLength: 20,
-              ),
-              const SizedBox(height: 20,),
-              TextField(
-                controller: _introController,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: Color(0xFFD9D9D9),
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: Color(0xFFD9E7F6),
-                      width: 2
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: Color(0xFFFA5252),
-                      width: 2
-                    )
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    borderSide: BorderSide(
-                      color: Color(0xFFFA5252),
-                      width: 2
-                    ),
-                  ),
-                  hintText: '소개글 입력',
-                  errorText: _introErrorText,
-                  errorStyle: TextStyle(
-                    color: Color(0xFFFA5252),
-                  ),
-                ),
-                maxLines: 8,
-                maxLength: 300,
-              ),
-              const SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
 
-            ],
-          ),
-        ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
