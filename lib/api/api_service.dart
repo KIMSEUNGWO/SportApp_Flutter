@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/src/services/text_input.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/error_handler.dart';
+import 'package:flutter_sport/api/social_result.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
 import 'package:flutter_sport/models/user/profile.dart';
@@ -34,7 +35,9 @@ class ApiService {
   }
 
   static Future<bool> _checkAccessToken() async {
+    print('_checkAccessToken 시작');
     final accessToken = await SecureStorage.readAccessToken();
+    print('_checkAccessToken : $accessToken');
     if (accessToken == null) return false;
     final response = await http.get(Uri.parse('$server/accessToken'),
       headers: {
@@ -59,8 +62,8 @@ class ApiService {
     final result = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      SecureStorage.saveAccessToken(result['accessToken']);
-      SecureStorage.saveRefreshToken(result['refreshToken']);
+      await SecureStorage.saveAccessToken(result['accessToken']);
+      await SecureStorage.saveRefreshToken(result['refreshToken']);
       print('Refreshing AccessToken');
       return true;
     }
@@ -76,34 +79,30 @@ class ApiService {
     return instances;
   }
 
-  static Future<ResultCode> login({required String userId, required String provider, required String accessToken}) async {
+  static Future<ResultCode> login(SocialResult result) async {
 
     final response = await http.post(Uri.parse('$server/social/login',),
         headers: headers,
         body: jsonEncode({
-          "socialId" : userId,
-          "provider" : provider,
-          "accessToken" : accessToken
+          "socialId" : result.socialId,
+          "provider" : result.provider.name,
+          "accessToken" : result.accessToken
         })
     );
 
     final json = jsonDecode(response.body);
     ResultCode resultType = ResultCode.valueOf(json['result']);
-    if (response.statusCode == 200) {
-      SecureStorage.saveAccessToken(json['data']['accessToken']);
-      SecureStorage.saveRefreshToken(json['data']['accessToken']);
+    if (resultType == ResultCode.OK) {
+      await SecureStorage.saveAccessToken(json['data']['accessToken']);
+      await SecureStorage.saveRefreshToken(json['data']['refreshToken']);
       print('LINE LOGIN SUCCESS !!!');
     }
     return resultType;
   }
 
   static Future<UserProfile?> getProfile() async {
-    print('getProfile');
-
-    final isValid = await _checkAccessToken();
-    if (!isValid) {
-      final refresh = await _refreshingAccessToken();
-      if (!refresh) {
+    if (!await _checkAccessToken()) {
+      if (!await _refreshingAccessToken()) {
         return null;
       }
     }
@@ -126,7 +125,8 @@ class ApiService {
   }
 
   static Future<bool> readUser() async {
-    if (await _checkAccessToken()) return true;
+    final isValidAccessToken = await _checkAccessToken();
+    if (isValidAccessToken) return true;
     return await _refreshingAccessToken();
   }
 
@@ -159,54 +159,41 @@ class ApiService {
       headers: {
       "Content-Type" : "application/json; charset=utf-8",
       "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
-      "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
       },
     );
 
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['data'];
     }
     return false;
   }
 
-  static Future<bool> register({required String nickname, required String? intro, required String sex, required String birth}) async {
+  static Future<ResultCode> register({required String nickname, required String? intro, required String sex, required String birth, required SocialResult social}) async {
 
     final response = await http.post(Uri.parse('$server/register'),
         headers: {
           "Content-Type" : "application/json; charset=utf-8",
           "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
         },
       body: jsonEncode({
         "nickname" : nickname,
         "intro" : intro,
         "sex" : sex,
-        "birth" : birth
+        "birth" : birth,
+        "socialId" : social.socialId,
+        "provider" : social.provider.name,
+        "accessToken" : social.accessToken
       })
     );
 
     final json = jsonDecode(response.body);
-    if (json['result'] == 'OK') {
-      return true;
+    ResultCode resultType = ResultCode.valueOf(json['result']);
+    if (resultType == ResultCode.OK) {
+      await SecureStorage.saveAccessToken(json['data']['accessToken']);
+      await SecureStorage.saveRefreshToken(json['data']['refreshToken']);
+      print('REGISTER SUCCESS !!!');
     }
-    return false;
-  }
-
-  static registerClear() async {
-    final response = await http.delete(Uri.parse('$server/register/clear'),
-        headers: {
-          "Content-Type" : "application/json; charset=utf-8",
-          "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
-        },
-    );
-    final json = jsonDecode(response.body);
-
-    if (response.statusCode == 200 && json['data'] == true) {
-      SecureStorage.removeAllByToken();
-    }
+    return resultType;
   }
 
 }

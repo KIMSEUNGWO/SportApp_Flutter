@@ -179,10 +179,10 @@ class Alert {
   );
 
   static void _pageMoveToLoginPage(BuildContext context) {
-    Navigator.pop(context);
+    Navigator.pop(context); // Alert 닫음
     Navigator.push(context,
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => LoginPageWidget(modalContext: context),
+        pageBuilder: (context, animation, secondaryAnimation) => LoginPageWidget(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           var begin = Offset(0.0, 1.0);
           var end = Offset.zero;

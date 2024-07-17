@@ -2,25 +2,26 @@ import 'package:flutter/services.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
+import 'package:flutter_sport/api/social_result.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 
 
 class LineAPI {
 
-  static Future<ResultCode> login() async {
+  static Future<SocialResult?> login() async {
     try {
       final result = await LineSDK.instance.login();
-
-      return ApiService.login(
-        userId: result.userProfile!.userId,
-        provider: 'LINE',
-        accessToken : result.accessToken.value
+      return SocialResult(
+        socialId: result.userProfile!.userId,
+        provider: Provider.LINE,
+        accessToken: result.accessToken.value,
       );
+
 
     } on PlatformException catch(e) {
       print('LINE API : PlatformException !!!');
       print(e);
-      return ResultCode.UNKOWN;
+      return null;
     }
 
   }

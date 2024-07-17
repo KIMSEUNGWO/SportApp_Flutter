@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
+import 'package:flutter_sport/api/social_result.dart';
 import 'package:flutter_sport/models/alert.dart';
 import 'package:intl/intl.dart';
 
@@ -14,7 +15,9 @@ import '../../notifiers/login_notifier.dart';
 
 
 class RegisterWidget extends ConsumerStatefulWidget {
-  const RegisterWidget({super.key});
+
+  final SocialResult socialResult;
+  const RegisterWidget(this.socialResult, {super.key});
 
   @override
   ConsumerState<RegisterWidget> createState() => _RegisterWidgetState();
@@ -73,7 +76,6 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
 
   distinctNickname() {
     if (isLoading) return;
-
     setState(() => isLoading = true);
     tryDistinctNickname();
     setState(() => isLoading = false);
@@ -145,12 +147,7 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
     _textNicknameController.dispose();
     _textIntroController.dispose();
     _dateController.dispose();
-    registerClear();
     super.dispose();
-  }
-
-  registerClear() async {
-    await ApiService.registerClear();
   }
 
   submit(BuildContext context) async {
@@ -179,7 +176,8 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
         nickname: _textNicknameController.text,
         intro: _textIntroController.text,
         sex: sex,
-        birth: DateFormat('yyyy-MM-dd').format(_confirmDate!)
+        birth: DateFormat('yyyy-MM-dd').format(_confirmDate!),
+        social : widget.socialResult
     );
 
     if (response) {

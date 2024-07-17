@@ -14,6 +14,8 @@ class ResponseResult {
 enum ResultCode {
   OK,
 
+  SOCIAL_LOGIN_FAILD,
+
   INVALID_DATA,
 
   REGISTER,
