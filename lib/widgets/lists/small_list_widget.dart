@@ -56,52 +56,55 @@ class SmallListWidget extends StatelessWidget {
                 child: image ?? Center(child: SvgPicture.asset('assets/icons/emptyGroupImage.svg', width: 40, height: 40, color: Color(0xFF878181),))
             ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(intro,
-                        style: TextStyle(
-                            overflow: TextOverflow.ellipsis,
-                            fontSize: 13,
-                            color: Theme.of(context).colorScheme.secondary
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5,),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFDFDFDF)
-                        ),
-                        child: Text(sportType,
+              child: Container(
+                decoration: const BoxDecoration(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
-                      dot(),
-                      Text(region.getLocaleName(EasyLocalization.of(context)!.locale), style: detailStyle),
-                      dot(),
-                      Icon(Icons.people_alt, size: 17, color: Color(0xFF707072),),
-                      Text('person'.tr(args: [personCount.toString()]), style: detailStyle)
-                    ],
-                  )
-                ],
+                        Text(intro,
+                          style: TextStyle(
+                              overflow: TextOverflow.ellipsis,
+                              fontSize: 13,
+                              color: Theme.of(context).colorScheme.secondary
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5,),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xFFDFDFDF)
+                          ),
+                          child: Text(sportType,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        dot(),
+                        Text(region.getLocaleName(EasyLocalization.of(context)!.locale), style: detailStyle),
+                        dot(),
+                        Icon(Icons.people_alt, size: 17, color: Color(0xFF707072),),
+                        Text('person'.tr(args: [personCount.toString()]), style: detailStyle)
+                      ],
+                    )
+                  ],
+                ),
               ),
             )
           ],
