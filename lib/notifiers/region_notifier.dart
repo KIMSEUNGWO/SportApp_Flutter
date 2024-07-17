@@ -7,7 +7,7 @@ import 'package:flutter_sport/models/region_data.dart';
 class RegionNotifier extends StateNotifier<Region> {
   RegionNotifier() : super(Region.ALL);
 
-  void init() async {
+  init() async {
     state = await LocalStorage.findByRegion();
   }
 

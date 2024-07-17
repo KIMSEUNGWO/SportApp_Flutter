@@ -16,9 +16,12 @@ class _InitPageState extends ConsumerState<InitPage> {
 
   @override
   void initState() {
-    ref.read(loginProvider.notifier).readUser();
-    ref.read(regionProvider.notifier).init();
+    init();
     super.initState();
+  }
+  init() async {
+    await ref.read(loginProvider.notifier).readUser();
+    await ref.read(regionProvider.notifier).init();
   }
 
   @override

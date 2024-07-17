@@ -17,8 +17,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../api/error_handler.dart';
-
 
 class ProfileEditPage extends ConsumerStatefulWidget {
 
@@ -46,7 +44,6 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
       nickname: _textNicknameController.text,
       intro: _textIntroController.text
     );
-    print(result);
 
     if (result == ResultCode.OK) {
       final response = await ApiService.getProfile();

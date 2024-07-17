@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  static const String server = "http://localhost:8080";
+  static const String server = "http://192.168.219.104:8080";
   static const Map<String, String>  headers = {
     "Content-Type" : "application/json",
     "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"
@@ -75,7 +75,6 @@ class ApiService {
   }
 
   static Future<ResultCode> login(SocialResult result) async {
-
     final response = await http.post(Uri.parse('$server/social/login',),
         headers: headers,
         body: jsonEncode({
@@ -133,11 +132,16 @@ class ApiService {
     }
     request.fields['intro'] = intro;
 
-    final response = await request.send();
-
-    final responseBody = await response.stream.bytesToString();
-    final json = jsonDecode(responseBody);
-    return ResultCode.valueOf(json['result']);
+    try {
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+      final json = jsonDecode(responseBody);
+      return ResultCode.valueOf(json['result']);
+    } catch (e) {
+      print('Edit Profile Exception !!');
+      print(e);
+      return ResultCode.UNKOWN;
+    }
   }
 
   static isDistinctNickname(String nickname) async {

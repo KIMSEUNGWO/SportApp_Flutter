@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +57,7 @@ class UserNotifier extends StateNotifier<UserProfile?> {
     state = null;
   }
 
-  void readUser() async {
+  readUser() async {
     final result = await ApiService.readUser();
     if (result) {
       state = await ApiService.getProfile();
