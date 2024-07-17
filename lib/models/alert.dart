@@ -70,7 +70,7 @@ class Alert {
     );
   }
   
-  static void _confirmMessageTemplate({
+  static void confirmMessageTemplate({
     required BuildContext context, 
     required String onPressedText,
     required VoidCallback onPressed,
@@ -126,7 +126,9 @@ class Alert {
                           ),
                           Expanded(
                             child: InkWell(
-                              onTap: onPressed,
+                              onTap: () {
+                                onPressed();
+                              },
                               splashColor: Colors.transparent, // 기본 InkWell 효과 삭제
                               highlightColor: Colors.grey.withOpacity(0.2), // 누르고있을때 색상
                               child: Container(
@@ -159,7 +161,7 @@ class Alert {
   }
 
   static void requireLogin(BuildContext context) {
-    _confirmMessageTemplate(
+    confirmMessageTemplate(
       context: context,
       onPressedText: '로그인',
       onPressed: () {

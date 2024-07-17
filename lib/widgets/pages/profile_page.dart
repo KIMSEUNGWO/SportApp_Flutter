@@ -11,14 +11,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientMixin {
+class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
@@ -82,23 +82,24 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  GestureDetector(
+                  ProfileBottomMenuWidget(
                     onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LanguageSettingsWidget(),)),
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.language, size: 20, color: Colors.grey,),
-                          SizedBox(width: 10,),
-                          Expanded(
-                            flex: 1,
-                            child: Text('Language', style: TextStyle(fontSize: 16),),
-                          ),
-                          Icon(Icons.arrow_forward_ios, size: 15, color: Colors.grey,)
-                        ],
-                      ),
-                    ),
+                    icon: Icons.language,
+                    text: 'Language',
+                  ),
+                  ProfileBottomMenuWidget(
+                    onTap: () {
+                      Alert.confirmMessageTemplate(
+                        context: context,
+                        onPressedText: '로그아웃',
+                        onPressed: () {
+                          ref.watch(loginProvider.notifier).logout();
+                          Navigator.pop(context);
+                        },
+                        message: Text('로그아웃 하시겠습니까?'),);
+                    },
+                    icon: Icons.logout,
+                    text: '로그아웃',
                   ),
                 ],
               ),
@@ -287,4 +288,37 @@ class ExtraInfoWidget extends StatelessWidget {
     );
   }
 }
+
+
+class ProfileBottomMenuWidget extends StatelessWidget {
+
+  final GestureTapCallback onTap;
+  final IconData icon;
+  final String text;
+
+  const ProfileBottomMenuWidget({super.key, required this.onTap, required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(icon, size: 20, color: Colors.grey,),
+            SizedBox(width: 10,),
+            Expanded(
+              flex: 1,
+              child: Text(text, style: TextStyle(fontSize: 16),),
+            ),
+            Icon(Icons.arrow_forward_ios, size: 15, color: Colors.grey,)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
