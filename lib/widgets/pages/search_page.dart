@@ -84,6 +84,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -127,71 +128,91 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SearchCondition(),
-          if (!recentlySearchIsDisable && recentlySearchWord.isNotEmpty)
-            Container(
-              constraints: BoxConstraints(
-                minHeight: 220,
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: RecentlySearchWord(
-                words : recentlySearchWord.toList(),
-                addWord : addWord,
-                deleteWord : deleteWord,
-                deleteAllWord : deleteAllWord,
-                onTap : onTapRecentlyWord,
-              ),
-            ),
+      body: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) {
 
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ListView(
-                children: [
-                  SmallListWidget(
-                    id: 1,
-                    image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                    title: '野球団野球団野球団野球団野球団野球団野球団野球団',
-                    intro: '新人さんを待っています',
-                    sportType: '야구',
-                    region: Region.SHINJUKU,
-                    personCount: 3,
-                  ),
-                  SmallListWidget(
-                    id: 1,
-                    image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                    title: '野球団野球団野球団野球団野球団野球団野球団野球団',
-                    intro: '新人さんを待っています',
-                    sportType: '야구',
-                    region: Region.ITABASHI,
-                    personCount: 3,
-                  ),
-                  SmallListWidget(
-                    id: 1,
-                    image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                    title: '野球団野球団野球団野球団野球団野球団野球団野球団',
-                    intro: '新人さんを待っています',
-                    sportType: '야구',
-                    region: Region.CHIYODA,
-                    personCount: 3,
-                  ),
-                  SmallListWidget(
-                    id: 1,
-                    image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                    title: '野球団野球団野球団野球団野球団野球団野球団野球団',
-                    intro: '新人さんを待っています',
-                    sportType: '야구',
-                    region: Region.ITABASHI,
-                    personCount: 3,
-                  ),
-                ],
+            // 키보드만큼의 height
+            // 이걸 사용하기 위해선 Scaffold에 resizeToAvoidBottomInset : false여야 한다.
+            final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
+
+            // SingleChildScrollView 안에서 ListView를 사용하려면
+            // ListView 속성에서
+            // shrinkWrap: true,
+            // physics: NeverScrollableScrollPhysics(),
+            // 를 넣어줘야한다.
+
+            return SingleChildScrollView(
+              child: Container(
+                decoration: const BoxDecoration(),
+                padding: EdgeInsets.only(bottom: keyboardHeight),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SearchCondition(),
+                    if (!recentlySearchIsDisable && recentlySearchWord.isNotEmpty)
+                        RecentlySearchWord(
+                          words : recentlySearchWord.toList(),
+                          addWord : addWord,
+                          deleteWord : deleteWord,
+                          deleteAllWord : deleteAllWord,
+                          onTap : onTapRecentlyWord,
+                      ),
+
+                    const SizedBox(height: 20,),
+                    ListView(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        SmallListWidget(
+                          id: 1,
+                          image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
+                          title: '野球団野球団野球団野球団野球団野球団野球団野球団',
+                          intro: '新人さんを待っています',
+                          sportType: '야구',
+                          region: Region.SHINJUKU,
+                          personCount: 3,
+                        ),
+                        SmallListWidget(
+                          id: 1,
+                          image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
+                          title: '野球団野球団野球団野球団野球団野球団野球団野球団',
+                          intro: '新人さんを待っています',
+                          sportType: '야구',
+                          region: Region.ITABASHI,
+                          personCount: 3,
+                        ),
+                        SmallListWidget(
+                          id: 1,
+                          image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
+                          title: '野球団野球団野球団野球団野球団野球団野球団野球団',
+                          intro: '新人さんを待っています',
+                          sportType: '야구',
+                          region: Region.CHIYODA,
+                          personCount: 3,
+                        ),
+                        SmallListWidget(
+                          id: 1,
+                          image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
+                          title: '野球団野球団野球団野球団野球団野球団野球団野球団',
+                          intro: '新人さんを待っています',
+                          sportType: '야구',
+                          region: Region.ITABASHI,
+                          personCount: 3,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -242,8 +263,8 @@ class _RecentlySearchWordState extends State<RecentlySearchWord> {
         SizedBox(height: 15,),
         GridView.builder(
           shrinkWrap: true, // chid 위젯의 크기를 정해주지 않아싿면 true로 지정해줘야한다.
-          physics: NeverScrollableScrollPhysics(), // 스크롤 금지
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          physics: const NeverScrollableScrollPhysics(), // 스크롤 금지
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 30,
             mainAxisExtent: 30,
@@ -261,18 +282,18 @@ class _RecentlySearchWordState extends State<RecentlySearchWord> {
                     onTap: () => widget.onTap(widget.words[index]),
                     child: Text(widget.words[index],
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 5,),
+                const SizedBox(width: 5,),
                 GestureDetector(
                   onTap: () {
                     widget.deleteWord(widget.words[index]);
                   },
-                  child: Icon(Icons.close),
+                  child: const Icon(Icons.close),
                 ),
               ],
             );
@@ -314,8 +335,8 @@ class SearchCondition extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(right: 7),
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+              margin: const EdgeInsets.only(right: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               decoration: BoxDecoration(
                   border: Border.all(
                     color : Color(0xFFACA5A5),

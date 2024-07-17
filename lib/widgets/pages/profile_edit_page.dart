@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 import 'dart:ui';
 
@@ -83,13 +81,11 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   getImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
     if (image != null) {
       // 선택한 이미지 경로 사용
       final cropper = await ImageCroppers().getCropper(image, context);
       if (cropper != null) {
         setState(() {
-          // TODO 가능하면 안에서 이미지를 변경시키자
           editImage = Image.file(File(cropper.path), fit: BoxFit.contain,);
           editProfileImagePath = cropper.path;
         });
