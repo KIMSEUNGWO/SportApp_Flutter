@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/models/region.dart';
-import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/models/club/region_data.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

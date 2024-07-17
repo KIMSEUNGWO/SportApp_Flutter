@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/models/club/region_data.dart';
+import 'package:flutter_sport/models/club/sport_type.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -9,21 +10,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 class SmallListWidget extends StatelessWidget {
 
   final int id;
-  Image? image;
+  final Image? image;
   final String title;
-  final String intro;
-  final String sportType;
+  final String? intro;
+  final SportType sport;
   final Region region;
   final int personCount;
   final EdgeInsets? padding;
 
-  SmallListWidget({
+  const SmallListWidget({
     super.key,
     required this.id,
-    this.image,
+    required this.image,
     required this.title,
     required this.intro,
-    required this.sportType,
+    required this.sport,
     required this.region,
     required this.personCount,
     this.padding
@@ -50,10 +51,14 @@ class SmallListWidget extends StatelessWidget {
                 margin: const EdgeInsets.only(right: 15),
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
-                  color: Color(0xFFE4E4E4),
+                  color: const Color(0xFFE4E4E4),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: image ?? Center(child: SvgPicture.asset('assets/icons/emptyGroupImage.svg', width: 40, height: 40, color: Color(0xFF878181),))
+                child: image ?? Center(
+                    child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
+                      width: 40, height: 40, color: Color(0xFF878181),
+                    )
+                )
             ),
             Expanded(
               child: Container(
@@ -71,7 +76,7 @@ class SmallListWidget extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text(intro,
+                        Text(intro ?? '',
                           style: TextStyle(
                               overflow: TextOverflow.ellipsis,
                               fontSize: 13,
@@ -89,12 +94,12 @@ class SmallListWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                               color: Color(0xFFDFDFDF)
                           ),
-                          child: Text(sportType,
+                          child: Text('sportTitle',
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 12,
                             ),
-                          ),
+                          ).tr(gender: sport.lang),
                         ),
                         dot(),
                         Text(region.getLocaleName(EasyLocalization.of(context)!.locale), style: detailStyle),

@@ -12,23 +12,33 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  static const String server = "http://192.168.219.104:8080";
+  static const String server = "http://localhost:8080";
   static const Map<String, String>  headers = {
     "Content-Type" : "application/json",
     "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"
   };
+  static const Map<String, String> defaultHeader = {"Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"};
 
   static Future<ResponseResult> post({required String uri, Map<String, String>? header, Object? body}) async {
-    Map<String, String> requestHeader = {"Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"};
+
+    Map<String, String> requestHeader = {};
+    requestHeader.addAll(defaultHeader);
     if (header != null) requestHeader.addAll(header);
 
-    final response = await http.post(Uri.parse(uri),
-      headers: requestHeader,
-      body: body
-    );
+    final response = await http.post(Uri.parse(uri), headers: requestHeader, body: body);
 
     final json = jsonDecode(response.body);
-    print(json);
+    return ResponseResult.fromJson(json);
+  }
+
+  static Future<ResponseResult> get({required String uri, Map<String, String>? header}) async {
+    Map<String, String> requestHeader = {
+      "Content-Type" : "application/json; charset=utf-8",
+      "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"
+    };
+
+    final response = await http.get(Uri.parse(uri), headers: requestHeader);
+    final json = jsonDecode(response.body);
     return ResponseResult.fromJson(json);
   }
 

@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
-import 'package:flutter_sport/api/group/group_service.dart';
+import 'package:flutter_sport/api/group/club_service.dart';
 import 'package:flutter_sport/models/alert.dart';
-import 'package:flutter_sport/models/region_data.dart';
-import 'package:flutter_sport/models/sport_type.dart';
+import 'package:flutter_sport/models/club/region_data.dart';
+import 'package:flutter_sport/models/club/sport_type.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,20 +53,46 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
         intro: _introController.text
     );
 
-    print(result.resultCode);
+    if (result.resultCode == ResultCode.OK) {
+      Alert.message(context: context,
+        text: Text('모임이 생성되었습니다.'),
+        onPressed: () {
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return GroupDetailWidget(id: result.data);
+          },));
+        }
+      );
+    } else if (result.resultCode == ResultCode.INVALID_DATA) {
+      for (var invalid in result.data) {
+        if (invalid == 'sportType') _sportTypeValid();
+        else if (invalid == 'region') _regionValid();
+        if (invalid == 'limitPerson') _personValid();
+        if (invalid == 'title') _titleValid();
+        if (invalid == 'intro') _introValid();
+      }
+    }
   }
 
   bool _valid(BuildContext context) {
+    return _sportTypeValid() && _regionValid() && _personValid() && _titleValid() && _introValid();
+  }
+
+  bool _sportTypeValid() {
     if (sportType == null) {
       Alert.message(context: context, text: Text('스포츠를 선택해주세요.'));
       return false;
     }
+    return true;
+  }
+
+  bool _regionValid() {
     if (region == null || region == Region.ALL) {
       Alert.message(context: context, text: Text('지역을 설정해주세요.'));
       selectRegion(null);
       return false;
     }
-    return _personValid() && _titleValid() && _introValid();
+    return true;
   }
 
   bool _personValid() {

@@ -1,9 +1,15 @@
 
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/api/group/club_service.dart';
+import 'package:flutter_sport/common/local_storage.dart';
+import 'package:flutter_sport/models/club/club_data.dart';
+import 'package:flutter_sport/models/club/region_data.dart';
+import 'package:flutter_sport/models/club/sport_type.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
@@ -26,6 +32,23 @@ class MainPage extends ConsumerStatefulWidget {
 class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClientMixin {
   final double margin = 20;
 
+  late List<ClubSimp> recentlyViewClubs;
+  bool recentlyViewIsLoading = true;
+
+  @override
+  void initState() {
+    recentlyClubsInit();
+    super.initState();
+  }
+
+  recentlyClubsInit() async {
+    recentlyViewClubs = await ClubService.getRecentlyViewClubs();
+    setState(() {
+      recentlyViewIsLoading = false;
+      print('???');
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +70,8 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
         const InfinityBanner(),
         Menus(),
         const SliverToBoxAdapter(child: SizedBox(height: 40,),),
-        SliverToBoxAdapter(
+        if (!recentlyViewIsLoading)
+          SliverToBoxAdapter(
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: margin),
             child: Column(
@@ -64,7 +88,7 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                     ).tr(),
                     GestureDetector(
                       onTap: () => Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => RecentlyVisitPages(),)
+                          builder: (context) => RecentlyVisitPages(clubs: recentlyViewClubs),)
                       ),
                       child: Text('more',
                         style: TextStyle(
@@ -75,27 +99,26 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                     )
                   ],
                 ),
-                SizedBox(height: 20,),
-                Column(
-                  children: [
-                    SmallListWidget(
-                      id: 1,
-                      image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                      title: '野球団野球団野球団野球団野球団野球団野球団野球団',
-                      intro: '新人さんを待っています',
-                      sportType: '야구',
-                      region: Region.ADACHI,
-                      personCount: 3,
-                    ),
-                    SmallListWidget(
-                      id: 2,
-                      title: 'ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇㄹ',
-                      intro: 'ㅁㄴㅇㄹㅁㄹㄹ',
-                      sportType: '야구',
-                      region: Region.ARAKAWA,
-                      personCount: 3,
-                    ),
-                  ],
+                ListView.builder(
+                  padding: const EdgeInsets.only(top: 15),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: min(recentlyViewClubs.length, 5),
+                  itemBuilder: (context, index) {
+                    ClubSimp club = recentlyViewClubs[index];
+                    if (club.sport != null && club.region != null) {
+                      return SmallListWidget(
+                        id: club.id,
+                        image: club.thumbnail,
+                        title: club.title,
+                        intro: club.intro,
+                        sport: club.sport!,
+                        region: club.region!,
+                        personCount: club.personCount,
+                      );
+                    }
+                    return null;
+                  },
                 ),
               ],
 

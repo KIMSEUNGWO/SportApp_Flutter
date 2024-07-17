@@ -12,4 +12,12 @@ enum SportType {
 
   const SportType(this.lang);
 
+  static SportType? valueOf(String data) {
+    List<SportType> values = SportType.values;
+    for (var o in values) {
+      if (o.name == data) return o;
+    }
+    return null;
+  }
+
 }

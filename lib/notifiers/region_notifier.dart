@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sport/common/local_storage.dart';
-import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/models/club/region_data.dart';
 
 class RegionNotifier extends StateNotifier<Region> {
   RegionNotifier() : super(Region.ALL);

@@ -1,4 +1,4 @@
-import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
@@ -26,11 +26,24 @@ class LocalStorage {
     storage.setStringList(LocalStorageKey.RECENTLY_SEARCH_WORD.name, words);
   }
 
+  static saveRecentlyViewClubList(List<String> clubList) async {
+    final storage = await SharedPreferences.getInstance();
+    if (clubList.length > 10) clubList = clubList.sublist(0, 10);
+    storage.setStringList(LocalStorageKey.RECENTLY_VIEW_CLUB.name, clubList);
+  }
+
+  static Future<List<String>> getRecentlyViewClubList() async{
+    final storage = await SharedPreferences.getInstance();
+    List<String>? words = storage.getStringList(LocalStorageKey.RECENTLY_VIEW_CLUB.name);
+    return (words == null) ? [] : words;
+  }
+
 }
 
 enum LocalStorageKey {
 
   REGION,
-  RECENTLY_SEARCH_WORD;
+  RECENTLY_SEARCH_WORD,
+  RECENTLY_VIEW_CLUB;
 
 }

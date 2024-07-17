@@ -3,7 +3,7 @@
 import 'dart:ui';
 
 import 'package:flutter_sport/common/language_enum.dart';
-import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/models/club/region_data.dart';
 
 class FindRegion {
 

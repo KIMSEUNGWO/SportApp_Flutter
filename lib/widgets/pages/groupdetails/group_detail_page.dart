@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/api/group/club_service.dart';
+import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_dateil_board_page.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_chat_page.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_home_page.dart';
@@ -28,6 +30,8 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
   late TabController _tabController;
   bool isLiked = false;
 
+  late ClubDetail club;
+
   toggleLike() {
     setState(() {
       isLiked = !isLiked;
@@ -48,8 +52,16 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
     );
   }
 
+
+  readClub() async {
+    final result = await ClubService.clubData(context: context, clubId: widget.id);
+    if (result == null) {
+     print('없음~~~');
+    }
+  }
   @override
   void initState() {
+    readClub();
     super.initState();
     _tabController = TabController(
       length: tabList.length,

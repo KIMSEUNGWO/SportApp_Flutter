@@ -26,6 +26,10 @@ enum ResultCode {
 
   MAX_UPLOAD_SIZE_EXCEEDED,
 
+
+  // 클럽 예외
+  CLUB_NOT_EXISTS,
+
   UNKOWN;
 
   static ResultCode valueOf(String errorCode) {

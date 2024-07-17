@@ -2,7 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/models/club/region_data.dart';
+import 'package:flutter_sport/models/club/sport_type.dart';
 import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/lists/large_list_widget.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
@@ -163,7 +164,7 @@ class SoccerPage extends ConsumerWidget {
                   image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
                   title: '野球団野球団野球団野球団野球団野球団野球団野球団',
                   intro: '新人さんを待っています',
-                  sportType: '야구',
+                  sport: SportType.BASKETBALL,
                   region: Region.TAITO,
                   personCount: 3,
                 );

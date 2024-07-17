@@ -1,23 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sport/models/group_data.dart';
-import 'package:flutter_sport/models/region_data.dart';
+import 'package:flutter_sport/api/group/club_service.dart';
+import 'package:flutter_sport/models/club/club_data.dart';
+import 'package:flutter_sport/models/component.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 
 class RecentlyVisitPages extends StatelessWidget {
-  RecentlyVisitPages({super.key});
 
-  final List<GroupData> recentlyVisitGroups = [
-    GroupData(
-      id: 1,
-      image: 'assets/groupImages/sample1.jpeg',
-      title: '野球団野球団野球団野球団野球団野球団野球団野球団',
-      intro: '新人さんを待っています',
-      sportType: '야구',
-      region: Region.SHINJUKU,
-      personCount: 3,
-    ),
+  List<ClubSimp> clubs;
 
-  ];
+  RecentlyVisitPages({super.key, required this.clubs});
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +20,23 @@ class RecentlyVisitPages extends StatelessWidget {
       body: Container(
         margin: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 30),
         child: ListView.builder(
-          itemCount: recentlyVisitGroups.length,
+          itemCount: clubs.length,
           itemBuilder: (context, index) {
-            final data = recentlyVisitGroups[index];
-            return SmallListWidget(
-                id: data.id,
-                image: Image.asset(data.image, fit: BoxFit.fill,),
-                title: data.title,
-                intro: data.intro,
-                sportType: data.sportType,
-                region: data.region,
-                personCount: data.personCount
-            );
+            final data = clubs[index];
+            if (data.sport != null && data.region != null) {
+              return SmallListWidget(
+                  id: data.id,
+                  image: data.thumbnail,
+                  title: data.title,
+                  intro: data.intro,
+                  sport: data.sport!,
+                  region: data.region!,
+                  personCount: data.personCount
+              );
+            }
+            return null;
           },
-        ),
+        )
       ),
     );
   }
