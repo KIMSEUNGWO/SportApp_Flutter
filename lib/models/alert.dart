@@ -1,6 +1,14 @@
 
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sport/api/api_result.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
+import 'package:flutter_sport/widgets/pages/register_page.dart';
 
 class Alert {
 
@@ -23,4 +31,119 @@ class Alert {
       },
     );
   }
+  
+  static void _confirmMessageTemplate({
+    required BuildContext context, 
+    required String onPressedText,
+    required VoidCallback onPressed,
+    required Text message,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 0,
+            child: Container(
+              width: 100,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                    child: message,
+                  ),
+
+                  Container(
+                    height: 45,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop(false);
+                              },
+                              splashColor: Colors.transparent, // 기본 InkWell 효과 삭제
+                              highlightColor: Colors.grey.withOpacity(0.2), // 누르고있을때 색상
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                      top: alertBorderSide,
+                                      right: alertBorderSide
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text('취소'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: onPressed,
+                              splashColor: Colors.transparent, // 기본 InkWell 효과 삭제
+                              highlightColor: Colors.grey.withOpacity(0.2), // 누르고있을때 색상
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                      top: alertBorderSide
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(onPressedText,
+                                    style: TextStyle(
+                                        color: Colors.blue
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+
+                ],
+              ),
+            )
+        );
+      },
+    );
+  }
+
+  static _onTryLogin(BuildContext context, WidgetRef ref) async {
+    Navigator.pop(context);
+    final resultType = await ref.read(loginProvider.notifier).login();
+    if (resultType == ResultCode.REGISTER) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterWidget()));
+    }
+  }
+  static void requireLogin(BuildContext context, WidgetRef ref) {
+    _confirmMessageTemplate(
+      context: context,
+      onPressedText: '로그인',
+      onPressed: () {
+        _onTryLogin(context, ref);
+      },
+      message: Text('로그인이 필요한 기능입니다.\n지금 로그인 하시겠습니까?',
+        style: TextStyle(
+            fontSize: 16
+        ),
+      ),
+    );
+  }
+
+  static BorderSide alertBorderSide = const BorderSide(
+    color: Colors.grey,
+    width: 0.2
+  );
 }

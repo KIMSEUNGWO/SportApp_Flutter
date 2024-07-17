@@ -1,27 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/models/alert.dart';
-import 'package:flutter_sport/models/component.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/language_settings.dart';
-import 'package:flutter_sport/widgets/pages/login_page.dart';
 import 'package:flutter_sport/widgets/pages/profile_edit_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientMixin {
+class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
@@ -228,9 +225,10 @@ class _ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClient
                 const SizedBox(width: 20,),
                 GestureDetector(
                   onTap: () {
-                    showModalBottomSheet(context: context, builder: (context) {
-                      return LoginPageWidget();
-                    },);
+                    // showModalBottomSheet(context: context, builder: (context) {
+                    //   return LoginPageWidget();
+                    // },);
+                    Alert.requireLogin(context, ref);
                   },
                   child: Row(
                     children: [
