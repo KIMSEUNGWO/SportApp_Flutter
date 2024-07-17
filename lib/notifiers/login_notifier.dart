@@ -26,7 +26,7 @@ class UserNotifier extends StateNotifier<UserProfile?> {
 
     final result = await ApiService.login(socialResult);
     if (result == ResultCode.OK) {
-      state = await ApiService.getProfile();
+      readUser();
       Navigator.pop(context);
     } else if (result == ResultCode.REGISTER) {
       Navigator.pop(context);
@@ -44,7 +44,7 @@ class UserNotifier extends StateNotifier<UserProfile?> {
       social: social,
     );
     if (response == ResultCode.OK) {
-      state = await ApiService.getProfile();
+      readUser();
       return true;
     }
     return false;

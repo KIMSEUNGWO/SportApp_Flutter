@@ -2,9 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/src/services/text_input.dart';
 import 'package:flutter_sport/api/api_result.dart';
-import 'package:flutter_sport/api/error_handler.dart';
 import 'package:flutter_sport/api/social_result.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
@@ -35,9 +33,7 @@ class ApiService {
   }
 
   static Future<bool> _checkAccessToken() async {
-    print('_checkAccessToken 시작');
     final accessToken = await SecureStorage.readAccessToken();
-    print('_checkAccessToken : $accessToken');
     if (accessToken == null) return false;
     final response = await http.get(Uri.parse('$server/accessToken'),
       headers: {
@@ -49,13 +45,12 @@ class ApiService {
     return response.statusCode == 200;
   }
   static Future<bool> _refreshingAccessToken() async {
-
     final refreshToken = await SecureStorage.readRefreshToken();
     if (refreshToken == null) return false;
 
     final response = await http.post(Uri.parse('$server/social/token'),
         headers: {
-          "Authorization" : "Bearer refreshToken",
+          "Authorization" : "Bearer $refreshToken",
           ...headers}
     );
 
@@ -101,12 +96,6 @@ class ApiService {
   }
 
   static Future<UserProfile?> getProfile() async {
-    if (!await _checkAccessToken()) {
-      if (!await _refreshingAccessToken()) {
-        return null;
-      }
-    }
-
     final response = await http.get(Uri.parse('$server/user/profile'),
       headers: {
         "Content-Type" : "application/json; charset=utf-8",
@@ -125,9 +114,7 @@ class ApiService {
   }
 
   static Future<bool> readUser() async {
-    final isValidAccessToken = await _checkAccessToken();
-    if (isValidAccessToken) return true;
-    return await _refreshingAccessToken();
+    return (await _checkAccessToken() || await _refreshingAccessToken());
   }
 
 
