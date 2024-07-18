@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/group/club_service.dart';
+import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_dateil_board_page.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_chat_page.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_home_page.
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_meeting_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/group_edit_page.dart';
 
 class GroupDetailWidget extends StatefulWidget {
 
@@ -60,12 +62,13 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
       isLoading = false;
     });
     tabList = {
-      Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(club : club),
+      Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(club : club, reloadClub: readClub),
       Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(club : club),
       Tab(text: 'groupMenus'.tr(gender: 'group')) : GroupDetailMeetingWidget(club : club),
       Tab(text: 'groupMenus'.tr(gender: 'chat')) : GroupDetailChatWidget(club : club)
     };
   }
+
   @override
   void initState() {
     readClub();
@@ -209,6 +212,17 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
                 Navigator.of(context).pop();
               },
               child: Text('shareGroup').tr(),
+            ),
+
+            if (club.authority != null && club.authority == Authority.OWNER)
+              CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ClubEditWidget(club: club, reload: readClub);
+                },));
+              },
+              child: Text('방 설정 변경'),
             ),
           ],
           cancelButton: CupertinoActionSheetAction(

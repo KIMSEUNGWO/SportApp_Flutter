@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/group/club_service.dart';
-import 'package:flutter_sport/models/alert.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 

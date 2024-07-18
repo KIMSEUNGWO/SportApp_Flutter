@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ImageCroppers {
 
@@ -53,4 +54,37 @@ class CropAspectRatioPresetCustom implements CropAspectRatioPresetData {
 }
 
 
+class ImagePick {
+
+  Future<PermissionStatus> _getPermission() async {
+    final status = await Permission.photos.status;
+    if (status.isDenied) {
+      return Permission.photos.request();
+    }
+    return PermissionStatus.granted;
+  }
+  Future<XFile?> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    return await picker.pickImage(source: ImageSource.gallery);
+  }
+
+  Future<XFile?> get() async {
+    final status = await _getPermission();
+    if (status.isGranted) {
+      return _pickImage();
+    } else {
+      print('이미지 권한 없음');
+      return null;
+    }
+  }
+
+  Future<CroppedFile?> getAndCrop(BuildContext context) async {
+    final XFile? image = await get();
+    if (image != null) {
+      return await ImageCroppers().getCropper(image, context);
+    }
+    return null;
+  }
+
+}
 

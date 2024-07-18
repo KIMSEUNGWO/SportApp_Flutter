@@ -5,12 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
-import 'package:flutter_sport/common/image_cropper.dart';
-import 'package:flutter_sport/models/alert.dart';
+import 'package:flutter_sport/common/image.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/profile_page.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -37,20 +35,24 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   late TextEditingController _textIntroController;
 
   editProfile(BuildContext context) async {
-    ResultCode result = await ApiService.editProfile(
-      profilePath: editProfileImagePath,
-      nickname: _textNicknameController.text,
-      intro: _textIntroController.text
-    );
+    Map<String, dynamic> data = {};
+    String nickname = _textNicknameController.text;
+    if (nickname.isNotEmpty) {
+      data.addAll({'nickname' : nickname});
+    }
+    data.addAll({'intro' : _textIntroController.text});
 
-    if (result == ResultCode.OK) {
+
+    ResponseResult responseResult = await ApiService.postMultipart('/user/edit', multipartFilePath: editProfileImagePath, data: data);
+
+    if (responseResult.resultCode == ResultCode.OK) {
       final response = await ApiService.getProfile();
       if (response != null) {
         ref.watch(loginProvider.notifier).setProfile(response);
       }
       Navigator.pop(context);
       return;
-    } else if (result == ResultCode.MAX_UPLOAD_SIZE_EXCEEDED) {
+    } else if (responseResult.resultCode == ResultCode.MAX_UPLOAD_SIZE_EXCEED) {
       setState(() {
         editImage = ref.read(loginProvider.notifier).state?.image;
       });
@@ -60,36 +62,13 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
 
   }
 
-  Future<PermissionStatus> getPermission() async {
-    final status = await Permission.photos.status;
-    if (status.isDenied) {
-      return Permission.photos.request();
-    }
-    return PermissionStatus.granted;
-  }
-
   selectImage() async {
-    final status = await getPermission();
-    if (status.isGranted) {
-      getImage();
-    } else {
-      print('권한이 없어서 못함~~~');
-    }
-
-  }
-
-  getImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      // 선택한 이미지 경로 사용
-      final cropper = await ImageCroppers().getCropper(image, context);
-      if (cropper != null) {
-        setState(() {
-          editImage = Image.file(File(cropper.path), fit: BoxFit.contain,);
-          editProfileImagePath = cropper.path;
-        });
-      }
+    final cropper = await ImagePick().getAndCrop(context);
+    if (cropper != null) {
+      setState(() {
+        editImage = Image.file(File(cropper.path), fit: BoxFit.contain,);
+        editProfileImagePath = cropper.path;
+      });
     }
   }
 

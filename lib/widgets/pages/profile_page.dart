@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/models/alert.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/language_settings.dart';

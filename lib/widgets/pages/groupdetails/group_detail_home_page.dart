@@ -3,23 +3,61 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/models/alert.dart';
+import 'package:flutter_sport/api/api_result.dart';
+import 'package:flutter_sport/api/group/club_service.dart';
+import 'package:flutter_sport/common/alert.dart';
+import 'package:flutter_sport/common/login_checker.dart';
+import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class GroupDetailHomeWidget extends StatefulWidget {
+class GroupDetailHomeWidget extends ConsumerStatefulWidget {
 
   final ClubDetail club;
-  const GroupDetailHomeWidget({super.key, required this.club});
+  final Function() reloadClub;
+  const GroupDetailHomeWidget({super.key, required this.club, required this.reloadClub});
 
   @override
-  State<GroupDetailHomeWidget> createState() => _GroupDetailHomeWidgetState();
+  ConsumerState<GroupDetailHomeWidget> createState() => _GroupDetailHomeWidgetState();
 }
 
-class _GroupDetailHomeWidgetState extends State<GroupDetailHomeWidget> with AutomaticKeepAliveClientMixin {
+class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> with AutomaticKeepAliveClientMixin {
 
+  late ClubDetail club;
+  bool joinBtnDisabled = false;
+
+  bool login() {
+    return LoginChecker.loginCheck(context, ref);
+  }
+
+  joinClub() async {
+    joinDisabled(false);
+    ResponseResult result = await ClubService.joinClub(clubId: club.id);
+    if (result.resultCode == ResultCode.OK) {
+      widget.reloadClub();
+    } else if (result.resultCode == ResultCode.CLUB_JOIN_FULL) {
+      Alert.message(context: context, text: Text('모임이 가득 찼습니다.'));
+    } else if (result.resultCode == ResultCode.CLUB_ALREADY_JOINED) {
+      Alert.message(context: context, text: Text('이미 참여 중인 모임입니다.'));
+    } else if (result.resultCode == ResultCode.EXCEED_MAX_CLUB) {
+      Alert.message(context: context, text: Text('참여할 수 있는 모임을 초과했습니다.'));
+    }
+  }
+
+  joinDisabled(bool data) {
+    setState(() {
+      joinBtnDisabled = data;
+    });
+  }
+
+  @override
+  void initState() {
+    club = widget.club;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,7 +73,7 @@ class _GroupDetailHomeWidgetState extends State<GroupDetailHomeWidget> with Auto
               refreshIndicatorExtent: 80.0,
               onRefresh: () async {
                 // 위로 새로고침
-                await Future.delayed(Duration(seconds: 2));
+                await widget.reloadClub();
               },
             ),
             SliverToBoxAdapter(
@@ -83,10 +121,23 @@ class _GroupDetailHomeWidgetState extends State<GroupDetailHomeWidget> with Auto
             SliverToBoxAdapter(child: SizedBox(height: 100,),)
           ],
         ),
-          GestureDetector(
-            onTap: () {
-              Alert.message(context: context, text: const Text('로그인이 필요합니다.'));
-
+          if (club.authority == null)
+            (club.personCount < club.maxPerson)
+              ? GestureDetector(
+            onTap: joinBtnDisabled ? null : () {
+              bool hasLogin = login();
+              if (!hasLogin) {
+                return;
+              }
+              Alert.confirmMessageTemplate(
+                context: context,
+                onPressedText: '참여',
+                onPressed: () {
+                  Navigator.pop(context);
+                  joinClub();
+                },
+                message: Text('이 모임에 참여하시나요?')
+              );
             },
             child: Container(
               margin: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
@@ -95,7 +146,7 @@ class _GroupDetailHomeWidgetState extends State<GroupDetailHomeWidget> with Auto
                 child: Container(
                   decoration: BoxDecoration(
                     // color: Colors.blue,
-                    color: Color(0xFF72A8E6),
+                    color: joinBtnDisabled ? Colors.grey : Color(0xFF72A8E6),
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
@@ -119,6 +170,35 @@ class _GroupDetailHomeWidgetState extends State<GroupDetailHomeWidget> with Auto
               ),
             ),
           )
+              : Container(
+                margin: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                            offset: Offset(2, 2),
+                            color: Colors.grey,
+                            blurRadius: 6
+                        )
+                      ],
+                    ),
+                    height: 55,
+                    alignment: Alignment.center,
+                    child: Text('마감',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 21,
+                        letterSpacing: 1.4,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
         ]
       ),
     );

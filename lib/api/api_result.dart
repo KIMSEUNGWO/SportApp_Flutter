@@ -24,14 +24,22 @@ enum ResultCode {
 
   ACCESS_TOKEN_REQUIRE,
 
-  MAX_UPLOAD_SIZE_EXCEEDED,
+  MAX_UPLOAD_SIZE_EXCEED,
 
 
   // 클럽 예외
   CLUB_NOT_EXISTS,
 
   // 클럽 생성
-  EXCEED_LIMIT_PERSON,
+  EXCEED_LIMIT_PERSON, // 생성시 : 최대 인원 수보다 많게 설정한 경우, 수정시 : 현재 인원 보다 적게 설정한 경우
+
+  // 클럽 수정
+  CLUB_NOT_OWNER,
+
+  // 클럽 참가
+  CLUB_JOIN_FULL, // 모임이 꽉 차 있을 때
+  CLUB_ALREADY_JOINED, // 이미 참여 중인 모임일 때
+  EXCEED_MAX_CLUB, // 참옇ㄹ 수 있는 방 개수를 초과 했을 때
 
   UNKOWN;
 

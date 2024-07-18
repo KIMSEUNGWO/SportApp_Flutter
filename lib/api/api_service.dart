@@ -19,16 +19,19 @@ class ApiService {
   };
   static const Map<String, String> defaultHeader = {"Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"};
 
+
+  static ResponseResult _decode(http.Response response) {
+    final json = jsonDecode(utf8.decode(response.bodyBytes));
+    return ResponseResult.fromJson(json);
+  }
   static Future<ResponseResult> post({required String uri, Map<String, String>? header, Object? body}) async {
 
     Map<String, String> requestHeader = {};
     requestHeader.addAll(defaultHeader);
     if (header != null) requestHeader.addAll(header);
 
-    final response = await http.post(Uri.parse(uri), headers: requestHeader, body: body);
-
-    final json = jsonDecode(response.body);
-    return ResponseResult.fromJson(json);
+    final response = await http.post(Uri.parse('$server$uri'), headers: requestHeader, body: body);
+    return _decode(response);
   }
 
   static Future<ResponseResult> get({required String uri, Map<String, String>? header}) async {
@@ -38,10 +41,32 @@ class ApiService {
     };
     if (header != null) requestHeader.addAll(header);
 
-    final response = await http.get(Uri.parse(uri), headers: requestHeader);
-    final json = jsonDecode(response.body);
-    return ResponseResult.fromJson(json);
+    final response = await http.get(Uri.parse('$server$uri'), headers: requestHeader);
+    return _decode(response);
   }
+
+  static Future<ResponseResult> postMultipart(String uri, {required String? multipartFilePath, required Map<String, dynamic> data}) async {
+    var request = http.MultipartRequest('POST', Uri.parse('$server$uri'));
+    request.headers.addAll({
+      "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
+      "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
+      "Content-Type": "application/json; charset=UTF-8"
+    });
+
+    if (multipartFilePath != null) {
+      request.files.add(await http.MultipartFile.fromPath('image', multipartFilePath));
+    }
+
+    for (String key in data.keys) {
+      if (data[key] == null) continue;
+      request.fields[key] = data[key];
+    }
+
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+    final json = jsonDecode(responseBody);
+    return ResponseResult.fromJson(json);
+}
 
   static Future<bool> _checkAccessToken() async {
     final accessToken = await SecureStorage.readAccessToken();
@@ -125,34 +150,6 @@ class ApiService {
 
   static Future<bool> readUser() async {
     return (await _checkAccessToken() || await _refreshingAccessToken());
-  }
-
-
-  static Future<ResultCode> editProfile({required String? profilePath, required String? nickname, required String intro }) async {
-    var request = http.MultipartRequest('POST', Uri.parse('$server/user/edit'));
-    request.headers.addAll({
-      "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
-      "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
-    });
-
-    if (profilePath != null) {
-      request.files.add(await http.MultipartFile.fromPath('image', profilePath));
-    }
-    if (nickname != null) {
-      request.fields['nickName'] = nickname;
-    }
-    request.fields['intro'] = intro;
-
-    try {
-      final response = await request.send();
-      final responseBody = await response.stream.bytesToString();
-      final json = jsonDecode(responseBody);
-      return ResultCode.valueOf(json['result']);
-    } catch (e) {
-      print('Edit Profile Exception !!');
-      print(e);
-      return ResultCode.UNKOWN;
-    }
   }
 
   static isDistinctNickname(String nickname) async {

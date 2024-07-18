@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/local_storage.dart';
-import 'package:flutter_sport/models/alert.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
@@ -24,7 +24,7 @@ class ClubService {
           required String? intro}) async {
 
     return await ApiService.post(
-      uri : '${ApiService.server}$_club/create',
+      uri : '/club/create',
       header: {
         "Content-Type" : "application/json",
         "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
@@ -41,7 +41,7 @@ class ClubService {
 
   static Future<ClubDetail> clubData({required BuildContext context, required int clubId}) async {
     ResponseResult response = await ApiService.get(
-      uri: '${ApiService.server}$_club/$clubId',
+      uri: '/club/$clubId',
       header : {
         "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
       }
@@ -62,7 +62,7 @@ class ClubService {
 
     String queryString = clubs.map((clubId) => 'clubs=$clubId').join('&');
     ResponseResult response = await ApiService.get(
-        uri: '${ApiService.server}?$queryString',
+        uri: '?$queryString',
         header : {
           "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
         }
@@ -84,12 +84,50 @@ class ClubService {
   static Future<List<ClubSimp>> getMyClubs() async {
 
     ResponseResult response = await ApiService.get(
-      uri: '${ApiService.server}/user/clubs',
+      uri: '/user/clubs',
       header: {
         "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
       }
     );
 
     return _getClubSimp(response);
+  }
+
+  static Future<ResponseResult> joinClub({required int clubId}) async {
+
+    ResponseResult response = await ApiService.post(
+        uri: '/club/$clubId/join',
+        header: {
+          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+        }
+    );
+
+    return response;
+  }
+
+  static Future<ResponseResult> clubEdit({
+    required String? image,
+    required SportType? sportType,
+    required Region? region,
+    required String? title,
+    required String? intro,
+    required int? limitPerson,
+    required int clubId}) async {
+
+    final response = await ApiService.postMultipart('/club/$clubId/edit',
+      multipartFilePath: image,
+      data: {
+        'image' : image,
+        'sportType' : sportType?.name,
+        'region' : region?.name,
+        'title' : title,
+        'intro' : intro,
+        'limitPerson' : limitPerson?.toString(),
+      },
+    );
+    print(response.resultCode);
+    print(response.data);
+    return response;
+
   }
 }

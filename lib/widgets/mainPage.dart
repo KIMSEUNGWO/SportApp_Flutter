@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
-import 'package:flutter_sport/models/alert.dart';
+import 'package:flutter_sport/common/login_checker.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
@@ -29,11 +30,9 @@ class _MainState extends ConsumerState<Main> {
 
   onChangePage(int index) {
     if (index == 2) {
-      bool hasLogin = ref.read(loginProvider.notifier).has();
-      if (!hasLogin) {
-        Alert.requireLogin(context);
-        return;
-      }
+      bool hasLogin = LoginChecker.loginCheck(context, ref);
+      print(hasLogin);
+      if (!hasLogin) return;
     }
     setState(() { _currentIndex = index;});
     _pageController.jumpToPage(index);

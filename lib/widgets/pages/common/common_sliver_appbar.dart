@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_sport/models/alert.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/notification/notifications_widget.dart';
