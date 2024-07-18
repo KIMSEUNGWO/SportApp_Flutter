@@ -45,7 +45,6 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
     recentlyViewClubs = await ClubService.getRecentlyViewClubs();
     setState(() {
       recentlyViewIsLoading = false;
-      print('???');
     });
   }
 

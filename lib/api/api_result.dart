@@ -30,6 +30,9 @@ enum ResultCode {
   // 클럽 예외
   CLUB_NOT_EXISTS,
 
+  // 클럽 생성
+  EXCEED_LIMIT_PERSON,
+
   UNKOWN;
 
   static ResultCode valueOf(String errorCode) {

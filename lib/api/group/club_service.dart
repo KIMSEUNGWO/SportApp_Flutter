@@ -67,6 +67,10 @@ class ClubService {
           "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
         }
     );
+    return _getClubSimp(response);
+  }
+
+  static List<ClubSimp> _getClubSimp(ResponseResult response) {
     List<ClubSimp> result = [];
 
     if (response.resultCode == ResultCode.OK) {
@@ -74,7 +78,18 @@ class ClubService {
         result.add(ClubSimp.fromJson(data));
       }
     }
-
     return result;
+  }
+
+  static Future<List<ClubSimp>> getMyClubs() async {
+
+    ResponseResult response = await ApiService.get(
+      uri: '${ApiService.server}/user/clubs',
+      header: {
+        "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
+      }
+    );
+
+    return _getClubSimp(response);
   }
 }

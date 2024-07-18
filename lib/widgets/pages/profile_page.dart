@@ -20,6 +20,13 @@ class ProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAliveClientMixin {
 
+  bool hasLogin = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -87,19 +94,27 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
                     icon: Icons.language,
                     text: 'Language',
                   ),
-                  ProfileBottomMenuWidget(
-                    onTap: () {
-                      Alert.confirmMessageTemplate(
-                        context: context,
-                        onPressedText: '로그아웃',
-                        onPressed: () {
-                          ref.watch(loginProvider.notifier).logout();
-                          Navigator.pop(context);
-                        },
-                        message: Text('로그아웃 하시겠습니까?'),);
+                  Consumer(
+                    builder: (context, ref, child) {
+                      if (ref.watch(loginProvider) != null) {
+                        return ProfileBottomMenuWidget(
+                          onTap: () {
+                            Alert.confirmMessageTemplate(
+                              context: context,
+                              onPressedText: '로그아웃',
+                              onPressed: () {
+                                ref.watch(loginProvider.notifier).logout();
+                                Navigator.pop(context);
+                              },
+                              message: Text('로그아웃 하시겠습니까?'),);
+                          },
+                          icon: Icons.logout,
+                          text: '로그아웃',
+                        );
+                      } else {
+                        return SizedBox();
+                      }
                     },
-                    icon: Icons.logout,
-                    text: '로그아웃',
                   ),
                 ],
               ),

@@ -11,19 +11,20 @@ import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateGroupWidget extends StatefulWidget {
+class CreateGroupWidget extends ConsumerStatefulWidget {
   const CreateGroupWidget({super.key});
 
   @override
-  State<CreateGroupWidget> createState() => _CreateGroupWidgetState();
+  ConsumerState<CreateGroupWidget> createState() => _CreateGroupWidgetState();
 }
 
-class _CreateGroupWidgetState extends State<CreateGroupWidget> {
+class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
 
   late TextEditingController _titleController;
   late TextEditingController _introController;
@@ -58,6 +59,7 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
         text: Text('모임이 생성되었습니다.'),
         onPressed: () {
           Navigator.pop(context);
+          ref.read(loginProvider.notifier).plusClub();
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return GroupDetailWidget(id: result.data);
           },));
@@ -208,14 +210,23 @@ class _CreateGroupWidgetState extends State<CreateGroupWidget> {
                               return RegionSettingsWidget(excludeAll: true, setRegion: selectRegion,);
                             },));
                           },
-                          child: Row(
-                            children: [
-                              Text(region?.getLocaleName(EasyLocalization.of(context)!.locale) ?? '',
-                                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                              ),
-                              SizedBox(width: 20,),
-                              Icon(Icons.arrow_forward_ios, size: 20,)
-                            ],
+                          child: Container(
+                            constraints: const BoxConstraints(minWidth: 150),
+                            decoration: const BoxDecoration(),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(region?.getFullName(EasyLocalization.of(context)!.locale) ?? '',
+                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B656E),),
+                                ),
+                                SizedBox(width: 5,),
+                                Text(region?.getLocaleName(EasyLocalization.of(context)!.locale) ?? '',
+                                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(width: 20,),
+                                Icon(Icons.arrow_forward_ios, size: 20,)
+                              ],
+                            ),
                           ),
                         )
                       ],

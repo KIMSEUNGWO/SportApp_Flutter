@@ -27,8 +27,7 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
     });
   }
   _onTryLogin(BuildContext context, WidgetRef ref) async {
-    loading(true);
-    final resultType = await ref.read(loginProvider.notifier).login(context);
+    final resultType = await ref.read(loginProvider.notifier).login(context, loading: loading);
     loading(false);
   }
 
@@ -150,7 +149,7 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
           width: isLoading ? MediaQuery.of(context).size.width : 0,
           height: isLoading ? MediaQuery.of(context).size.height : 0,
           child: AnimatedOpacity(
-            duration: const Duration(seconds: 2),
+            duration: const Duration(seconds: 1),
             opacity: isLoading ? 1 : 0,
             child: isLoading
               ? Container(

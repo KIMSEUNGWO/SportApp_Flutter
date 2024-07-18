@@ -4,27 +4,37 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
+import 'package:flutter_sport/models/alert.dart';
 import 'package:flutter_sport/models/user/profile.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/my_group_page.dart';
 import 'package:flutter_sport/widgets/pages/profile_page.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Main extends StatefulWidget {
+class Main extends ConsumerStatefulWidget {
   const Main({super.key});
 
   @override
-  State<Main> createState() => _MainState();
+  ConsumerState<Main> createState() => _MainState();
 }
 
-class _MainState extends State<Main> {
+class _MainState extends ConsumerState<Main> {
 
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
   onChangePage(int index) {
+    if (index == 2) {
+      bool hasLogin = ref.read(loginProvider.notifier).has();
+      if (!hasLogin) {
+        Alert.requireLogin(context);
+        return;
+      }
+    }
     setState(() { _currentIndex = index;});
     _pageController.jumpToPage(index);
   }

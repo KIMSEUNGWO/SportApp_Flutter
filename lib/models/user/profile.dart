@@ -14,9 +14,9 @@ class UserProfile {
   final String sex;
   final String birth;
 
-  final int groupCount;
-  final int inviteCount;
-  final int likeCount;
+  int groupCount;
+  int inviteCount;
+  int likeCount;
 
 
 

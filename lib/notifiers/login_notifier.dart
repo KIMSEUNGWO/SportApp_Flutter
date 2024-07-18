@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -19,13 +20,13 @@ class UserNotifier extends StateNotifier<UserProfile?> {
     state = newProfile;
   }
 
-  Future<ResultCode> login(BuildContext context) async {
+  Future<ResultCode> login(BuildContext context, {required Function(bool isLoading) loading}) async {
     final socialResult = await LineAPI.login();
     if (socialResult == null) {
       state = null;
       return ResultCode.SOCIAL_LOGIN_FAILD;
     }
-
+    loading(true);
     final result = await ApiService.login(socialResult);
     if (result == ResultCode.OK) {
       readUser();
@@ -57,6 +58,10 @@ class UserNotifier extends StateNotifier<UserProfile?> {
     state = null;
   }
 
+  bool has() {
+    return state != null;
+  }
+
   readUser() async {
     final result = await ApiService.readUser();
     if (result) {
@@ -64,6 +69,14 @@ class UserNotifier extends StateNotifier<UserProfile?> {
     } else {
       logout();
     }
+  }
+
+  void plusClub() {
+    state?.groupCount++;
+  }
+  void minusClub() {
+    if (state == null) return;
+    state!.groupCount = max(0, state!.groupCount - 1);
   }
 
 }
