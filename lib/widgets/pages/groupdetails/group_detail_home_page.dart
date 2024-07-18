@@ -73,6 +73,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
               refreshIndicatorExtent: 80.0,
               onRefresh: () async {
                 // 위로 새로고침
+                await Future.delayed(Duration(seconds: 1));
                 await widget.reloadClub();
               },
             ),

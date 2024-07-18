@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/group/club_service.dart';
-import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
-import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
 import 'package:flutter_sport/widgets/pages/create_group_page.dart';
 
@@ -27,6 +25,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
   bool isLoading = true;
 
   readMyClubs() async {
+    loading(true);
     myClubs = await ClubService.getMyClubs();
     loading(false);
   }
@@ -56,7 +55,8 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                   refreshIndicatorExtent: 50.0,
                   onRefresh: () async {
                     // 위로 새로고침
-                    await Future.delayed(Duration(seconds: 2));
+                    await Future.delayed(Duration(seconds: 1));
+                    readMyClubs();
                   },
                 ),
                 SliverToBoxAdapter(
@@ -141,7 +141,9 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                                           color: Color(0xFFE4E4E4),
                                           borderRadius: BorderRadius.circular(10),
                                         ),
-                                        child: Center(child: SvgPicture.asset('assets/icons/emptyGroupImage.svg', width: 35, height: 35, color: Color(0xFF878181),))
+                                        child: club.thumbnail == null
+                                          ? Center(child: SvgPicture.asset('assets/icons/emptyGroupImage.svg', width: 35, height: 35, color: Color(0xFF878181),))
+                                          : club.thumbnail
                                     ),
                                   ],
                                 ),
