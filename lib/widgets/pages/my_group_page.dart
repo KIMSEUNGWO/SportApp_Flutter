@@ -49,41 +49,41 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
           children: [
             CustomScrollView(
               slivers: [
-                CustomSliverAppBar(),
+                const CustomSliverAppBar(),
                 CupertinoSliverRefreshControl(
                   refreshTriggerPullDistance: 100.0,
                   refreshIndicatorExtent: 50.0,
                   onRefresh: () async {
-                    // 위로 새로고침
-                    await Future.delayed(Duration(seconds: 1));
+                    await Future.delayed(const Duration(seconds: 1));
                     readMyClubs();
                   },
                 ),
                 SliverToBoxAdapter(
                   child: Container(
                     height: 120,
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Color(0xFFDCD7D7)
+                        color: const Color(0xFFDCD7D7)
                     ),
                   ),
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text('내 모임',
                       style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500
+                        fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.primary
                       ),
                     ),
                   ),
                 ),
                 SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverList.separated(
-                    separatorBuilder: (context, index) => SizedBox(height: 13,),
+                    separatorBuilder: (context, index) => const SizedBox(height: 13,),
                     itemCount: myClubs.length,
                     itemBuilder: (context, index) {
                       ClubSimp club = myClubs[index];
@@ -95,13 +95,12 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                             },));
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Color(0xFFFBFBFB),
-                                boxShadow: [
-                                  BoxShadow(color: Color(0xFFF1F1F5), offset: Offset(5, 5), blurRadius: 6)
-                                ]
+                              borderRadius: BorderRadius.circular(15),
+                              // color: Theme.of(context).cardColor,
+                              color: Theme.of(context).colorScheme.tertiaryContainer,
+
                             ),
                             child: Column (
                               children: [
@@ -115,19 +114,34 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                                           Text(club.title,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                              fontSize: 17,
+                                              // fontSize: 17,
+                                              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                              color: Theme.of(context).colorScheme.primary,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          SizedBox(height: 5,),
+                                          const SizedBox(height: 5,),
                                           Row(
                                             children: [
-                                              Text('sportTitle').tr(gender: club.sport!.lang),
-                                              Text(' · '),
-                                              Text(club.region!.getLocaleName(EasyLocalization.of(context)!.locale)),
-                                              Text(' · '),
-                                              Icon(Icons.people_alt, size: 17, color: Color(0xFF707072),),
-                                              Text('person').tr(args: [club.personCount.toString()]),
+                                              Text('sportTitle',
+                                                style: detailStyle(context),
+                                              ).tr(gender: club.sport!.lang),
+                                              Text(' · ',
+                                                style: detailStyle(context),
+                                              ),
+                                              Text(club.region!.getLocaleName(EasyLocalization.of(context)!.locale),
+                                                style: detailStyle(context),
+                                              ),
+                                              Text(' · ',
+                                                style: detailStyle(context),
+                                              ),
+                                              Icon(Icons.people_alt,
+                                                size: 17,
+                                                color: Color(0xFF707072),
+                                              ),
+                                              Text('person',
+                                                style: detailStyle(context),
+                                              ).tr(args: [club.personCount.toString()]),
                                             ],
                                           )
                                         ],
@@ -172,9 +186,9 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                   width: 65, height: 65,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: Color(0xFFE9F1FA),
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
-                  child: Icon(Icons.add, size: 40,),
+                  child: const Icon(Icons.add, size: 40, color: Colors.white,),
                 ),
               ),
             )
@@ -186,6 +200,14 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
       );
     }
 
+  }
+
+  TextStyle detailStyle(BuildContext context) {
+    return TextStyle(
+      color: Theme.of(context).colorScheme.secondary,
+      fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+      fontWeight: FontWeight.w400
+    );
   }
 
   @override

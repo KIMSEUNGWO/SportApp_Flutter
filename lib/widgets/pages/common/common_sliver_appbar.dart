@@ -22,6 +22,7 @@ class CustomSliverAppBar extends StatelessWidget {
       elevation: 0,
       toolbarHeight: 50,
       floating: true,
+      backgroundColor: Theme.of(context).colorScheme.background,
       title: GestureDetector(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => RegionSettingsWidget(),));
@@ -32,17 +33,17 @@ class CustomSliverAppBar extends StatelessWidget {
               builder: (context, ref, child) {
                 return Text(ref.watch(regionProvider).getLocaleName(EasyLocalization.of(context)!.locale),
                   style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 24,
-                      color: Color(0xFF2B2828)
+                    fontWeight: FontWeight.w600,
+                    fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                    color: Theme.of(context).colorScheme.primary
                   ),
                 );
               },
             ),
-            SizedBox(width: 3,),
+            SizedBox(width: 5,),
             Icon(Icons.arrow_forward_ios,
-              color: Color(0xFF2B2828),
-              size: 21,
+              color: Theme.of(context).colorScheme.primary,
+              size: Theme.of(context).textTheme.displayLarge!.fontSize,
             )
           ],
         ),

@@ -38,8 +38,9 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text('mainAppBarMenus').tr(gender: 'notification'),
-        flexibleSpace: Container(color: Colors.white,),
       ),
       body: isLoading
         ? const Center(child: CircularProgressIndicator(),)

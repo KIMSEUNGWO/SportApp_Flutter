@@ -24,19 +24,19 @@ class LargeListWidget extends StatelessWidget {
   });
 
 
-  final double titleSize = 16;
-  final TextStyle detailStyle = const TextStyle(
-    color: Color(0xFF878080),
-    fontSize: 13,
-  );
-
+  TextStyle detailStyle (BuildContext context) {
+    return TextStyle(
+      color: Theme.of(context).colorScheme.secondary,
+      fontSize: 13,
+    );
+  }
   @override
   Widget build(BuildContext context) {
 
     List<Widget> extraWidget = [];
 
     if (extraInfo != null) {
-      extraWidget.add(dot());
+      extraWidget.add(dot(context));
       extraWidget.add(extraInfo!);
     }
     return GestureDetector(
@@ -61,17 +61,18 @@ class LargeListWidget extends StatelessWidget {
                 children: [
                   Text(title,
                     style: TextStyle(
-                        fontSize: titleSize,
-                        fontWeight: FontWeight.w600,
-                        overflow: TextOverflow.ellipsis,
-                        height: 1.5
+                      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                      overflow: TextOverflow.ellipsis,
+                      height: 1.5
                     ),
                   ),
                   Row(
                     children: [
-                      Text(region, style: detailStyle,),
-                      dot(),
-                      Text('person', style: detailStyle,).tr(args: [personCount.toString()]),
+                      Text(region, style: detailStyle(context),),
+                      dot(context),
+                      Text('person', style: detailStyle(context),).tr(args: [personCount.toString()]),
                       ...extraWidget
                     ],
                   ),
@@ -84,7 +85,7 @@ class LargeListWidget extends StatelessWidget {
     );
   }
 
-  Text dot() {
-    return Text(' · ', style: detailStyle,);
+  Text dot(BuildContext context) {
+    return Text(' · ', style: detailStyle(context),);
   }
 }

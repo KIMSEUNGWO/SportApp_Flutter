@@ -3,21 +3,21 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/login_checker.dart';
-import 'package:flutter_sport/common/alert.dart';
-import 'package:flutter_sport/models/user/profile.dart';
-import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/my_group_page.dart';
-import 'package:flutter_sport/widgets/pages/profile_page.dart';
+import 'package:flutter_sport/widgets/pages/profile/profile_page.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Main extends ConsumerStatefulWidget {
-  const Main({super.key});
+
+  final Function() themeLight;
+  final Function() themeDark;
+
+  const Main({super.key, required this.themeLight, required this.themeDark});
 
   @override
   ConsumerState<Main> createState() => _MainState();
@@ -49,7 +49,7 @@ class _MainState extends ConsumerState<Main> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: PageView(
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
@@ -57,35 +57,42 @@ class _MainState extends ConsumerState<Main> {
           MainPage(),
           SearchPage(),
           MyGroupPage(),
-          ProfilePage(),
+          ProfilePage(themeLight: widget.themeLight, themeDark: widget.themeDark),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-        elevation: 0,
-        color: Colors.white,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            BottomNavigator(
-              title: 'home', icon: Icons.home,
-              callback: () => onChangePage(0), isPressed: _currentIndex == 0,
-            ),
-            BottomNavigator(
-              title: 'search', icon: Icons.search,
-              // callback: () => onChangePage(1),
-              callback: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(),)),
-              isPressed: _currentIndex == 1,
-            ),
-            BottomNavigator(
-              title: 'myGroups', icon: Icons.chat_bubble,
-              callback: () => onChangePage(2), isPressed: _currentIndex == 2,
-            ),
-            BottomNavigator(
-              title: 'profile', icon: Icons.person,
-              callback: () => onChangePage(3), isPressed: _currentIndex == 3,
-            ),
-          ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Color(0xFFF1F1F5), width: 0.2)
+          ),
+        ),
+        child: BottomAppBar(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.background,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              BottomNavigator(
+                title: 'home', icon: Icons.home,
+                callback: () => onChangePage(0), isPressed: _currentIndex == 0,
+              ),
+              BottomNavigator(
+                title: 'search', icon: Icons.search,
+                // callback: () => onChangePage(1),
+                callback: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(),)),
+                isPressed: _currentIndex == 1,
+              ),
+              BottomNavigator(
+                title: 'myGroups', icon: Icons.chat_bubble,
+                callback: () => onChangePage(2), isPressed: _currentIndex == 2,
+              ),
+              BottomNavigator(
+                title: 'profile', icon: Icons.person,
+                callback: () => onChangePage(3), isPressed: _currentIndex == 3,
+              ),
+            ],
+          ),
         ),
       ),
 
@@ -118,9 +125,21 @@ class BottomNavigator extends StatelessWidget {
       onTap: callback,
       child: Column(
         children: [
-          Icon(icon, size: 35, color: isPressed ? pressedColor : defaultColor,),
-          Text('bottomAppBarMenus', style: TextStyle(color: isPressed ? pressedColor : defaultColor),)
-            .tr(gender: title),
+          Icon(icon,
+            size: 35,
+            color: isPressed
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.secondary,
+          ),
+          Text('bottomAppBarMenus',
+            style: TextStyle(
+              color: isPressed
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.secondary,
+              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+              fontWeight: FontWeight.w500
+            ),
+          ).tr(gender: title),
         ],
       ),
     );

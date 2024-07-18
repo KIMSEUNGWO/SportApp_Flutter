@@ -30,10 +30,6 @@ class SmallListWidget extends StatelessWidget {
     this.padding
   });
 
-  final TextStyle detailStyle = const TextStyle(
-    color: Color(0xFF707072),
-    fontSize: 12,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +67,18 @@ class SmallListWidget extends StatelessWidget {
                       children: [
                         Text(title,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 18,
+                          style: TextStyle(
+                            // fontSize: 18,
+                            fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                             fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.primary
                           ),
                         ),
                         Text(intro ?? '',
                           style: TextStyle(
                               overflow: TextOverflow.ellipsis,
-                              fontSize: 13,
+                              // fontSize: 13,
+                              fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
                               color: Theme.of(context).colorScheme.secondary
                           ),
                         ),
@@ -89,23 +88,32 @@ class SmallListWidget extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color(0xFFDFDFDF)
+                            borderRadius: BorderRadius.circular(10),
+                            color: Theme.of(context).colorScheme.secondaryContainer
                           ),
                           child: Text('sportTitle',
-                            style: const TextStyle(
-                              color: Colors.black,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
                               fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 1
                             ),
                           ).tr(gender: sport.lang),
                         ),
-                        dot(),
-                        Text(region.getLocaleName(EasyLocalization.of(context)!.locale), style: detailStyle),
-                        dot(),
-                        Icon(Icons.people_alt, size: 17, color: Color(0xFF707072),),
-                        Text('person'.tr(args: [personCount.toString()]), style: detailStyle)
+                        dot(context),
+                        Text(region.getLocaleName(EasyLocalization.of(context)!.locale),
+                          style: detailStyle(context),
+                        ),
+                        dot(context),
+                        Icon(Icons.people_alt,
+                          size: 17,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
+                        Text('person'.tr(args: [personCount.toString()]),
+                          style: detailStyle(context),
+                        ),
                       ],
                     )
                   ],
@@ -119,7 +127,14 @@ class SmallListWidget extends StatelessWidget {
     );
   }
 
-  Text dot() {
-    return Text(' · ', style: detailStyle,);
+  TextStyle detailStyle(BuildContext context) {
+    return TextStyle(
+      color: Theme.of(context).colorScheme.tertiary,
+      fontSize: 12,
+    );
+  }
+
+  Text dot(BuildContext context) {
+    return Text(' · ', style: detailStyle(context),);
   }
 }

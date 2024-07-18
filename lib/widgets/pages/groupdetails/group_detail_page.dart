@@ -143,7 +143,13 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text(club.title, overflow: TextOverflow.ellipsis,),
+        title: Text(club.title,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w500,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           GestureDetector(
             onTap: () => toggleLike(),
@@ -159,26 +165,30 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
           ),
           GestureDetector(
             onTap: () => showBottomActionSheet(context),
-            child: const Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: Icon(Icons.more_horiz_outlined, size: 30, ),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: Icon(Icons.more_horiz_outlined,
+                size: 30,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           )
         ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(40.0),
           child: Container(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.background,
             child: TabBar(
               controller: _tabController,
               // labelColor: Colors.red,
-              labelColor: Color(0xFF72A8E6),
+              labelColor: Theme.of(context).colorScheme.onPrimary,
               // indicatorColor: Colors.red,
-              indicatorColor: Color(0xFF72A8E6),
+              indicatorColor: Theme.of(context).colorScheme.onPrimary,
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorWeight: 2.5,
               labelStyle: TextStyle(
-                fontSize: 18,
+                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                fontWeight: FontWeight.w500,
               ),
               tabs: tabList.keys.toList(),
             ),

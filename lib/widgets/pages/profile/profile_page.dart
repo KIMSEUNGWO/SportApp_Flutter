@@ -4,15 +4,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
-import 'package:flutter_sport/widgets/pages/language_settings.dart';
-import 'package:flutter_sport/widgets/pages/profile_edit_page.dart';
+import 'package:flutter_sport/widgets/pages/profile/language_settings.dart';
+import 'package:flutter_sport/widgets/pages/profile/profile_edit_page.dart';
+import 'package:flutter_sport/widgets/pages/profile/settings.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({super.key});
+
+  final Function() themeLight;
+  final Function() themeDark;
+
+  const ProfilePage({super.key, required this.themeLight, required this.themeDark});
 
   @override
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
@@ -34,6 +39,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
       appBar: AppBar(
         actions: [
           GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingWidget(themeLight: widget.themeLight, themeDark: widget.themeDark),));
+            },
             child: Container(
                 margin: EdgeInsets.only(right: 20),
                 child: Icon(Icons.settings, size: 30,)

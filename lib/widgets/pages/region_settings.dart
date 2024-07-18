@@ -44,11 +44,12 @@ class _RegionSettingsWidgetState extends ConsumerState<RegionSettingsWidget> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Container(
           padding: EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Color(0xFFE3E3E3),
+            color: Theme.of(context).cardColor,
           ),
           child: Row(
             children: [
@@ -77,10 +78,10 @@ class _RegionSettingsWidgetState extends ConsumerState<RegionSettingsWidget> {
       ),
       body: ListView.separated(
         separatorBuilder: (context, index) => Container(
-          margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-          height: 1,
-          decoration: BoxDecoration(
-            color: Color(0xFFE4DDDD),
+          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+          height: 0.2,
+          decoration: const BoxDecoration(
+            color: Color(0xFF959595),
           ),
         ),
         itemCount: find.length,
@@ -127,7 +128,8 @@ class _FindResultRegionWidgetState extends ConsumerState<FindResultRegionWidget>
         children: [
           Text(name,
             style: TextStyle(
-              fontSize: 16,
+              // fontSize: 16,
+              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize
             ),
           ),
           SizedBox(width: 10,),

@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sport/api/group/club_service.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
-import 'package:flutter_sport/models/component.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 
 class RecentlyVisitPages extends StatelessWidget {
 
-  List<ClubSimp> clubs;
+  final List<ClubSimp> clubs;
 
   RecentlyVisitPages({super.key, required this.clubs});
 
@@ -15,6 +13,8 @@ class RecentlyVisitPages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text('최근 본 모임'),
       ),
       body: Container(

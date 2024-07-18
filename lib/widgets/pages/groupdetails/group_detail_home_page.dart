@@ -7,7 +7,6 @@ import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/group/club_service.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/login_checker.dart';
-import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,6 +59,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
   }
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       child: Stack(
         children: [
@@ -73,7 +73,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
               refreshIndicatorExtent: 80.0,
               onRefresh: () async {
                 // 위로 새로고침
-                await Future.delayed(Duration(seconds: 1));
+                await Future.delayed(const Duration(seconds: 1));
                 await widget.reloadClub();
               },
             ),
@@ -98,7 +98,8 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
                   children: [
                     Text(widget.club.title,
                       style: TextStyle(
-                        fontSize: 21,
+                        fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w500,
                         height: 2
                       ),
@@ -114,7 +115,13 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
                     ),
                     const SizedBox(height: 20,),
                     if (widget.club.intro != null)
-                      Text(widget.club.intro!, style: TextStyle(fontSize: 14),), // 본문내용
+                      Text(widget.club.intro!,
+                        style: TextStyle(
+                          fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w500
+                        ),
+                      ), // 본문내용
                   ],
                 )
               ),

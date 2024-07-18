@@ -155,17 +155,24 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('모임 생성'),
+        title: Text('모임 생성',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w500
+          ),
+        ),
         scrolledUnderElevation: 0,
         actions: [
           GestureDetector(
             onTap: () => _submit(context),
             child: Container(
-              margin: EdgeInsets.only(right: 20),
+              margin: const EdgeInsets.only(right: 20),
               child: Text('등록',
-                style: const TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.w500
+                style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 1.1
                 ),
               ),
             ),
@@ -194,11 +201,14 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.location_on, size: 25,),
-                            SizedBox(width: 5,),
+                            Icon(Icons.location_on, size: 25,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            const SizedBox(width: 5,),
                             Text('지역',
                               style: TextStyle(
-                                  fontSize: 17
+                                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                                fontWeight: FontWeight.w500,
                               ),
                             )
                           ],
@@ -217,13 +227,22 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(region?.getFullName(EasyLocalization.of(context)!.locale) ?? '',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B656E),),
+                                  style: TextStyle(
+                                    fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                                    fontWeight: FontWeight.w500,
+                                    // color: Color(0xFF6B656E),
+                                    color: Theme.of(context).colorScheme.tertiary
+                                  ),
                                 ),
-                                SizedBox(width: 5,),
+                                const SizedBox(width: 10,),
                                 Text(region?.getLocaleName(EasyLocalization.of(context)!.locale) ?? '',
-                                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                                  style: TextStyle(
+                                    fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                                    fontWeight: FontWeight.w500,
+                                      color: Theme.of(context).colorScheme.primary
+                                  ),
                                 ),
-                                SizedBox(width: 20,),
+                                const SizedBox(width: 10,),
                                 Icon(Icons.arrow_forward_ios, size: 20,)
                               ],
                             ),
@@ -237,15 +256,24 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.people_alt, size: 25,),
+                            Icon(Icons.people_alt, size: 25,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                             const SizedBox(width: 5,),
                             Text('인원 수',
                               style: TextStyle(
-                                  fontSize: 17
+                                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                                fontWeight: FontWeight.w500
                               ),
                             ),
                             const SizedBox(width: 10,),
-                            Text('(3 ~ 100명)')
+                            Text('(3 ~ 100명)',
+                              style: TextStyle(
+                                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontWeight: FontWeight.w500
+                              ),
+                            )
                           ],
                         ),
                         SizedBox(width: 30,),
@@ -515,17 +543,25 @@ class _SelectMenuState extends State<SelectMenu> {
         widget.select(widget.sportType);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: widget.sportType == widget.target ? const Color(0xFFD9E7F6) : Colors.white,
+          color: widget.sportType == widget.target 
+              ? Theme.of(context).colorScheme.primaryContainer
+              : Colors.white.withOpacity(0),
           borderRadius: BorderRadius.circular(10)
         ),
         width: 80,
         child: Column(
           children: [
             SvgPicture.asset(widget.assetSvg),
-            const SizedBox(height: 6,),
-            Text('sportTitle').tr(gender: widget.label),
+            const SizedBox(height: 10,),
+            Text('sportTitle',
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w600
+              ),
+            ).tr(gender: widget.label),
           ],
         ),
       ),

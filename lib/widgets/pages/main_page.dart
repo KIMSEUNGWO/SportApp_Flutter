@@ -82,7 +82,8 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                     Text('recentlySearchGroups',
                       style: TextStyle(
                         fontSize: 19,
-                        fontWeight: FontWeight.w500
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.primary
                       ),
                     ).tr(),
                     GestureDetector(
@@ -247,8 +248,15 @@ class Menu extends StatelessWidget {
         child: Column(
           children: [
             SvgPicture.asset(assetSvg),
-            const SizedBox(height: 6,),
-            Text('sportTitle').tr(gender: label),
+            const SizedBox(height: 8,),
+            Text('sportTitle',
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 1,
+              ),
+            ).tr(gender: label),
           ],
         ),
       ),

@@ -6,7 +6,11 @@ import 'package:flutter_sport/widgets/mainPage.dart';
 
 
 class InitPage extends ConsumerStatefulWidget {
-  const InitPage({super.key});
+
+  final Function() themeLight;
+  final Function() themeDark;
+
+  const InitPage({super.key, required this.themeLight, required this.themeDark});
 
   @override
   ConsumerState<InitPage> createState() => _InitPageState();
@@ -26,6 +30,6 @@ class _InitPageState extends ConsumerState<InitPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Main();
+    return Main(themeLight: widget.themeLight, themeDark: widget.themeDark);
   }
 }

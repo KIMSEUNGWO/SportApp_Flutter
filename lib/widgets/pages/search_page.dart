@@ -87,11 +87,12 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: const Color(0xFFE3E3E3),
+            color: Theme.of(context).cardColor,
           ),
           child: Row(
             children: [
@@ -110,18 +111,18 @@ class _SearchPageState extends State<SearchPage> {
                   autofocus: true,
                 ),
               ),
-              SizedBox(width: 10,),
+              const SizedBox(width: 10,),
               if (_textController.text.isNotEmpty)
                 GestureDetector(
                   onTap: () => textClear(),
-                  child: Icon(Icons.cancel,
+                  child: const Icon(Icons.cancel,
                     color: Color(0xFF9F9B9B),
-                    size: 25,
+                    size: 22,
                   ),
                 ),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
 
-              Icon(Icons.search,
+              const Icon(Icons.search,
                 color: Color(0xFF9F9B9B),
                 size: 30,
               ),
@@ -151,7 +152,7 @@ class _SearchPageState extends State<SearchPage> {
               child: Container(
                 decoration: const BoxDecoration(),
                 padding: EdgeInsets.only(bottom: keyboardHeight),
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -247,15 +248,15 @@ class _RecentlySearchWordState extends State<RecentlySearchWord> {
             Text('최근 검색어',
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 17,
+                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
               ),
             ),
             GestureDetector(
               onTap: () => widget.deleteAllWord(),
               child: Text('전체 지우기',
                 style: TextStyle(
-                    fontSize: 14,
-                    color: Theme.of(context).colorScheme.secondary
+                  fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                  color: Theme.of(context).colorScheme.secondary
                 ),
               ),
             ),
@@ -283,8 +284,10 @@ class _RecentlySearchWordState extends State<RecentlySearchWord> {
                     onTap: () => widget.onTap(widget.words[index]),
                     child: Text(widget.words[index],
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14
+                      style: TextStyle(
+                        fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w600
                       ),
                     ),
                   ),
@@ -294,7 +297,9 @@ class _RecentlySearchWordState extends State<RecentlySearchWord> {
                   onTap: () {
                     widget.deleteWord(widget.words[index]);
                   },
-                  child: const Icon(Icons.close),
+                  child: Icon(Icons.close,
+                    size: Theme.of(context).textTheme.displayMedium!.fontSize,
+                  ),
                 ),
               ],
             );
@@ -314,24 +319,24 @@ class SearchCondition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.only(bottom: 10),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            const SizedBox(width: 20,),
             Container(
               margin: EdgeInsets.only(right: 7),
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               decoration: BoxDecoration(
                   border: Border.all(
-                    color : Color(0xFFACA5A5),
+                    color : Theme.of(context).colorScheme.outline,
+                    width: 1.8,
                   ),
                   borderRadius: BorderRadius.circular(30)
               ),
               child: Text('야구',
                 style: TextStyle(
-                    fontWeight: FontWeight.w500
+                  fontWeight: FontWeight.w500
                 ),
               ),
             ),
@@ -340,7 +345,8 @@ class SearchCondition extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               decoration: BoxDecoration(
                   border: Border.all(
-                    color : Color(0xFFACA5A5),
+                    color : Theme.of(context).colorScheme.outline,
+                    width: 1.8,
                   ),
                   borderRadius: BorderRadius.circular(30)
               ),

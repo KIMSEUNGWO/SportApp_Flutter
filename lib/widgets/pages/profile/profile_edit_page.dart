@@ -8,7 +8,7 @@ import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/common/image.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
-import 'package:flutter_sport/widgets/pages/profile_page.dart';
+import 'package:flutter_sport/widgets/pages/profile/profile_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:easy_localization/easy_localization.dart';

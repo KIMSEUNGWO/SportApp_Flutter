@@ -25,9 +25,13 @@ class SoccerPage extends ConsumerWidget {
     String translationRegionTitle = ref.read(regionProvider.notifier).getLocalName(locale);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         scrolledUnderElevation: 0,
-        title: Text('sportTitle').tr(gender: label),
+        title: const Text('sportTitle',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
+        ).tr(gender: label),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -48,27 +52,21 @@ class SoccerPage extends ConsumerWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Text('mostActiveGroups',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF565360),
-                        ),
-                      ).tr(),
-                      SizedBox(width: 5,),
-                      Text('🔥', style: TextStyle(fontSize: 19),)
-                    ],
-                  ),
+                  child: Text('mostActiveGroups',
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.primary
+                    ),
+                  ).tr(),
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 SizedBox(
                   height: 200,
                   child: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     scrollDirection: Axis.horizontal,
-                    separatorBuilder: (context, index) => SizedBox(width: 20,),
+                    separatorBuilder: (context, index) => const SizedBox(width: 20,),
                     itemCount: 10,
                     itemBuilder: (context, index) {
                       return LargeListWidget(
@@ -77,7 +75,7 @@ class SoccerPage extends ConsumerWidget {
                         title: '모임제목모임제목모임제목모임제목모임제목모임제목',
                         region: '시부야구',
                         personCount: 3,
-                        extraInfo: Text('recentlyChat',
+                        extraInfo: const Text('recentlyChat',
                           style: TextStyle(
                             color: Color(0xFFF34C4C),
                             fontWeight: FontWeight.w600,
@@ -97,27 +95,21 @@ class SoccerPage extends ConsumerWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      Text('newGroups',
-                        style: TextStyle(
-                          fontSize: 19,
-                          color: Color(0xFF565360),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ).tr(),
-                      SizedBox(width: 5,),
-                      Text('🔰', style: TextStyle(fontSize: 19),)
-                    ],
-                  ),
+                  child: Text('newGroups',
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.primary
+                    ),
+                  ).tr(),
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 SizedBox(
                   height: 200,
                   child: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     scrollDirection: Axis.horizontal,
-                    separatorBuilder: (context, index) => SizedBox(width: 20,),
+                    separatorBuilder: (context, index) => const SizedBox(width: 20,),
                     itemCount: 10,
                     itemBuilder: (context, index) {
                       return LargeListWidget(
@@ -126,7 +118,7 @@ class SoccerPage extends ConsumerWidget {
                         title: '모임제목모임제목모임제목모임제목모임제목모임제목',
                         region: '시부야구',
                         personCount: 3,
-                        extraInfo: Text('NEW',
+                        extraInfo: const Text('NEW',
                           style: TextStyle(
                             color: Color(0xFF53C62C),
                             fontWeight: FontWeight.w600,
@@ -137,26 +129,26 @@ class SoccerPage extends ConsumerWidget {
                     },
                   ),
                 ),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20,),
               ],
             ),
           ),
 
           SliverToBoxAdapter(
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               child : Text('activateIn',
                 style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.w500
+                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                  fontWeight: FontWeight.w500
                 ),
               ).tr(args: [translationRegionTitle]),
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             sliver: SliverList.separated(
-              separatorBuilder: (context, index) => SizedBox(height: 5,),
+              separatorBuilder: (context, index) => const SizedBox(height: 5,),
               itemCount: 20,
               itemBuilder: (context, index) {
                 return SmallListWidget(
