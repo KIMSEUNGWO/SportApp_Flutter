@@ -155,9 +155,12 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                                           color: Theme.of(context).colorScheme.surface,
                                           borderRadius: BorderRadius.circular(10),
                                         ),
-                                        child: club.thumbnail == null
-                                          ? Center(child: SvgPicture.asset('assets/icons/emptyGroupImage.svg', width: 35, height: 35, color: Color(0xFF878181),))
-                                          : club.thumbnail
+                                        child: club.thumbnail ??
+                                          Center(
+                                            child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
+                                              width: 35, height: 35, color: const Color(0xFF878181),
+                                            ),
+                                          )
                                     ),
                                   ],
                                 ),
@@ -183,12 +186,27 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                   ));
                 },
                 child: Container(
-                  width: 65, height: 65,
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(20),
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
-                  child: const Icon(Icons.add, size: 40, color: Colors.white,),
+                  child: Row(
+                    children: [
+                      Icon(Icons.add,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 8,),
+                      Text('그룹 생성',
+                        style: TextStyle(
+                          fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
