@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/models/upload_image.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -68,6 +69,13 @@ class ImagePick {
     return await picker.pickImage(source: ImageSource.gallery);
   }
 
+  Future<List<XFile>> _pickMultiImage() async {
+    final ImagePicker picker = ImagePicker();
+    return picker.pickMultiImage();
+  }
+
+
+
   Future<XFile?> get() async {
     final status = await _getPermission();
     if (status.isGranted) {
@@ -76,6 +84,20 @@ class ImagePick {
       print('이미지 권한 없음');
       return null;
     }
+  }
+
+  Future<List<UploadImage>> getMulti() async {
+    final status = await _getPermission();
+    if (status.isGranted) {
+      List<XFile> images = await _pickMultiImage();
+      return images.map((e) => convert(e)).toList();
+    } else {
+      return [];
+    }
+  }
+
+  UploadImage convert(XFile xFile) {
+    return UploadImage(xFile.path);
   }
 
   Future<CroppedFile?> getAndCrop(BuildContext context) async {

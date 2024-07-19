@@ -1,11 +1,18 @@
 
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/alert.dart';
+import 'package:flutter_sport/common/image.dart';
+import 'package:flutter_sport/main.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
+import 'package:flutter_sport/models/upload_image.dart';
+import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
 
 class CreateBoardWidget extends StatefulWidget {
   final int clubId;
@@ -21,6 +28,7 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
 
   late TextEditingController _titleController;
   late TextEditingController _contentController;
+  List<UploadImage> uploadImages = [];
 
   String? _titleErrorText;
   String? _contentErrorText;
@@ -35,6 +43,12 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
     setState(() {
       boardType = selectBoardType;
     });
+  }
+
+  selectImages() async {
+    List<UploadImage> images = await ImagePick().getMulti();
+    uploadImages.addAll(images);
+    setState(() {});
   }
 
   bool _titleValid() {
@@ -85,6 +99,7 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -121,146 +136,227 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
           return SingleChildScrollView(
             child: GestureDetector(
               onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: Container(
-                decoration: const BoxDecoration(),
-                margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15 + keyboardHeight),
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      height: 200,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              selectImages();
+                            },
+                            child: Container(
+                              width: 200,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.outlineVariant,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.add,
+                                      size: 40,
+                                      color: Theme.of(context).colorScheme.tertiary,
+                                    ),
+                                    const SizedBox(height: 5,),
+                                    Text('눌러서 선택',
+                                      style: TextStyle(
+                                        color: Theme.of(context).colorScheme.tertiary,
+                                        fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10,),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            separatorBuilder: (context, index) => const SizedBox(width: 10,),
+                            itemCount: uploadImages.length,
+                            itemBuilder: (context, index) {
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              UploadImage uploadImage = uploadImages[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    fullscreenDialog: true,
+                                    builder: (context) {
+                                      return ImageDetailView(image: uploadImage.image);
+                                    },
+                                  ));
+                                },
+                                child: Container(
+                                  width: 200,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Theme.of(context).colorScheme.outlineVariant,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: uploadImage.image,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  Container(
+                    decoration: const BoxDecoration(),
+                    margin: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15 + keyboardHeight),
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.grid_view_rounded, size: 25,
-                              color: Theme.of(context).colorScheme.secondary,
+                            Row(
+                              children: [
+                                Icon(Icons.grid_view_rounded, size: 25,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                                const SizedBox(width: 5,),
+                                Text('카테고리',
+                                  style: TextStyle(
+                                    fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                )
+                              ],
                             ),
-                            const SizedBox(width: 5,),
-                            Text('카테고리',
-                              style: TextStyle(
-                                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
-                                fontWeight: FontWeight.w500,
+
+                            GestureDetector(
+                              onTap: () {
+                                showBottomActionSheet(context, setBoardType, widget.authority!);
+                              },
+                              child: Container(
+                                constraints: const BoxConstraints(minWidth: 150),
+                                decoration: const BoxDecoration(),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    if (boardType != null)
+                                      Text('groupBoardMenus',
+                                      style: TextStyle(
+                                          fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                                          fontWeight: FontWeight.w500,
+                                          color: Theme.of(context).colorScheme.primary
+                                      ),
+                                    ).tr(gender: boardType!.lang),
+                                    const SizedBox(width: 10,),
+                                    const Icon(Icons.arrow_forward_ios, size: 20,)
+                                  ],
+                                ),
                               ),
                             )
                           ],
                         ),
-
-                        GestureDetector(
-                          onTap: () {
-                            showBottomActionSheet(context, setBoardType, widget.authority!);
-                          },
-                          child: Container(
-                            constraints: const BoxConstraints(minWidth: 150),
-                            decoration: const BoxDecoration(),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                if (boardType != null)
-                                  Text('groupBoardMenus',
-                                  style: TextStyle(
-                                      fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
-                                      fontWeight: FontWeight.w500,
-                                      color: Theme.of(context).colorScheme.primary
-                                  ),
-                                ).tr(gender: boardType!.lang),
-                                const SizedBox(width: 10,),
-                                const Icon(Icons.arrow_forward_ios, size: 20,)
-                              ],
+                        const SizedBox(height: 40,),
+                        TextField(
+                          controller: _titleController,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color(0xFFD9D9D9),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                  color: Color(0xFFD9E7F6),
+                                  width: 2
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Color(0xFFFA5252),
+                                    width: 2
+                                )
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                  color: Color(0xFFFA5252),
+                                  width: 2
+                              ),
+                            ),
+                            hintText: '제목을 입력해주세요.',
+                            errorText: _titleErrorText,
+                            errorStyle: TextStyle(
+                              color: Color(0xFFFA5252),
                             ),
                           ),
-                        )
+                          maxLength: 20,
+                        ),
+                        const SizedBox(height: 20,),
+                        TextField(
+                          controller: _contentController,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: Color(0xFFD9D9D9),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                  color: Color(0xFFD9E7F6),
+                                  width: 2
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                    color: Color(0xFFFA5252),
+                                    width: 2
+                                )
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                  color: Color(0xFFFA5252),
+                                  width: 2
+                              ),
+                            ),
+                            hintText: '게시물 내용을 입력해주세요.',
+                            errorText: _contentErrorText,
+                            errorStyle: TextStyle(
+                              color: Color(0xFFFA5252),
+                            ),
+                          ),
+                          maxLines: 8,
+                          maxLength: 200,
+                        ),
+                        const SizedBox(height: 20,),
                       ],
                     ),
-                    const SizedBox(height: 20,),
-
-                    TextField(
-                      controller: _titleController,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                            color: Color(0xFFD9D9D9),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Color(0xFFD9E7F6),
-                              width: 2
-                          ),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: BorderSide(
-                                color: Color(0xFFFA5252),
-                                width: 2
-                            )
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Color(0xFFFA5252),
-                              width: 2
-                          ),
-                        ),
-                        hintText: '제목을 입력해주세요.',
-                        errorText: _titleErrorText,
-                        errorStyle: TextStyle(
-                          color: Color(0xFFFA5252),
-                        ),
-                      ),
-                      maxLength: 20,
-                    ),
-                    const SizedBox(height: 20,),
-                    TextField(
-                      controller: _contentController,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                            color: Color(0xFFD9D9D9),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Color(0xFFD9E7F6),
-                              width: 2
-                          ),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: BorderSide(
-                                color: Color(0xFFFA5252),
-                                width: 2
-                            )
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(
-                              color: Color(0xFFFA5252),
-                              width: 2
-                          ),
-                        ),
-                        hintText: '게시물 내용을 입력해주세요.',
-                        errorText: _contentErrorText,
-                        errorStyle: TextStyle(
-                          color: Color(0xFFFA5252),
-                        ),
-                      ),
-                      maxLines: 8,
-                      maxLength: 200,
-                    ),
-                    const SizedBox(height: 20,),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
@@ -299,3 +395,4 @@ void showBottomActionSheet(BuildContext context, Function(BoardType) setBoardTyp
     },
   );
 }
+

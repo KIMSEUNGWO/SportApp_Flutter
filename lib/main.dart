@@ -57,6 +57,7 @@ class _AppState extends State<App> {
     surface: Color(0xFFF1F1F5), // 이미지 Empty 컬러
 
     outline: Color(0xFFC8C8C8), // border outline 컬러
+    outlineVariant: Color(0xFFD9D9D9), // border input outline 컬러
 
 
   );
@@ -77,6 +78,7 @@ class _AppState extends State<App> {
     surface: Color(0xFF2B2B32), // 이미지 Empty 컬러
 
     outline: Color(0xFF26262A), // border outline 컬러
+    outlineVariant: Color(0xFFD9D9D9), // border input outline 컬러
   );
 
   themeLight() {
