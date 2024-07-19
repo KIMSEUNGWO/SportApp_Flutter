@@ -52,7 +52,7 @@ class SmallListWidget extends StatelessWidget {
                 ),
                 child: image ?? Center(
                     child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-                      width: 40, height: 40, color: Color(0xFF878181),
+                      width: 40, height: 40, color: const Color(0xFF878181),
                     )
                 )
             ),
@@ -81,7 +81,7 @@ class SmallListWidget extends StatelessWidget {
                               fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
                               color: Theme.of(context).colorScheme.secondary
                           ),
-                          maxLines: 2,
+                          maxLines: 1,
                         ),
                       ],
                     ),
