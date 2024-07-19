@@ -202,7 +202,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                         style: TextStyle(
                           fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                           fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Colors.white
                         ),
                       ),
                     ],

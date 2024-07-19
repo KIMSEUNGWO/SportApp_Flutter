@@ -12,4 +12,8 @@ enum Authority {
     }
     return null;
   }
+
+  bool isOwner() {
+    return this == Authority.OWNER;
+  }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
+import 'package:flutter_sport/widgets/pages/board/create_board_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -18,53 +20,90 @@ class GroupDetailBoardWidget extends StatefulWidget {
 
 class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with AutomaticKeepAliveClientMixin{
 
-  int count = 0;
-
   final List<String> boardMenus = ['all', 'notice', 'firstComment', 'openBoard'];
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 13),
-                child: Row(
-                  children: boardMenus
-                    .map((menu) =>
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 7),
-                        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Theme.of(context).colorScheme.onSecondary,
-                        ),
-                        child: Text('groupBoardMenus',
-                          style: TextStyle(
-                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.primary
+    return Stack(
+      children: [
+        CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 15),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  child: Row(
+                    children: boardMenus
+                      .map((menu) =>
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 7),
+                          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Theme.of(context).colorScheme.onSecondary,
                           ),
-                        ).tr(gender: menu),
-                      )
-                  ).toList(),
+                          child: Text('groupBoardMenus',
+                            style: TextStyle(
+                              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.primary
+                            ),
+                          ).tr(gender: menu),
+                        )
+                    ).toList(),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        const SliverToBoxAdapter(child: SizedBox(height: 30,)),
-        const BoardNoticeWidget(),
-        // SliverToBoxAdapter(child: HrBox(),)
-        const SliverToBoxAdapter(child: SizedBox(height: 30,)),
-        const BoardListWidget(),
+          const SliverToBoxAdapter(child: SizedBox(height: 30,)),
+          const BoardNoticeWidget(),
+          // SliverToBoxAdapter(child: HrBox(),)
+          const SliverToBoxAdapter(child: SizedBox(height: 30,)),
+          const BoardListWidget(),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 50,),)
-      ],
+          const SliverToBoxAdapter(child: SizedBox(height: 50,),)
+        ],
+      ),
+        if (widget.club.authority != null)
+          Positioned(
+          right: 20,
+          bottom: 70,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateBoardWidget(clubId: widget.club.id, authority: widget.club.authority),
+                fullscreenDialog: true,
+              ));
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.add,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8,),
+                  Text('글쓰기',
+                    style: TextStyle(
+                      fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]
     );
   }
 

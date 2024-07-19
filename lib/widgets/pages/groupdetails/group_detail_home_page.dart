@@ -25,7 +25,6 @@ class GroupDetailHomeWidget extends ConsumerStatefulWidget {
 
 class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> with AutomaticKeepAliveClientMixin {
 
-  late ClubDetail club;
   bool joinBtnDisabled = false;
 
   bool login() {
@@ -34,9 +33,13 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
 
   joinClub() async {
     joinDisabled(false);
-    ResponseResult result = await ClubService.joinClub(clubId: club.id);
+    ResponseResult result = await ClubService.joinClub(clubId: widget.club.id);
     if (result.resultCode == ResultCode.OK) {
-      widget.reloadClub();
+      Alert.message(context: context, text: Text('가입이 완료되었습니다.'),
+        onPressed: () {
+          widget.reloadClub();
+        }
+      );
     } else if (result.resultCode == ResultCode.CLUB_JOIN_FULL) {
       Alert.message(context: context, text: Text('모임이 가득 찼습니다.'));
     } else if (result.resultCode == ResultCode.CLUB_ALREADY_JOINED) {
@@ -53,18 +56,13 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
   }
 
   @override
-  void initState() {
-    club = widget.club;
-    super.initState();
-  }
-  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Container(
       child: Stack(
         children: [
           CustomScrollView(
-          physics: AlwaysScrollableScrollPhysics(
+          physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),
           ),
           slivers: [
@@ -89,7 +87,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
                 height: 200,
                 child: widget.club.image ?? Center(
                   child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-                  width: 40, height: 40, color: Color(0xFF878181),
+                  width: 40, height: 40, color: const Color(0xFF878181),
                   ),
                 ),
               ),
@@ -130,57 +128,52 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
                 )
               ),
             ),
-            SliverToBoxAdapter(child: SizedBox(height: 100,),)
+            const SliverToBoxAdapter(child: SizedBox(height: 100,),)
           ],
         ),
-          if (club.authority == null)
-            (club.personCount < club.maxPerson)
+          if (widget.club.authority == null)
+            (widget.club.personCount < widget.club.maxPerson)
               ? GestureDetector(
-            onTap: joinBtnDisabled ? null : () {
-              bool hasLogin = login();
-              if (!hasLogin) {
-                return;
-              }
-              Alert.confirmMessageTemplate(
-                context: context,
-                onPressedText: '참여',
-                onPressed: () {
-                  Navigator.pop(context);
-                  joinClub();
+                onTap: joinBtnDisabled ? null : () {
+                  bool hasLogin = login();
+                  if (!hasLogin) {
+                    return;
+                  }
+                  Alert.confirmMessageTemplate(
+                    context: context,
+                    onPressedText: '참여',
+                    onPressed: () {
+                      Navigator.pop(context);
+                      joinClub();
+                    },
+                    message: '이 모임에 참여하시나요?'
+                  );
                 },
-                message: '이 모임에 참여하시나요?'
-              );
-            },
-            child: Container(
-              margin: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
-              child: Align(
-                alignment: Alignment.bottomCenter,
                 child: Container(
-                  decoration: BoxDecoration(
-                    // color: Colors.blue,
-                    color: joinBtnDisabled ? Colors.grey : Color(0xFF72A8E6),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(2, 2),
-                        color: Colors.grey,
-                        blurRadius: 6
-                      )
-                    ],
-                  ),
-                  height: 55,
-                  alignment: Alignment.center,
-                  child: Text('참여하기',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 21,
-                      letterSpacing: 1.4,
+                  margin: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        // color: Colors.blue,
+                        color: joinBtnDisabled
+                          ? Colors.grey
+                          : Theme.of(context).colorScheme.onPrimary,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      height: 55,
+                      alignment: Alignment.center,
+                      child: Text('참여하기',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 21,
+                          letterSpacing: 1.4,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
           )
               : Container(
                 margin: const EdgeInsets.only(left: 20, right: 20, bottom: 40),
