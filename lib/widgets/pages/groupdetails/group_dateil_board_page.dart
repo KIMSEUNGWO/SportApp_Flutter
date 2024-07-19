@@ -29,38 +29,39 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
             margin: const EdgeInsets.symmetric(vertical: 15),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  const SizedBox(width: 13,) ,
-                  ...boardMenus.map((menu) =>
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13),
+                child: Row(
+                  children: boardMenus
+                    .map((menu) =>
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 7),
                         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFFE9F1FA),
+                          color: Theme.of(context).colorScheme.onSecondary,
                         ),
                         child: Text('groupBoardMenus',
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style: TextStyle(
+                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF433F3F),
+                            color: Theme.of(context).colorScheme.primary
                           ),
                         ).tr(gender: menu),
-                      )),
-                  const SizedBox(width: 13,) ,
-                ],
+                      )
+                  ).toList(),
+                ),
               ),
             ),
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 30,)),
-        BoardNoticeWidget(),
+        const BoardNoticeWidget(),
         // SliverToBoxAdapter(child: HrBox(),)
         const SliverToBoxAdapter(child: SizedBox(height: 30,)),
-        BoardListWidget(),
+        const BoardListWidget(),
 
-        SliverToBoxAdapter(child: SizedBox(height: 50,),)
+        const SliverToBoxAdapter(child: SizedBox(height: 50,),)
       ],
     );
   }
@@ -93,9 +94,10 @@ class BoardNoticeWidget extends StatelessWidget {
                 ),
                 child: Text('[공지]',
                   style: TextStyle(
-                    fontSize: 17,
+                    fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFFF35353),
+                    // color: Color(0xFFF35353),
+                    color: Theme.of(context).colorScheme.onPrimary
                   ),
                 ),
               ),
@@ -105,8 +107,9 @@ class BoardNoticeWidget extends StatelessWidget {
                 child: Text('공지사항내용입니다공지사항내용입니다공지사항내용입니다공지사항내용입니다공지사항내용입니다공지사항내용입니다.',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 17,
+                    fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                     fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.primary
                   ),
                 ),
               ),
@@ -125,18 +128,20 @@ class BoardListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverList.separated(
-      separatorBuilder: (context, index) => Container(
-        margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-        height: 1,
-        decoration: BoxDecoration(
-          color: Color(0xFFE4DDDD),
-        ),
+      separatorBuilder: (context, index) =>
+        Container(
+          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+          height: 1,
+          decoration: BoxDecoration(
+            // color: Color(0xFFE4DDDD),
+            color: Theme.of(context).colorScheme.outline
+          ),
       ),
       itemCount: 5,
       itemBuilder: (context, index) {
         return Container(
-          padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-          constraints: BoxConstraints(
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+          constraints: const BoxConstraints(
             minHeight: 180,
           ),
           child: Column(
@@ -157,28 +162,30 @@ class BoardListWidget extends StatelessWidget {
                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
-                                color: Color(0xFFF3EFEF),
+                                color: Theme.of(context).colorScheme.onSecondary,
                               ),
                               child: Text('가입인사',
                                 style: TextStyle(
-                                  fontSize: 11,
-                                  color: Color(0xFF5C5959),
+                                  fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                                  color: Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.w500
                                 ),
                               ),
                             ),
-                            SizedBox(height: 5,),
+                            const SizedBox(height: 5,),
                             Text('게시글 제목',
                               style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
+                                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
                             const SizedBox(height: 6,),
                             Text('게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용게시물 내용내용게시물내용게시물내용게시물',
-                              maxLines: 3,
+                              maxLines: 2,
                               style: TextStyle(
-                                color: Color(0xFF333131),
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
                               ),
                             ),
                           ],
@@ -188,7 +195,8 @@ class BoardListWidget extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    width: 70, height: 70,
+                    // width: 70, height: 70,
+                    width: 112, height: 73,
                     margin: const EdgeInsets.only(left: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -205,36 +213,24 @@ class BoardListWidget extends StatelessWidget {
                   Row(
                     children: [
                       Text('게시글 작성자',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                        style: detailStyle(context),
                       ),
                       Text(' · ',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                        style: detailStyle(context),
                       ),
                       Text('댓글 1',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                        style: detailStyle(context),
                       ),
                       Text(' · ',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                        style: detailStyle(context),
                       ),
                       Text('13분 전',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                        style: detailStyle(context),
                       ),
                     ],
                   ),
                   Text('좋아요 1',
-                    style: TextStyle(
-                      fontSize: 13,
-                    ),
+                    style: detailStyle(context),
                   ),
                 ],
               ),
@@ -242,6 +238,13 @@ class BoardListWidget extends StatelessWidget {
           ),
         );
       },
+    );
+
+  }
+  TextStyle detailStyle(BuildContext context) {
+    return TextStyle(
+      fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+      color: Theme.of(context).colorScheme.tertiary,
     );
   }
 }

@@ -98,14 +98,18 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
           alignment: Alignment
               .bottomCenter, //특정 위젯이 어디에 정렬을 해야되는지 모르면 height값줘도 최대한에 사이즈를 먹음
           child: Container(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.background,
             height: 300,
             child: Column(
               children: [
                 CupertinoButton(
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text('complete').tr(),
+                    child: Text('complete',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500
+                      ),
+                    ).tr(),
                   ),
                   onPressed: () {
                     _confirmDate = _selectedDate;
@@ -191,6 +195,7 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('signup').tr(gender: 'signup'),
+        backgroundColor: Theme.of(context).colorScheme.background,
         actions: [
           GestureDetector(
             onTap: () => submit(context),
@@ -198,7 +203,9 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
               padding: EdgeInsets.only(right: 20),
               child: Text('complete',
                 style: TextStyle(
-                  fontSize: 19,
+                  fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
                 ),
               ).tr(),
             ),
@@ -218,8 +225,9 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
               ),
               Text('user',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.primary
                 ),
               ).tr(gender: 'nickname'),
               Row(
@@ -238,10 +246,18 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                       },
                       decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                            borderSide: BorderSide(
+                                // color: Color(0xFFE4E2E2),
+                              color: Theme.of(context).colorScheme.outline,
+                              width: 1.5,
+                            ),
                           ),
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                            borderSide: BorderSide(
+                              // color: Color(0xFFE4E2E2),
+                              color: Theme.of(context).colorScheme.outline,
+                              width: 1.5,
+                            ),
                           ),
                           hintText: 'signup'.tr(gender: 'nicknameHintText')
                       ),
@@ -254,7 +270,10 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                       height: 50,
                       margin: EdgeInsets.only(left: 20),
                       decoration: BoxDecoration(
-                        color: !isLoading ? Color(0xFF72A8E6) : Colors.grey,
+                        color: !isLoading
+                          // ? Color(0xFF72A8E6)
+                          ? Theme.of(context).colorScheme.primaryContainer
+                          : Colors.grey,
                         borderRadius: BorderRadius.circular(10)
                       ),
                       child: Center(
@@ -287,8 +306,9 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
               SizedBox(height: 20,),
               Text('user',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.primary
                 ),
               ).tr(gender: 'introduce'),
               TextFormField(
@@ -300,10 +320,16 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                 style: const TextStyle(fontSize: 17),
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outline,
+                      width: 1.5,
+                    ),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outline,
+                      width: 1.5,
+                    ),
                   ),
                   hintText: 'signup'.tr(gender: 'introHintText'),
                   counterText: '$introCurrentCount / $introMaxCount',
@@ -322,18 +348,18 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                     children: [
                       Text('user',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                          fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.primary
                         ),
                       ).tr(gender: 'sex'),
                       SizedBox(height: 15,),
                       Container(
                         width: 150,
-                        height: 50,
+                        height: 55,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          // color: Color(0xFFE9F1FA),
-                          color: Color(0xFFE6E6E6),
+                          color: Theme.of(context).colorScheme.secondaryContainer
                         ),
                         child: Flex(
                           direction: Axis.horizontal,
@@ -344,13 +370,13 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                                 onTap: () => changeSex('F'),
                                 child: Container(
                                   margin: EdgeInsets.all(5),
-                                  decoration: (sex == 'F') ? myBoxDecoration : youBoxDecoration ,
+                                  decoration: (sex == 'F') ? myBoxDecoration(context) : youBoxDecoration(context) ,
                                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                   child: Center(
                                     child: Text('female',
                                       style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                        fontWeight: FontWeight.w600,
                                         color: (sex == 'F') ? myTextColor : youTextColor,
                                       ),
                                     ).tr(),
@@ -364,13 +390,13 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                                 onTap: () => changeSex('M'),
                                 child: Container(
                                   margin: EdgeInsets.all(5),
-                                  decoration: (sex == 'M') ? myBoxDecoration : youBoxDecoration,
+                                  decoration: (sex == 'M') ? myBoxDecoration(context) : youBoxDecoration(context),
                                   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                   child: Center(
                                     child: Text('male',
                                       style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                        fontWeight: FontWeight.w600,
                                         color: (sex == 'M') ? myTextColor : youTextColor,
                                       ),
                                     ).tr()
@@ -391,32 +417,33 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                       children: [
                         Text('user',
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                            fontWeight: FontWeight.w700,
+                            color: Theme.of(context).colorScheme.primary
                           ),
                         ).tr(gender: 'birthday'),
                         SizedBox(height: 15,),
                         Container(
-                          height: 50,
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             // color: Color(0xFFE9F1FA),
-                            color: Color(0xFFE6E6E6),
+                            color: Theme.of(context).colorScheme.secondaryContainer
                           ),
                           child: TextField(
                             controller: _dateController,
                             readOnly: true,
                             style: TextStyle(
-                              color: Color(0xFF3E3E3E),
-                              fontSize: 16,
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                              fontWeight: FontWeight.w500
                             ),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFFFFFFFF).withOpacity(0)),
+                                borderSide: BorderSide(),
                               ),
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFFFFFFFF).withOpacity(0)),
+                                borderSide: BorderSide(),
                               ),
                             ),
                             onTap: () => _selectDate(context),
@@ -436,15 +463,19 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
     );
   }
 
-  BoxDecoration myBoxDecoration = BoxDecoration(
-    borderRadius: BorderRadius.circular(10),
-    // color: Color(0xFFD2E7FE),
-    color: Color(0xFFFFFFFF),
-  );
-  BoxDecoration youBoxDecoration = BoxDecoration(
-    borderRadius: BorderRadius.circular(10),
-  );
-
+  BoxDecoration myBoxDecoration(BuildContext context) {
+    return BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        // color: Color(0xFFD2E7FE),
+        // color: Color(0xFFFFFFFF),
+        color: Theme.of(context).colorScheme.primary
+    );
+  }
+  BoxDecoration youBoxDecoration(BuildContext context) {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+    );
+  }
   // Color myTextColor = Color(0xFF3E3E3E);
   // Color youTextColor = Color(0xFF7E7E7E);
   Color myTextColor = Color(0xFF000000);

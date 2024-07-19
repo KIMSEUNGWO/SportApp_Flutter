@@ -37,6 +37,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
     super.build(context);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         actions: [
           GestureDetector(
             onTap: () {
@@ -65,7 +66,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
             Container(
               margin: const EdgeInsets.symmetric(vertical: 20),
               height: 20,
-              decoration: const BoxDecoration(color: Color(0xFFF1F1F5)),
+              decoration: BoxDecoration(
+                // color: Color(0xFFF1F1F5),
+                color: Theme.of(context).colorScheme.outline
+              ),
             ),
             Container(
               height: 70,
@@ -114,7 +118,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
                                 ref.watch(loginProvider.notifier).logout();
                                 Navigator.pop(context);
                               },
-                              message: Text('로그아웃 하시겠습니까?'),);
+                              message: '로그아웃 하시겠습니까?');
                           },
                           icon: Icons.logout,
                           text: '로그아웃',

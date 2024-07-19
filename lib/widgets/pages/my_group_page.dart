@@ -152,7 +152,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                                         margin: EdgeInsets.only(left: 15),
                                         clipBehavior: Clip.hardEdge,
                                         decoration: BoxDecoration(
-                                          color: Color(0xFFE4E4E4),
+                                          color: Theme.of(context).colorScheme.surface,
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: club.thumbnail == null
@@ -178,7 +178,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
               bottom: 20,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateGroupWidget(),
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateGroupWidget(clubReload: readMyClubs),
                     fullscreenDialog: true,
                   ));
                 },

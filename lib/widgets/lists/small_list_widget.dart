@@ -40,14 +40,14 @@ class SmallListWidget extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
                 width: 65, height: 65,
                 margin: const EdgeInsets.only(right: 15),
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE4E4E4),
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: image ?? Center(
@@ -81,6 +81,7 @@ class SmallListWidget extends StatelessWidget {
                               fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
                               color: Theme.of(context).colorScheme.secondary
                           ),
+                          maxLines: 2,
                         ),
                       ],
                     ),

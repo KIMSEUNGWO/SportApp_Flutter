@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
-import 'package:flutter_sport/widgets/pages/register_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,13 +41,20 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: Text('로그인'),
+            title: Text('로그인',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.w500
+              ),
+            ),
             automaticallyImplyLeading: false,
             scrolledUnderElevation: 0,
+            backgroundColor: Theme.of(context).colorScheme.background,
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(1.0),
               child: Container(
-                color: Colors.grey[300], // border 색상
+                // color: Colors.grey[300], // border 색상
+                color: Theme.of(context).colorScheme.outline,
                 height: 1.0, // border 높이
               ),
             ),
@@ -57,7 +62,9 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: GestureDetector(
-                  child: Icon(Icons.close, size: 30,),
+                  child: Icon(Icons.close, size: 30,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   onTap: () => Navigator.pop(context),
                 ),
               ),
@@ -78,20 +85,19 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
                         children: [
                           Text('어서오세요!',
                             style: TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.w600
+                              // fontSize: 21,
+                              fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w700
                             ),
                           ),
-                          SizedBox(height: 5,),
-                          Text('어쩌구저쩌구 소개글입니다.',
+                          SizedBox(height: 10,),
+                          Text('어쩌구저쩌구 소개글입니다.\n뭐하고 뭐하고 뭐하세요~~',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
-                          ),
-                          Text('뭐하고 뭐하고 뭐하세요~~',
-                              style: TextStyle(
-                                fontSize: 16,
-                              )
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
@@ -113,9 +119,6 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
                           decoration: BoxDecoration(
                             color: lineColor,
                             borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(color: Colors.grey, offset: Offset(2, 2), blurRadius: 5),
-                            ],
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

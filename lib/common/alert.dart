@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/widgets/pages/login_page.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Alert {
 
@@ -74,7 +75,7 @@ class Alert {
     required BuildContext context, 
     required String onPressedText,
     required VoidCallback onPressed,
-    required Text message,
+    required String message,
   }) {
     showDialog(
       context: context,
@@ -91,7 +92,14 @@ class Alert {
                 children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-                    child: message,
+                    child: Text(message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
 
                   Container(
@@ -119,7 +127,12 @@ class Alert {
                                   ),
                                 ),
                                 child: Center(
-                                  child: Text('취소'),
+                                  child: Text('cancel',
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.w500
+                                    ),
+                                  ).tr(),
                                 ),
                               ),
                             ),
@@ -140,7 +153,8 @@ class Alert {
                                 child: Center(
                                   child: Text(onPressedText,
                                     style: TextStyle(
-                                        color: Colors.blue
+                                      color: Theme.of(context).colorScheme.onPrimary,
+                                      fontWeight: FontWeight.w500
                                     ),
                                   ),
                                 ),
@@ -167,11 +181,7 @@ class Alert {
       onPressed: () {
         _pageMoveToLoginPage(context);
       },
-      message: Text('로그인이 필요한 기능입니다.\n지금 로그인 하시겠습니까?',
-        style: TextStyle(
-            fontSize: 16
-        ),
-      ),
+      message: '로그인이 필요한 기능입니다.\n지금 로그인 하시겠습니까?',
     );
   }
 

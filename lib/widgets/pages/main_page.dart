@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/group/club_service.dart';
-import 'package:flutter_sport/common/local_storage.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
-import 'package:flutter_sport/models/club/region_data.dart';
-import 'package:flutter_sport/models/club/sport_type.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
@@ -136,8 +133,7 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
 
 class Menus extends StatelessWidget {
 
-
-  const Menus({super.key});
+  const Menus({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +247,7 @@ class Menu extends StatelessWidget {
             const SizedBox(height: 8,),
             Text('sportTitle',
               style: TextStyle(
-                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                 color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 1,

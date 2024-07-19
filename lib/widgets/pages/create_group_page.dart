@@ -18,7 +18,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateGroupWidget extends ConsumerStatefulWidget {
-  const CreateGroupWidget({super.key});
+
+  final Function() clubReload;
+  const CreateGroupWidget({super.key, required this.clubReload});
 
   @override
   ConsumerState<CreateGroupWidget> createState() => _CreateGroupWidgetState();
@@ -54,12 +56,14 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
         intro: _introController.text
     );
 
+    print(result.resultCode);
     if (result.resultCode == ResultCode.OK) {
       Alert.message(context: context,
         text: Text('모임이 생성되었습니다.'),
         onPressed: () {
           Navigator.pop(context);
           ref.read(loginProvider.notifier).plusClub();
+          widget.clubReload();
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return GroupDetailWidget(id: result.data);
           },));
@@ -73,6 +77,8 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
         if (invalid == 'title') _titleValid();
         if (invalid == 'intro') _introValid();
       }
+    } else if (result.resultCode == ResultCode.EXCEED_LIMIT_PERSON) {
+      Alert.message(context: context, text: Text('일반 그룹은 최대 10명까지 가입할 수 있습니다.'));
     }
   }
 
@@ -162,6 +168,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
           ),
         ),
         scrolledUnderElevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.background,
         actions: [
           GestureDetector(
             onTap: () => _submit(context),
@@ -169,7 +176,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
               margin: const EdgeInsets.only(right: 20),
               child: Text('등록',
                 style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                  fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 1.1
@@ -550,7 +557,7 @@ class _SelectMenuState extends State<SelectMenu> {
               : Colors.white.withOpacity(0),
           borderRadius: BorderRadius.circular(10)
         ),
-        width: 80,
+        width: 100,
         child: Column(
           children: [
             SvgPicture.asset(widget.assetSvg),

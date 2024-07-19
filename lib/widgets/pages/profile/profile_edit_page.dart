@@ -106,6 +106,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: false,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text('profile').tr(gender: 'editProfile'),
         scrolledUnderElevation: 0,
         actions: [
@@ -115,8 +116,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
               margin: EdgeInsets.only(right: 20),
               child: Text('save',
                 style: TextStyle(
-                    fontSize: 21,
-                    fontWeight: FontWeight.w500
+                  fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
                 ),
               ).tr(),
             ),
@@ -176,8 +178,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                     ),
                     Text('user',
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.primary
                       ),
                     ).tr(gender: 'nickname'),
                     TextField(
@@ -199,8 +202,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                     SizedBox(height: 30,),
                     Text('user',
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.primary
                       ),
                     ).tr(gender: 'introduce'),
                     TextFormField(
@@ -234,8 +238,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                           children: [
                             Text('user',
                               style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).colorScheme.primary
                               ),
                             ).tr(gender: 'sex'),
                             SizedBox(height: 15,),
@@ -245,7 +250,8 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 // color: Color(0xFFE9F1FA),
-                                color: Color(0xFFE6E6E6),
+                                // color: Color(0xFFE6E6E6),
+                                color: Theme.of(context).colorScheme.secondaryContainer
                               ),
                               child: Flex(
                                 direction: Axis.horizontal,
@@ -254,13 +260,13 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                     flex: 1,
                                     child: Container(
                                       margin: EdgeInsets.all(5),
-                                      decoration: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myBoxDecoration : youBoxDecoration ,
+                                      decoration: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myBoxDecoration(context) : youBoxDecoration(context) ,
                                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                       child: Center(
                                         child: Text('female',
                                           style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                            fontWeight: FontWeight.w600,
                                             color: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myTextColor : youTextColor,
                                           ),
                                         ).tr(),
@@ -271,13 +277,13 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                     flex: 1,
                                     child: Container(
                                       margin: EdgeInsets.all(5),
-                                      decoration: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myBoxDecoration : youBoxDecoration,
+                                      decoration: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myBoxDecoration(context) : youBoxDecoration(context),
                                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                       child: Center(
                                           child: Text('male',
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
+                                              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                              fontWeight: FontWeight.w600,
                                               color: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myTextColor : youTextColor,
                                             ),
                                           ).tr()
@@ -297,8 +303,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                             children: [
                               Text('user',
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                  fontWeight: FontWeight.w700,
+                                  color: Theme.of(context).colorScheme.primary
                                 ),
                               ).tr(gender: 'birthday'),
                               SizedBox(height: 15,),
@@ -307,13 +314,17 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   // color: Color(0xFFE9F1FA),
-                                  color: Color(0xFFE6E6E6),
+                                  // color: Color(0xFFE6E6E6),
+                                  color: Theme.of(context).colorScheme.secondaryContainer
                                 ),
                                 child: Center(
                                   child: Text('${ref.read(loginProvider.notifier).state!.birth}',
                                     style: TextStyle(
-                                      color: Color(0xFF3E3E3E),
-                                      fontSize: 18,
+                                      // color: Color(0xFF3E3E3E),
+                                      // fontSize: 18,
+                                      color: Theme.of(context).colorScheme.secondary,
+                                      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                      fontWeight: FontWeight.w500
                                     ),
                                   ),
                                 ),
@@ -335,14 +346,20 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     );
   }
 
-  BoxDecoration myBoxDecoration = BoxDecoration(
-    borderRadius: BorderRadius.circular(10),
-    // color: Color(0xFFD2E7FE),
-    color: Color(0xFFFFFFFF),
-  );
-  BoxDecoration youBoxDecoration = BoxDecoration(
-    borderRadius: BorderRadius.circular(10),
-  );
+
+  BoxDecoration myBoxDecoration(BuildContext context) {
+    return BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        // color: Color(0xFFD2E7FE),
+        // color: Color(0xFFFFFFFF),
+        color: Theme.of(context).colorScheme.primary
+    );
+  }
+  BoxDecoration youBoxDecoration(BuildContext context) {
+    return BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+    );
+  }
 
   // Color myTextColor = Color(0xFF3E3E3E);
   // Color youTextColor = Color(0xFF7E7E7E);

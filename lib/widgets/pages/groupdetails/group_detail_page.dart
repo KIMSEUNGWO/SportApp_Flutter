@@ -24,10 +24,10 @@ class GroupDetailWidget extends StatefulWidget {
 class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTickerProviderStateMixin {
 
   Map<Tab, Widget> tabList = {
-    Tab(text: 'groupMenus'.tr(gender: 'home')) : SizedBox(),
-    Tab(text: 'groupMenus'.tr(gender: 'board')) : SizedBox(),
-    Tab(text: 'groupMenus'.tr(gender: 'group')) : SizedBox(),
-    Tab(text: 'groupMenus'.tr(gender: 'chat')) : SizedBox()
+    Tab(text: 'groupMenus'.tr(gender: 'home')) : const SizedBox(),
+    Tab(text: 'groupMenus'.tr(gender: 'board')) : const SizedBox(),
+    Tab(text: 'groupMenus'.tr(gender: 'group')) : const SizedBox(),
+    Tab(text: 'groupMenus'.tr(gender: 'chat')) : const SizedBox()
   };
   late TabController _tabController;
   bool isLiked = false;
@@ -92,46 +92,47 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
       return Stack(
         children: [
           Scaffold(
-          appBar: AppBar(
-            actions: const [
-              Padding(
-                padding: EdgeInsets.only(right: 15),
-                child: Icon(Icons.favorite,
-                  size: 30,
-                  color: Colors.grey,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Icon(Icons.more_horiz_outlined, size: 30, ),
-              )
-            ],
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(40.0),
-              child: Container(
-                color: Colors.white,
-                child: TabBar(
-                  controller: _tabController,
-                  // labelColor: Colors.red,
-                  labelColor: Color(0xFF72A8E6),
-                  // indicatorColor: Colors.red,
-                  indicatorColor: Color(0xFF72A8E6),
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorWeight: 2.5,
-                  labelStyle: TextStyle(
-                    fontSize: 18,
+            appBar: AppBar(
+              actions: const [
+                Padding(
+                  padding: EdgeInsets.only(right: 15),
+                  child: Icon(Icons.favorite,
+                    size: 30,
+                    color: Colors.grey,
                   ),
-                  tabs: tabList.keys.toList(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Icon(Icons.more_horiz_outlined, size: 30, ),
+                )
+              ],
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(40.0),
+                child: Container(
+                  color: Theme.of(context).colorScheme.background,
+                  child: TabBar(
+                    controller: _tabController,
+                    // labelColor: Colors.red,
+                    labelColor: Theme.of(context).colorScheme.onPrimary,
+                    // indicatorColor: Colors.red,
+                    indicatorColor: Theme.of(context).colorScheme.onPrimary,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicatorWeight: 2.5,
+                    labelStyle: TextStyle(
+                      fontSize: 18,
+                    ),
+                    tabs: tabList.keys.toList(),
+                  ),
                 ),
               ),
             ),
+            body: TabBarView(
+              controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
+              children: List.generate(tabList.length, (index) => SizedBox()),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.background,
           ),
-          body: TabBarView(
-            controller: _tabController,
-            physics: NeverScrollableScrollPhysics(),
-            children: List.generate(tabList.length, (index) => SizedBox()),
-          ),
-        ),
           Positioned(
             child: Center(
               child: CupertinoActivityIndicator(radius: 15,),
@@ -143,6 +144,7 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(club.title,
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
@@ -158,7 +160,7 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
               child: Icon(Icons.favorite,
                 size: 30,
                 color: isLiked
-                  ? Color(0xFFF84D4D)
+                  ? const Color(0xFFF84D4D)
                   : Colors.grey,
               ),
             ),
@@ -197,7 +199,7 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
       ),
       body: TabBarView(
         controller: _tabController,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: tabList.values.toList(),
       ),
     );
@@ -214,14 +216,24 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
                 // Chat 탭 처리
                 Navigator.of(context).pop();
               },
-              child: Text('notifyGroup', style: const TextStyle(color: Colors.red),).tr(),
+              child: const Text('notifyGroup',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w500,
+                ),
+              ).tr(),
             ),
             CupertinoActionSheetAction(
               onPressed: () {
                 // Chat 탭 처리
                 Navigator.of(context).pop();
               },
-              child: Text('shareGroup').tr(),
+              child: Text('shareGroup',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ).tr(),
             ),
 
             if (club.authority != null && club.authority == Authority.OWNER)
@@ -232,14 +244,19 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
                   return ClubEditWidget(club: club, reload: readClub);
                 },));
               },
-              child: Text('방 설정 변경'),
+              child: Text('방 설정 변경',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('cancel').tr(),
+            child: const Text('cancel').tr(),
           ),
         );
       },

@@ -37,20 +37,24 @@ class _AppState extends State<App> {
   late ColorScheme currentColorScheme;
   late Color currentCardColor;
 
-  Color lightCardColor = Color(0xFFE3E3E3); // Input 컨테이너컬러
-  Color darkCardColor = Color(0xFF212227); // Input 컨테이너컬러
+  Color lightCardColor = const Color(0xFFE3E3E3); // Input 컨테이너컬러
+  Color darkCardColor = const Color(0xFF212227); // Input 컨테이너컬러
 
   ColorScheme lightTheme = const ColorScheme.light(
     background: Colors.white,
     onPrimary: Color(0xFF72A8E6), // 메인컬러
+    onSecondary: Color(0xFFE9F1FA), // 메인컬러 2
 
     primary: Color(0xFF292929), // 기본 폰트 컬러
+    // primary: Color(0xFF433F3F), // 기본 폰트 컬러 -> 이 색도 괜찮은 듯
     secondary: Color(0xFF686868), // 상세 폰트 컬러
     tertiary: Color(0xFF888888), // 부가 폰트 컬러
 
     primaryContainer: Color(0xFFE3E3E3), // 선택된 컨테이너 컬러
     secondaryContainer: Color(0xFFDFDFDF), // 상세 폰트 컨테이너 컬러
     tertiaryContainer: Color(0xFFFBFBFB), // 내 모임 카드 컬러
+
+    surface: Color(0xFFF1F1F5), // 이미지 Empty 컬러
 
     outline: Color(0xFFC8C8C8), // border outline 컬러
 
@@ -60,6 +64,7 @@ class _AppState extends State<App> {
   ColorScheme darkTheme = const ColorScheme.dark(
     background: Color(0xFF19181B),
     onPrimary: Color(0xFF72A8E6), // 메인컬러
+    onSecondary: Color(0xFF85898F), // 메인컬러 2
 
     primary: Color(0xFFE6E6E6), // 기본 폰트 컬러
     secondary: Color(0xFFD4D4D4), // 상세 폰트 컬러
@@ -68,6 +73,8 @@ class _AppState extends State<App> {
     primaryContainer: Color(0xFF2A2A32), // 선택된 컨테이너 컬러
     secondaryContainer: Color(0xFF2A292C), // 상세 폰트 컨테이너 컬러
     tertiaryContainer: Color(0xFF212227), // 내 모임 카드 컬러
+
+    surface: Color(0xFF2B2B32), // 이미지 Empty 컬러
 
     outline: Color(0xFF26262A), // border outline 컬러
   );
@@ -88,7 +95,7 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    themeLight();
+    themeDark();
     super.initState();
   }
 

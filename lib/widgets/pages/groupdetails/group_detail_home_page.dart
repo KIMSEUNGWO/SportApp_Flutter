@@ -80,7 +80,11 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
             SliverToBoxAdapter(
               child: Container(
                 margin: const EdgeInsets.only(bottom: 20),
-                decoration: widget.club.image == null ? const BoxDecoration(color: Color(0xFFF1F1F5)) : const BoxDecoration(),
+                decoration: widget.club.image == null
+                  ? BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                    )
+                  : const BoxDecoration(),
                 width: double.infinity,
                 height: 200,
                 child: widget.club.image ?? Center(
@@ -117,7 +121,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
                     if (widget.club.intro != null)
                       Text(widget.club.intro!,
                         style: TextStyle(
-                          fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                          fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w500
                         ),
@@ -144,7 +148,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
                   Navigator.pop(context);
                   joinClub();
                 },
-                message: Text('이 모임에 참여하시나요?')
+                message: '이 모임에 참여하시나요?'
               );
             },
             child: Container(
@@ -228,12 +232,13 @@ class Tag extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Color(0xFFDFDFDF),
+        color: Theme.of(context).colorScheme.secondaryContainer
       ),
       child: Text(title,
         style: TextStyle(
-          color: Color(0xFF605B5B),
-          fontSize: 12
+          color: Theme.of(context).colorScheme.secondary,
+          fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+          fontWeight: FontWeight.w500
         ),
       ),
     );
