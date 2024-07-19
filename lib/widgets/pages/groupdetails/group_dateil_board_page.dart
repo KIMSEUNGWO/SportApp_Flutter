@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 
+import 'package:flutter_svg/flutter_svg.dart';
+
 class GroupDetailBoardWidget extends StatefulWidget {
 
   final ClubDetail club;
@@ -142,42 +144,52 @@ class BoardListWidget extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
           constraints: const BoxConstraints(
-            minHeight: 180,
+            minHeight: 160,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flex(
-                direction: Axis.horizontal,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Column(
                 children: [
-                  Expanded(
-                    flex: 3,
-                    child: Column(
+                  Container(
+                    child: Row(
                       children: [
-                        Column(
+                        Container(
+                            width: 25, height: 25,
+                            margin: const EdgeInsets.only(right: 10),
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: const Center(
+                                child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
+                            )
+                        ),
+                        Text('아아아아아아아아아아',
+                          style: TextStyle(
+                              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  Flex(
+                    direction: Axis.horizontal,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Theme.of(context).colorScheme.onSecondary,
-                              ),
-                              child: Text('가입인사',
-                                style: TextStyle(
-                                  fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
-                                  color: Theme.of(context).colorScheme.secondary,
-                                  fontWeight: FontWeight.w500
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 5,),
                             Text('게시글 제목',
                               style: TextStyle(
                                 fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                                 fontWeight: FontWeight.w600,
                                 color: Theme.of(context).colorScheme.primary,
+                                overflow: TextOverflow.ellipsis
                               ),
                             ),
                             const SizedBox(height: 6,),
@@ -190,35 +202,42 @@ class BoardListWidget extends StatelessWidget {
                             ),
                           ],
                         ),
+                      ),
+                      Container(
+                        // width: 70, height: 70,
+                        width: 112, height: 73,
+                        margin: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
+                      ),
+                    ],
 
-                      ],
-                    ),
-                  ),
-                  Container(
-                    // width: 70, height: 70,
-                    width: 112, height: 73,
-                    margin: const EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
                   ),
                 ],
-
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      Text('게시글 작성자',
+                      Icon(Icons.favorite,
+                        color: Colors.grey,
+                        size: 17,
+                      ),
+                      Text(' 1',
                         style: detailStyle(context),
                       ),
                       Text(' · ',
                         style: detailStyle(context),
                       ),
-                      Text('댓글 1',
+                      SvgPicture.asset('assets/icons/emptyGroupImage.svg',
+                        color: Colors.grey,
+                        width: 20,
+                      ),
+                      Text(' 1',
                         style: detailStyle(context),
                       ),
                       Text(' · ',
@@ -229,9 +248,21 @@ class BoardListWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text('좋아요 1',
-                    style: detailStyle(context),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                    ),
+                    child: Text('가입인사',
+                      style: TextStyle(
+                          fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.w600
+                      ),
+                    ),
                   ),
+
                 ],
               ),
             ],
