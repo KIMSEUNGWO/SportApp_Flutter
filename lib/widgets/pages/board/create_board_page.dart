@@ -1,14 +1,14 @@
 
-import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/api/api_result.dart';
+import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/image.dart';
-import 'package:flutter_sport/main.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/upload_image.dart';
@@ -51,6 +51,96 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
     setState(() {});
   }
 
+  removeImage(int index) {
+    setState(() {
+      uploadImages.removeAt(index);
+    });
+  }
+
+  _submit() async {
+    if (!_valid()) return;
+
+    ResponseResult result = await BoardService.createBoard(
+      clubId: widget.clubId,
+      images: uploadImages,
+      boardType: boardType!,
+      title: _titleController.text,
+      content: _contentController.text,
+    );
+
+    print(result.resultCode);
+
+    if (result.resultCode == ResultCode.OK) {
+      Alert.message(
+        context: context,
+        text: Text('게시글이 등록되었습니다.'),
+        onPressed: () {
+          Navigator.pop(context);
+        }
+      );
+    } else if (result.resultCode == ResultCode.CLUB_NOT_EXISTS) {
+      Alert.message(
+        context: context,
+        text: Text('존재하지 않는 모임이니다,'),
+        onPressed: () {
+          Navigator.pop(context);
+        }
+      );
+    } else if (result.resultCode == ResultCode.CLUB_NOT_OWNER) {
+      Alert.message(
+        context: context,
+        text: Text('모임장만 공지사항을 등록할 수 있습니다.'),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
+    } else if (result.resultCode == ResultCode.INVALID_DATA) {
+      _valid();
+    } else {
+      Alert.message(context: context, text: Text('알 수 없는 오류가 발생했습니다.'));
+    }
+  }
+
+  bool _valid() {
+    return _authorityValid() && _categoryValid() && _titleValid() && _contentValid();
+  }
+
+  bool _authorityValid() {
+    if (widget.authority == null) {
+      Alert.message(
+          context: context,
+          text: Text('모임장만 공지사항을 등록할 수 있습니다.'),
+          onPressed: () {
+            Navigator.pop(context);
+          }
+      );
+      return false;
+    }
+    return true;
+  }
+  bool _categoryValid() {
+    if (boardType == null) {
+      Alert.message(
+        context: context,
+        text: Text('카테고리를 선택해주세요.'),
+        onPressed: () {
+          showBottomActionSheet(context, setBoardType, widget.authority!);
+        }
+      );
+      return false;
+    }
+    if (boardType == BoardType.NOTICE && !widget.authority!.isOwner()) {
+      Alert.message(
+        context: context,
+        text: Text('모임장만 공지사항을 등록할 수 있습니다.'),
+        onPressed: () {
+          Navigator.pop(context);
+        }
+      );
+      return false;
+    }
+    return true;
+  }
   bool _titleValid() {
     final title = _titleController.text;
     if (title.isEmpty) {
@@ -113,16 +203,16 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
         actions: [
           GestureDetector(
             onTap: () {
-
+              _submit();
             },
             child: Container(
               margin: const EdgeInsets.only(right: 20),
               child: Text('등록',
                 style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 1.1
+                  fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 1.1
                 ),
               ),
             ),
@@ -198,16 +288,30 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
                                     },
                                   ));
                                 },
-                                child: Container(
-                                  width: 200,
-                                  height: 200,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Theme.of(context).colorScheme.outlineVariant,
-                                      width: 1,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 200,
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Theme.of(context).colorScheme.outlineVariant,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: uploadImage.image,
                                     ),
-                                  ),
-                                  child: uploadImage.image,
+
+                                    Positioned(
+                                      top: 10, right: 10,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          removeImage(index);
+                                        },
+                                        child: Icon(Icons.cancel,),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             },

@@ -41,6 +41,9 @@ enum ResultCode {
   CLUB_ALREADY_JOINED, // 이미 참여 중인 모임일 때
   EXCEED_MAX_CLUB, // 참옇ㄹ 수 있는 방 개수를 초과 했을 때
 
+  // 게시글
+  CLUB_NOT_JOIN_USER, // 모임에 참가 중인 회원이 아닌 경우
+
   UNKOWN;
 
   static ResultCode valueOf(String errorCode) {

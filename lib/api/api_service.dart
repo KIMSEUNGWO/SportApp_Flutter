@@ -68,6 +68,29 @@ class ApiService {
     return ResponseResult.fromJson(json);
 }
 
+static Future<ResponseResult> postMultipartList(String uri, {required List<String> multipartFilePathList, required Map<String, dynamic> data}) async {
+    var request = http.MultipartRequest('POST', Uri.parse('$server$uri'));
+    request.headers.addAll({
+      "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
+      "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
+      "Content-Type": "application/json; charset=UTF-8"
+    });
+
+    for (var multipartFilePath in multipartFilePathList) {
+      request.files.add(await http.MultipartFile.fromPath('image', multipartFilePath));
+    }
+
+    for (String key in data.keys) {
+      if (data[key] == null) continue;
+      request.fields[key] = data[key];
+    }
+
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+    final json = jsonDecode(responseBody);
+    return ResponseResult.fromJson(json);
+}
+
   static Future<bool> _checkAccessToken() async {
     final accessToken = await SecureStorage.readAccessToken();
     if (accessToken == null) return false;

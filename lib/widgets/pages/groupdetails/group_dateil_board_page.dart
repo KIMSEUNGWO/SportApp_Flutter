@@ -23,6 +23,11 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
   final List<String> boardMenus = ['all', 'notice', 'firstComment', 'openBoard'];
 
   @override
+  void initState() {
+    print('asdf');
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
