@@ -1,9 +1,13 @@
 
 enum Authority {
 
-  OWNER,
-  MANAGER,
-  USER;
+  OWNER('owner'),
+  MANAGER('manager'),
+  USER('user');
+
+  final String lang;
+
+  const Authority(this.lang);
 
   static Authority? valueOf(String? data) {
     List<Authority> values = Authority.values;

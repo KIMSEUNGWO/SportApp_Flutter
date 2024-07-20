@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_sport/models/club/authority.dart';
+import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/board/create_board_page.dart';
 
@@ -20,13 +20,8 @@ class GroupDetailBoardWidget extends StatefulWidget {
 
 class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with AutomaticKeepAliveClientMixin{
 
-  final List<String> boardMenus = ['all', 'notice', 'firstComment', 'openBoard'];
+  final List<String> boardMenus = ['all', ...BoardType.values.map((e) => e.lang)];
 
-  @override
-  void initState() {
-    print('asdf');
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     return Stack(

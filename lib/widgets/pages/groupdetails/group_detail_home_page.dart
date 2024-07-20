@@ -7,10 +7,12 @@ import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/group/club_service.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/login_checker.dart';
+import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_sport/models/user/club_member.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class GroupDetailHomeWidget extends ConsumerStatefulWidget {
@@ -25,6 +27,7 @@ class GroupDetailHomeWidget extends ConsumerStatefulWidget {
 
 class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> with AutomaticKeepAliveClientMixin {
 
+  List<ClubUser> _userList = [];
   bool joinBtnDisabled = false;
 
   bool login() {
@@ -62,75 +65,85 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
       child: Stack(
         children: [
           CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          slivers: [
-            CupertinoSliverRefreshControl(
-              refreshTriggerPullDistance: 100.0,
-              refreshIndicatorExtent: 80.0,
-              onRefresh: () async {
-                // 위로 새로고침
-                await Future.delayed(const Duration(seconds: 1));
-                await widget.reloadClub();
-              },
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: widget.club.image == null
-                  ? BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                    )
-                  : const BoxDecoration(),
-                width: double.infinity,
-                height: 200,
-                child: widget.club.image ?? Center(
-                  child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-                  width: 40, height: 40, color: const Color(0xFF878181),
+            slivers: [
+              CupertinoSliverRefreshControl(
+                refreshTriggerPullDistance: 100.0,
+                refreshIndicatorExtent: 80.0,
+                onRefresh: () async {
+                  // 위로 새로고침
+                  await Future.delayed(const Duration(seconds: 1));
+                  await widget.reloadClub();
+                },
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: widget.club.image == null
+                    ? BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                      )
+                    : const BoxDecoration(),
+                  width: double.infinity,
+                  height: 200,
+                  child: widget.club.image ?? Center(
+                    child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
+                    width: 40, height: 40, color: const Color(0xFF878181),
+                    ),
                   ),
                 ),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.club.title,
-                      style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                        height: 2
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Tag(title: 'sportTitle'.tr(gender: widget.club.sport!.lang)),
-                        const SizedBox(width: 10),
-                        Tag(title: widget.club.region!.getLocaleName(EasyLocalization.of(context)!.locale),),
-                        const SizedBox(width: 10),
-                        Tag(title: 'person'.tr(args: [widget.club.personCount.toString()]),)
-                      ],
-                    ),
-                    const SizedBox(height: 20,),
-                    if (widget.club.intro != null)
-                      Text(widget.club.intro!,
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.club.title,
                         style: TextStyle(
-                          fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                          fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
                           color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w500
+                          fontWeight: FontWeight.w500,
+                          height: 2
                         ),
-                      ), // 본문내용
-                  ],
-                )
+                      ),
+                      Row(
+                        children: [
+                          Tag(title: 'sportTitle'.tr(gender: widget.club.sport!.lang)),
+                          const SizedBox(width: 10),
+                          Tag(title: widget.club.region!.getLocaleName(EasyLocalization.of(context)!.locale),),
+                          const SizedBox(width: 10),
+                          Tag(title: 'person'.tr(args: [widget.club.personCount.toString()]),)
+                        ],
+                      ),
+                      const SizedBox(height: 20,),
+                      if (widget.club.intro != null)
+                        Text(widget.club.intro!,
+                          style: TextStyle(
+                            fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w500
+                          ),
+                        ), // 본문내용
+                    ],
+                  )
+                ),
               ),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 100,),)
-          ],
-        ),
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 30),
+                  color: Theme.of(context).colorScheme.outline,
+                  height: 30,
+                ),
+              ),
+
+              ClubUserListWidget(clubId: widget.club.id,),
+
+              const SliverToBoxAdapter(child: SizedBox(height: 100,),)
+            ],
+          ),
           if (widget.club.authority == null)
             (widget.club.personCount < widget.club.maxPerson)
               ? GestureDetector(
@@ -238,3 +251,107 @@ class Tag extends StatelessWidget {
   }
 }
 
+
+
+class ClubUserListWidget extends StatefulWidget {
+
+  final int clubId;
+
+  const ClubUserListWidget({super.key, required this.clubId});
+
+  @override
+  State<ClubUserListWidget> createState() => _ClubUserListWidgetState();
+}
+
+class _ClubUserListWidgetState extends State<ClubUserListWidget> {
+
+  List<ClubUser> _userList = [];
+
+
+  _initClubUsers() async {
+    _userList = await ClubService.getClubUsers(clubId: widget.clubId);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _initClubUsers();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          separatorBuilder: (context, index) => Container(
+            height: 1.5,
+            decoration: BoxDecoration(
+              // color: Color(0xFFE4DDDD),
+                color: Theme.of(context).colorScheme.outline
+            ),
+          ),
+          itemCount: _userList.length,
+          itemBuilder: (context, index) {
+            ClubUser clubUser = _userList[index];
+            return ClubUserWidget(clubUser: clubUser);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class ClubUserWidget extends StatelessWidget {
+
+  final ClubUser clubUser;
+  const ClubUserWidget({super.key, required this.clubUser,});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: 40, height: 40,
+            margin: const EdgeInsets.only(right: 10),
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: clubUser.thumbnail ?? const Center(child: Icon(Icons.person, size: 30, color: const Color(0xFF878181),))
+          ),
+          const SizedBox(width: 5,),
+          Expanded(
+            child: Text(clubUser.nickname,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize
+              ),
+            ),
+          ),
+          const SizedBox(width: 15,),
+          if (clubUser.authority != Authority.USER)
+            Container(
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Theme.of(context).colorScheme.secondaryContainer,
+            ),
+            child: Text('authority',
+              style: TextStyle(
+                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
+              ),
+            ).tr(gender: clubUser.authority.lang),
+          ),
+        ],
+      ),
+    );
+  }
+}

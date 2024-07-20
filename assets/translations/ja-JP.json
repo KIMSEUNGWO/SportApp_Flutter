@@ -102,5 +102,11 @@
 
   "save" : "保存",
   "complete" : "完了",
-  "goToLogin" : "ログイン"
+  "goToLogin" : "ログイン",
+
+  "authority" : {
+    "owner" : "관리자",
+    "manager" : "매니저",
+    "user" : "회원"
+  }
 }

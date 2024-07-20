@@ -99,6 +99,14 @@
 
   "save" : "저장",
   "complete" : "완료",
-  "goToLogin" : "로그인하러 가기"
+  "goToLogin" : "로그인하러 가기",
+
+
+
+  "authority" : {
+    "owner" : "관리자",
+    "manager" : "매니저",
+    "user" : "회원"
+  }
 
 }

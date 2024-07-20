@@ -11,6 +11,7 @@ import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 
 import 'package:flutter_sport/common/secure_strage.dart';
+import 'package:flutter_sport/models/user/club_member.dart';
 
 class ClubService {
 
@@ -129,5 +130,18 @@ class ClubService {
     print(response.data);
     return response;
 
+  }
+
+  static Future<List<ClubUser>> getClubUsers({required int clubId}) async {
+
+    ResponseResult response = await ApiService.get(uri: '/club/$clubId/users');
+    if (response.resultCode != ResultCode.OK) return [];
+
+    List<ClubUser> list = [];
+    for (var data in response.data) {
+      ClubUser clubUser = ClubUser.fromJson(data);
+      list.add(clubUser);
+    }
+    return list;
   }
 }
