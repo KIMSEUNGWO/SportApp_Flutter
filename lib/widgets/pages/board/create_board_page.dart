@@ -119,7 +119,7 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
     return true;
   }
   bool _categoryValid() {
-    if (boardType == null) {
+    if (boardType == null || boardType == BoardType.ALL) {
       Alert.message(
         context: context,
         text: Text('카테고리를 선택해주세요.'),
