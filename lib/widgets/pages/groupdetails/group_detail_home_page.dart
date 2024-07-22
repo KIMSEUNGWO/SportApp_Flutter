@@ -36,7 +36,8 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
 
   joinClub() async {
     joinDisabled(false);
-    ResponseResult result = await ClubService.joinClub(clubId: widget.club.id);
+    ResponseResult? result = await ClubService.joinClub(clubId: widget.club.id, context: context);
+    if (result == null) return;
     if (result.resultCode == ResultCode.OK) {
       Alert.message(context: context, text: Text('가입이 완료되었습니다.'),
         onPressed: () {

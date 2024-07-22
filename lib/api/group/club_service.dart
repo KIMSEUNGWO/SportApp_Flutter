@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
@@ -36,20 +37,25 @@ class ClubService {
     );
   }
 
-  static Future<ClubDetail> clubData({required BuildContext context, required int clubId}) async {
+  static bool isClubExists(ResponseResult response, BuildContext context) {
+    if (response.resultCode == ResultCode.CLUB_NOT_EXISTS) {
+      Future.delayed(const Duration(milliseconds: 300));
+      Navigator.pop(context);
+      Alert.message(context: context, text: Text('존재하지 않는 모임입니다.'));
+      return false;
+    }
+    return true;
+  }
+
+  static Future<ClubDetail?> clubData({required BuildContext context, required int clubId}) async {
     ResponseResult response = await ApiService.get(
       uri: '/club/$clubId',
       header : {
         "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
       }
     );
+    if (!isClubExists(response, context)) return null;
 
-    if (response.resultCode == ResultCode.CLUB_NOT_EXISTS) {
-      Alert.message(context: context, text: Text('존재하지 않는 모임입니다.'), onPressed: () {
-        Navigator.pop(context);
-      });
-    }
-    print(response.data);
     return ClubDetail.fromJson(response.data);
   }
 
@@ -90,7 +96,7 @@ class ClubService {
     return _getClubSimp(response);
   }
 
-  static Future<ResponseResult> joinClub({required int clubId}) async {
+  static Future<ResponseResult?> joinClub({required int clubId, required BuildContext context}) async {
 
     ResponseResult response = await ApiService.post(
         uri: '/club/$clubId/join',
@@ -98,17 +104,21 @@ class ClubService {
           "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
         }
     );
-
+    if (!isClubExists(response, context)) {
+      return null;
+    }
     return response;
   }
 
-  static Future<ResponseResult> clubEdit({
+  static Future<ResponseResult?> clubEdit({
     required String? image,
     required SportType? sportType,
     required Region? region,
     required String? title,
     required String? intro,
-    required int clubId}) async {
+    required int clubId,
+    required BuildContext context
+  }) async {
 
     final response = await ApiService.postMultipart('/club/$clubId/edit',
       multipartFilePath: image,
@@ -120,6 +130,8 @@ class ClubService {
         'intro' : intro,
       },
     );
+
+    if (!isClubExists(response, context)) return null;
     return response;
 
   }

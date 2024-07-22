@@ -56,14 +56,16 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
 
   _submit(BuildContext context) async {
     if (!_valid(context)) return;
-    final ResponseResult result = await ClubService.clubEdit(
+    final ResponseResult? result = await ClubService.clubEdit(
       clubId: widget.club.id,
       image: editProfileImagePath,
       sportType: sportType != widget.club.sport ? sportType : null,
       region: region != widget.club.region ? region : null,
       title: _titleController.text.isEmpty ? null : _titleController.text,
       intro: _introController.text.isEmpty ? null : _introController.text,
+      context: context
     );
+    if (result == null) return;
 
     if (result.resultCode == ResultCode.OK) {
       Alert.message(context: context,

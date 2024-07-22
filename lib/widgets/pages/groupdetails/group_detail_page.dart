@@ -32,7 +32,7 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
   late TabController _tabController;
   bool isLiked = false;
 
-  late ClubDetail club;
+  late ClubDetail? club;
   bool isLoading = true;
 
   toggleLike() {
@@ -58,14 +58,15 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
 
   readClub() async {
     club = await ClubService.clubData(context: context, clubId: widget.id);
+    if (club == null) return;
     setState(() {
       isLoading = false;
     });
     tabList = {
-      Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(club : club, reloadClub: readClub),
-      Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(club : club),
-      Tab(text: 'groupMenus'.tr(gender: 'group')) : GroupDetailMeetingWidget(club : club),
-      Tab(text: 'groupMenus'.tr(gender: 'chat')) : GroupDetailChatWidget(club : club)
+      Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(club : club!, reloadClub: readClub),
+      Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(club : club!),
+      Tab(text: 'groupMenus'.tr(gender: 'group')) : GroupDetailMeetingWidget(club : club!),
+      Tab(text: 'groupMenus'.tr(gender: 'chat')) : GroupDetailChatWidget(club : club!)
     };
   }
 
@@ -145,7 +146,7 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text(club.title,
+        title: Text(club!.title,
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w500,
@@ -236,12 +237,12 @@ class _GroupDetailWidgetState extends State<GroupDetailWidget> with SingleTicker
               ).tr(),
             ),
 
-            if (club.authority != null && club.authority == Authority.OWNER)
+            if (club!.authority != null && club!.authority == Authority.OWNER)
               CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ClubEditWidget(club: club, reload: readClub);
+                  return ClubEditWidget(club: club!, reload: readClub);
                 },));
               },
               child: Text('방 설정 변경',
