@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/group/club_service.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
+import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
@@ -29,23 +30,6 @@ class MainPage extends ConsumerStatefulWidget {
 class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClientMixin {
   final double margin = 20;
 
-  late List<ClubSimp> recentlyViewClubs;
-  bool recentlyViewIsLoading = true;
-
-  @override
-  void initState() {
-    recentlyClubsInit();
-    super.initState();
-  }
-
-  recentlyClubsInit() async {
-    recentlyViewClubs = await ClubService.getRecentlyViewClubs();
-    setState(() {
-      recentlyViewIsLoading = false;
-    });
-  }
-
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -66,7 +50,7 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
         const InfinityBanner(),
         Menus(),
         const SliverToBoxAdapter(child: SizedBox(height: 40,),),
-        if (!recentlyViewIsLoading)
+        if (!ref.read(recentlyClubNotifier.notifier).isEmpty())
           SliverToBoxAdapter(
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: margin),
@@ -85,7 +69,7 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                     ).tr(),
                     GestureDetector(
                       onTap: () => Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => RecentlyVisitPages(clubs: recentlyViewClubs),)
+                          builder: (context) => RecentlyVisitPages(clubs: ref.read(recentlyClubNotifier.notifier).state),)
                       ),
                       child: Text('more',
                         style: TextStyle(
@@ -100,9 +84,9 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                   padding: const EdgeInsets.only(top: 15),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: min(recentlyViewClubs.length, 5),
+                  itemCount: min(ref.watch(recentlyClubNotifier.notifier).length(), 5),
                   itemBuilder: (context, index) {
-                    ClubSimp club = recentlyViewClubs[index];
+                    ClubSimp club = ref.read(recentlyClubNotifier.notifier).index(index);
                     if (club.sport != null && club.region != null) {
                       return SmallListWidget(
                         id: club.id,
