@@ -15,12 +15,9 @@ import 'package:flutter_sport/models/user/club_member.dart';
 
 class ClubService {
 
-  static final String _club = '/club';
-
   static Future<ResponseResult> clubCreate({
           required SportType sportType,
           required Region region,
-          required int limitPerson,
           required String title,
           required String? intro}) async {
 
@@ -35,7 +32,6 @@ class ClubService {
         "region" : region.name,
         "title" : title,
         "intro" : intro,
-        "limitPerson" : limitPerson
       })
     );
   }
@@ -112,7 +108,6 @@ class ClubService {
     required Region? region,
     required String? title,
     required String? intro,
-    required int? limitPerson,
     required int clubId}) async {
 
     final response = await ApiService.postMultipart('/club/$clubId/edit',
@@ -123,11 +118,8 @@ class ClubService {
         'region' : region?.name,
         'title' : title,
         'intro' : intro,
-        'limitPerson' : limitPerson?.toString(),
       },
     );
-    print(response.resultCode);
-    print(response.data);
     return response;
 
   }

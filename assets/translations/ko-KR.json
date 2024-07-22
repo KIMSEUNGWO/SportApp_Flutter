@@ -43,6 +43,7 @@
   "joinGroup" : "참여하기",
 
   "time" : {
+    "seconds" : "{}초 전",
     "minutes" : "{}분 전",
     "hours" : "{}시간 전",
     "days" : "{}일 전",

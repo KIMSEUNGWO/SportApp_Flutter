@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/common/dateformat.dart';
 import 'package:intl/intl.dart';
 
 class NotificationWidget extends StatelessWidget {
@@ -31,7 +32,7 @@ class NotificationWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),),
-              Text(formatDate(date), style: const TextStyle(fontSize: 12, color: Color(0xFF797979)),)
+              Text('13분전', style: const TextStyle(fontSize: 12, color: Color(0xFF797979)),)
             ],
           )
         ],
@@ -39,23 +40,4 @@ class NotificationWidget extends StatelessWidget {
     );
   }
 
-  String formatDate(String dateString) {
-    final now = DateTime.now();
-    final date = DateTime.parse(dateString);
-    final difference = now.difference(date);
-
-    if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}분 전';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours}시간 전';
-    } else if (difference.inDays == 1) {
-      return '어제 ${DateFormat('HH:mm').format(date)}';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays}일 전';
-    } else if (difference.inDays < 365) {
-      return DateFormat('M월 dd일 HH:mm').format(date);
-    } else {
-      return DateFormat('yyyy년 MM월 dd일 HH:mm').format(date);
-    }
-  }
 }

@@ -45,6 +45,7 @@
   "joinGroup" : "参加する",
 
   "time" : {
+    "seconds" : "{}초 전",
     "minutes" : "{}分前",
     "hours" : "{}時間前",
     "days" : "{}日前",

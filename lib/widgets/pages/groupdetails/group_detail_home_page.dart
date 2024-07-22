@@ -98,6 +98,9 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
               SliverToBoxAdapter(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
+                  constraints: BoxConstraints(
+                    minHeight: 300
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

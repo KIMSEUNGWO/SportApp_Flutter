@@ -51,7 +51,6 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
     final ResponseResult result = await ClubService.clubCreate(
         sportType: sportType!,
         region: region!,
-        limitPerson: int.parse(_personController.text),
         title: _titleController.text,
         intro: _introController.text
     );
@@ -73,7 +72,6 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
       for (var invalid in result.data) {
         if (invalid == 'sportType') _sportTypeValid();
         else if (invalid == 'region') _regionValid();
-        if (invalid == 'limitPerson') _personValid();
         if (invalid == 'title') _titleValid();
         if (invalid == 'intro') _introValid();
       }
@@ -83,7 +81,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
   }
 
   bool _valid(BuildContext context) {
-    return _sportTypeValid() && _regionValid() && _personValid() && _titleValid() && _introValid();
+    return _sportTypeValid() && _regionValid() && _titleValid() && _introValid();
   }
 
   bool _sportTypeValid() {
@@ -103,20 +101,20 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
     return true;
   }
 
-  bool _personValid() {
-    final int? person = int.tryParse(_personController.text);
-    if (person == null) {
-      _personError('유효한 숫자를 입력해주세요.');
-      return false;
-    } else if (person < 3) {
-      _personError('3명 이상으로 설정해주세요.');
-      return false;
-    } else if (person > 100) {
-      _personError('100명 이하로 설정해주세요.');
-      return false;
-    }
-    return true;
-  }
+  // bool _personValid() {
+  //   final int? person = int.tryParse(_personController.text);
+  //   if (person == null) {
+  //     _personError('유효한 숫자를 입력해주세요.');
+  //     return false;
+  //   } else if (person < 3) {
+  //     _personError('3명 이상으로 설정해주세요.');
+  //     return false;
+  //   } else if (person > 100) {
+  //     _personError('200명 이하로 설정해주세요.');
+  //     return false;
+  //   }
+  //   return true;
+  // }
   bool _titleValid() {
     final title = _titleController.text;
     if (title.isEmpty) {
@@ -146,6 +144,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
     _titleController = TextEditingController();
     _introController = TextEditingController();
     _personController = TextEditingController();
+    _personController.text = '200';
     super.initState();
   }
 
@@ -274,7 +273,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
                               ),
                             ),
                             const SizedBox(width: 10,),
-                            Text('(3 ~ 100명)',
+                            Text('(200명)',
                               style: TextStyle(
                                 fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
                                 color: Theme.of(context).colorScheme.secondary,
@@ -283,50 +282,51 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
                             )
                           ],
                         ),
-                        SizedBox(width: 30,),
+                        const SizedBox(width: 30,),
                         Expanded(
                           child: TextField(
                             controller: _personController,
+                            readOnly: true,
                             keyboardType: TextInputType.number,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
-                              CustomRangeTextInputFormatter(max: 100),
+                              const CustomRangeTextInputFormatter(max: 200),
                             ],
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                             ),
                             decoration: InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Color(0xFFD9D9D9),
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: Color(0xFFD9E7F6),
                                       width: 2
                                   ),
                                 ),
                                 errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Color(0xFFFA5252),
                                         width: 2
                                     )
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: Color(0xFFFA5252),
                                         width: 2
                                     )
                                 ),
                                 errorText: _personErrorText,
-                                errorStyle: TextStyle(
+                                errorStyle: const TextStyle(
                                   color: Color(0xFFFA5252),
-                                )
+                                ),
                             ),
                           ),
                         ),
@@ -435,6 +435,7 @@ class CustomRangeTextInputFormatter extends TextInputFormatter {
   final int max;
 
   const CustomRangeTextInputFormatter({required this.max});
+
 
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {

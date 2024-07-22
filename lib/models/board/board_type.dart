@@ -19,4 +19,12 @@ enum BoardType {
     return const [BoardType.FIRST_COMMENT, BoardType.OPEN_BOARD];
   }
 
+  static BoardType valueOf(String data) {
+    for (var boardType in BoardType.values) {
+      if (boardType  == BoardType.ALL) continue;
+      if (boardType.name == data) return boardType;
+    }
+    return BoardType.OPEN_BOARD;
+  }
+
 }

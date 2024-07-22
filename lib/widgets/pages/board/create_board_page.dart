@@ -71,11 +71,11 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
     print(result.resultCode);
 
     if (result.resultCode == ResultCode.OK) {
+      Navigator.pop(context);
       Alert.message(
         context: context,
         text: Text('게시글이 등록되었습니다.'),
         onPressed: () {
-          Navigator.pop(context);
         }
       );
     } else if (result.resultCode == ResultCode.CLUB_NOT_EXISTS) {

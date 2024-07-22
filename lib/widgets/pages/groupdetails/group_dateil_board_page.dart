@@ -56,7 +56,7 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
           physics: const NeverScrollableScrollPhysics(),
           itemCount: _boardMenus.length,
           itemBuilder: (context, index) {
-            return BoardPageWidget(boardMenus : _boardMenus, index: index, onChange: onChangeType);
+            return BoardPageWidget(clubId: widget.club.id, boardMenus : _boardMenus, index: index, onChange: onChangeType);
           },
         ),
         if (widget.club.authority != null)

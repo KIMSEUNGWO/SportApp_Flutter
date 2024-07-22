@@ -63,7 +63,6 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
       region: region != widget.club.region ? region : null,
       title: _titleController.text.isEmpty ? null : _titleController.text,
       intro: _introController.text.isEmpty ? null : _introController.text,
-      limitPerson: _personController.text.isNotEmpty ? int.parse(_personController.text) : null,
     );
 
     if (result.resultCode == ResultCode.OK) {
@@ -78,7 +77,6 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
       for (var invalid in result.data) {
         if (invalid == 'sportType') _sportTypeValid();
         else if (invalid == 'region') _regionValid();
-        if (invalid == 'limitPerson') _personValid();
         if (invalid == 'title') _titleValid();
         if (invalid == 'intro') _introValid();
       }
@@ -93,7 +91,7 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
   }
 
   bool _valid(BuildContext context) {
-    return _sportTypeValid() && _regionValid() && _personValid() && _titleValid() && _introValid();
+    return _sportTypeValid() && _regionValid() && _titleValid() && _introValid();
   }
 
   bool _sportTypeValid() {
@@ -111,21 +109,21 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
     }
     return true;
   }
-  bool _personValid() {
-    final int? person = int.tryParse(_personController.text);
-    if (person == null) return true;
-
-    if (person < 3) {
-      _personError('3명 이상으로 설정해주세요.');
-      return false;
-    } else if (person > 100) {
-      _personError('100명 이하로 설정해주세요.');
-      return false;
-    } else if (person < widget.club.personCount) {
-      _personError('현재 인원보다 적게 설정할 수 없습니다.');
-    }
-    return true;
-  }
+  // bool _personValid() {
+  //   final int? person = int.tryParse(_personController.text);
+  //   if (person == null) return true;
+  //
+  //   if (person < 3) {
+  //     _personError('3명 이상으로 설정해주세요.');
+  //     return false;
+  //   } else if (person > 100) {
+  //     _personError('100명 이하로 설정해주세요.');
+  //     return false;
+  //   } else if (person < widget.club.personCount) {
+  //     _personError('현재 인원보다 적게 설정할 수 없습니다.');
+  //   }
+  //   return true;
+  // }
   bool _titleValid() {
     final title = _titleController.text;
     if (title.isEmpty) {
@@ -309,7 +307,7 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
                                   ),
                                 ),
                                 const SizedBox(width: 10,),
-                                Text('(3 ~ 100명)')
+                                Text('(200명)')
                               ],
                             ),
                             SizedBox(width: 30,),
@@ -317,6 +315,7 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
                               child: TextField(
                                 controller: _personController,
                                 keyboardType: TextInputType.number,
+                                readOnly: true,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                   CustomRangeTextInputFormatter(max: 100),

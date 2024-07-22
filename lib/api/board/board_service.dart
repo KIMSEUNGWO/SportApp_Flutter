@@ -17,4 +17,9 @@ class BoardService {
       },
     );
   }
+
+  static Future<ResponseResult> getBoards({required int clubId, required int page, required int size, required String? boardType}) async {
+    return await ApiService.get(uri: '/club/$clubId/board?boardType=$boardType&page=$page&size=$size',
+    );
+  }
 }
