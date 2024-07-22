@@ -35,7 +35,7 @@ class SmallListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(context, MaterialPageRoute(
-          builder: (context) => GroupDetailWidget(id: 123,),)
+          builder: (context) => GroupDetailWidget(id: id,),)
       ),
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),
