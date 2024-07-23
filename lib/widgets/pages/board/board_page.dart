@@ -8,6 +8,7 @@ import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
+import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -19,6 +20,7 @@ class BoardPageWidget extends StatelessWidget {
   final int index;
   final Function(BoardType boardType) onChange;
   final GlobalKey<_BoardListWidgetState> boardListKey = GlobalKey<_BoardListWidgetState>();
+  final GlobalKey<_BoardNoticeWidgetState> noticeListKey = GlobalKey<_BoardNoticeWidgetState>();
 
   BoardPageWidget({super.key, required this.boardMenus, required this.index, required this.onChange, required this.clubId});
 
@@ -35,6 +37,9 @@ class BoardPageWidget extends StatelessWidget {
             // 위로 새로고침
             await Future.delayed(const Duration(seconds: 1));
             await boardListKey.currentState?._fetchRefresh();
+            if (boardMenus[index] == BoardType.ALL) {
+              await noticeListKey.currentState?._fetchBoards();
+            }
           },
         ),
         SliverToBoxAdapter(
@@ -76,7 +81,7 @@ class BoardPageWidget extends StatelessWidget {
             ),
           ),
         ),
-        if (boardMenus[index] == BoardType.ALL) BoardNoticeWidget(clubId: clubId),
+        if (boardMenus[index] == BoardType.ALL) BoardNoticeWidget(key: noticeListKey, clubId: clubId),
         BoardListWidget(key: boardListKey, clubId: clubId, boardType: boardMenus[index]),
         const SliverToBoxAdapter(child: SizedBox(height: 50,),)
       ],
@@ -293,7 +298,7 @@ class _BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAli
           _fetchBoards();
           return const Center(child: CupertinoActivityIndicator(),);
         }
-        return BoardWidget(board: _boards[index]);
+        return BoardWidget(clubId: widget.clubId, board: _boards[index]);
       },
 
     );
@@ -308,26 +313,30 @@ class _BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAli
 
 class BoardWidget extends StatelessWidget {
   final Board board;
+  final int clubId;
 
-  const BoardWidget({super.key, required this.board});
+  const BoardWidget({super.key, required this.board, required this.clubId});
 
   @override
   Widget build(BuildContext context) {
-      return Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-        constraints: const BoxConstraints(
-          minHeight: 160,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-
-                  },
-                  child: Row(
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return BoardDetailWidget(clubId: clubId, boardId: board.boardId);
+          },));
+        },
+        child: Container(
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+          constraints: const BoxConstraints(
+            minHeight: 160,
+          ),
+          decoration: BoxDecoration(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Row(
                     children: [
                       Container(
                           width: 25, height: 25,
@@ -349,100 +358,100 @@ class BoardWidget extends StatelessWidget {
                       )
                     ],
                   ),
-                ),
-                const SizedBox(height: 10,),
-                Flex(
-                  direction: Axis.horizontal,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(board.title,
-                            style: TextStyle(
-                                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                                fontWeight: FontWeight.w600,
-                                color: Theme.of(context).colorScheme.primary,
-                                overflow: TextOverflow.ellipsis
+                  const SizedBox(height: 10,),
+                  Flex(
+                    direction: Axis.horizontal,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(board.title,
+                              style: TextStyle(
+                                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  overflow: TextOverflow.ellipsis
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 6,),
-                          Text(board.content,
-                            maxLines: 2,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
+                            const SizedBox(height: 6,),
+                            Text(board.content,
+                              maxLines: 2,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.secondary,
+                                  fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (board.thumbnailBoard != null)
-                      Container(
-                        // width: 70, height: 70,
-                        width: 112, height: 73,
-                        margin: const EdgeInsets.only(left: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
+                          ],
                         ),
-                        clipBehavior: Clip.hardEdge,
-                        child: board.thumbnailBoard,
                       ),
-                  ],
+                      if (board.thumbnailBoard != null)
+                        Container(
+                          // width: 70, height: 70,
+                          width: 112, height: 73,
+                          margin: const EdgeInsets.only(left: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: board.thumbnailBoard,
+                        ),
+                    ],
 
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.favorite,
-                      color: Colors.grey,
-                      size: 17,
-                    ),
-                    Text(board.likeCount.toString(),
-                      style: detailStyle(context),
-                    ),
-                    Text(' · ',
-                      style: detailStyle(context),
-                    ),
-                    SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-                      color: Colors.grey,
-                      width: 20,
-                    ),
-                    Text(board.commentCount.toString(),
-                      style: detailStyle(context),
-                    ),
-                    Text(' · ',
-                      style: detailStyle(context),
-                    ),
-                    Text(DateTimeFormatter.formatDate(board.createDate),
-                      style: detailStyle(context),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Theme.of(context).colorScheme.secondaryContainer,
                   ),
-                  child: Text('groupBoardMenus'.tr(gender: board.boardType.lang),
-                    style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontWeight: FontWeight.w600
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.favorite,
+                        color: Colors.grey,
+                        size: 17,
+                      ),
+                      Text(board.likeCount.toString(),
+                        style: detailStyle(context),
+                      ),
+                      Text(' · ',
+                        style: detailStyle(context),
+                      ),
+                      SvgPicture.asset('assets/icons/emptyGroupImage.svg',
+                        color: Colors.grey,
+                        width: 20,
+                      ),
+                      Text(board.commentCount.toString(),
+                        style: detailStyle(context),
+                      ),
+                      Text(' · ',
+                        style: detailStyle(context),
+                      ),
+                      Text(DateTimeFormatter.formatDate(board.createDate),
+                        style: detailStyle(context),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                    ),
+                    child: Text('groupBoardMenus'.tr(gender: board.boardType.lang),
+                      style: TextStyle(
+                          fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.w600
+                      ),
                     ),
                   ),
-                ),
 
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       );
   }
