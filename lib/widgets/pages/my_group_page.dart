@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/api/group/club_service.dart';
+import 'package:flutter_sport/api/club/club_service.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
 import 'package:flutter_sport/widgets/pages/create_group_page.dart';

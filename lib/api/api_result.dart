@@ -44,6 +44,10 @@ enum ResultCode {
   // 게시글
   CLUB_NOT_JOIN_USER, // 모임에 참가 중인 회원이 아닌 경우
 
+
+  // 댓글
+  NOT_EXISTS_COMMENT, // 대댓글을 작성할 때 부모댓글이 존재하지 않은 경우
+
   UNKOWN;
 
   static ResultCode valueOf(String errorCode) {

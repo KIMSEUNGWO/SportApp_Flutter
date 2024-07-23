@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_sport/api/api_result.dart';
+import 'package:flutter_sport/api/method_type.dart';
 import 'package:flutter_sport/api/social_result.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';
@@ -17,7 +18,9 @@ class ApiService {
     "Content-Type" : "application/json",
     "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"
   };
-  static const Map<String, String> defaultHeader = {"Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv"};
+  static const Map<String, String> defaultHeader = {
+    "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
+  };
 
 
   static ResponseResult _decode(http.Response response) {
@@ -45,8 +48,8 @@ class ApiService {
     return _decode(response);
   }
 
-  static Future<ResponseResult> postMultipart(String uri, {required String? multipartFilePath, required Map<String, dynamic> data}) async {
-    var request = http.MultipartRequest('POST', Uri.parse('$server$uri'));
+  static Future<ResponseResult> multipart(String uri, {required MethodType method, required String? multipartFilePath, required Map<String, dynamic> data}) async {
+    var request = http.MultipartRequest(method.name, Uri.parse('$server$uri'));
     request.headers.addAll({
       "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
       "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
@@ -68,8 +71,8 @@ class ApiService {
     return ResponseResult.fromJson(json);
 }
 
-static Future<ResponseResult> postMultipartList(String uri, {required List<String> multipartFilePathList, required Map<String, dynamic> data}) async {
-    var request = http.MultipartRequest('POST', Uri.parse('$server$uri'));
+static Future<ResponseResult> multipartList(String uri, {required MethodType method, required List<String> multipartFilePathList, required Map<String, dynamic> data}) async {
+    var request = http.MultipartRequest(method.name, Uri.parse('$server$uri'));
     request.headers.addAll({
       "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",
       "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",

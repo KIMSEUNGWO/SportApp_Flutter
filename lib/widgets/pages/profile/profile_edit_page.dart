@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
+import 'package:flutter_sport/api/method_type.dart';
 import 'package:flutter_sport/common/image.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
@@ -43,7 +44,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     data.addAll({'intro' : _textIntroController.text});
 
 
-    ResponseResult responseResult = await ApiService.postMultipart('/user/edit', multipartFilePath: editProfileImagePath, data: data);
+    ResponseResult responseResult = await ApiService.multipart('/user/edit', method: MethodType.POST, multipartFilePath: editProfileImagePath, data: data);
 
     if (responseResult.resultCode == ResultCode.OK) {
       final response = await ApiService.getProfile();

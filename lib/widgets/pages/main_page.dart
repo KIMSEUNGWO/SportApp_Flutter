@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/api/group/club_service.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';

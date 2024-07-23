@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sport/api/group/club_service.dart';
+import 'package:flutter_sport/api/club/club_service.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';

@@ -7,15 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sport/api/api_result.dart';
-import 'package:flutter_sport/api/group/club_service.dart';
+import 'package:flutter_sport/api/club/club_service.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/image.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
-import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/create_group_page.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,10 +66,10 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
     if (result == null) return;
 
     if (result.resultCode == ResultCode.OK) {
+      Navigator.pop(context);
       Alert.message(context: context,
           text: Text('설정이 변경되었습니다.'),
           onPressed: () {
-            Navigator.pop(context);
             widget.reload();
           }
       );

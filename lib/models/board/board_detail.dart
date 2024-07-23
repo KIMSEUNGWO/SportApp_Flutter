@@ -3,7 +3,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sport/api/uri_helper.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
-import 'package:flutter_sport/models/comment/comment.dart';
 
 class BoardDetail {
 
@@ -21,8 +20,6 @@ class BoardDetail {
   final Image? thumbnailUser;
   final String nickname;
 
-  final List<Comment> comments;
-
   BoardDetail.fromJson(Map<String, dynamic> json):
     boardId = json['boardId'],
     title = json['title'],
@@ -38,10 +35,7 @@ class BoardDetail {
     thumbnailUser = json['thumbnailUser'] != null
         ? ImageHelper.parseImage(imagePath: ImagePath.THUMBNAIL, imageType: ImageType.PROFILE, imageName: json['thumbnailUser'], fit: BoxFit.fill,)
         : null,
-    nickname = json['nickname'],
-
-    comments = json['comments'] == null ? []
-      : List<Comment>.from(json['comments'].map((comment) => Comment.fromJson(comment)));
+    nickname = json['nickname'];
 }
 
 class BoardImage {

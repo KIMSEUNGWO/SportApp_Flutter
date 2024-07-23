@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
+import 'package:flutter_sport/api/method_type.dart';
 import 'package:flutter_sport/common/local_storage.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
@@ -23,7 +24,7 @@ class ClubService {
           required String? intro}) async {
 
     return await ApiService.post(
-      uri : '/club/create',
+      uri : '/club',
       header: {
         "Content-Type" : "application/json",
         "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
@@ -37,7 +38,7 @@ class ClubService {
     );
   }
 
-  static bool isClubExists(ResponseResult response, BuildContext context) {
+  static bool _isClubExists(ResponseResult response, BuildContext context) {
     if (response.resultCode == ResultCode.CLUB_NOT_EXISTS) {
       Future.delayed(const Duration(milliseconds: 300));
       Navigator.pop(context);
@@ -54,23 +55,9 @@ class ClubService {
         "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
       }
     );
-    if (!isClubExists(response, context)) return null;
+    if (!_isClubExists(response, context)) return null;
 
     return ClubDetail.fromJson(response.data);
-  }
-
-  static Future<List<ClubSimp>> getRecentlyViewClubs() async {
-    // List<String> clubs = await LocalStorage.getRecentlyViewClubList();
-    List<String> clubs = ['1'];
-
-    String queryString = clubs.map((clubId) => 'clubs=$clubId').join('&');
-    ResponseResult response = await ApiService.get(
-        uri: '?$queryString',
-        header : {
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
-        }
-    );
-    return _getClubSimp(response);
   }
 
   static List<ClubSimp> _getClubSimp(ResponseResult response) {
@@ -99,12 +86,12 @@ class ClubService {
   static Future<ResponseResult?> joinClub({required int clubId, required BuildContext context}) async {
 
     ResponseResult response = await ApiService.post(
-        uri: '/club/$clubId/join',
+        uri: '/club/$clubId',
         header: {
           "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
         }
     );
-    if (!isClubExists(response, context)) {
+    if (!_isClubExists(response, context)) {
       return null;
     }
     return response;
@@ -120,7 +107,8 @@ class ClubService {
     required BuildContext context
   }) async {
 
-    final response = await ApiService.postMultipart('/club/$clubId/edit',
+    final response = await ApiService.multipart('/club/$clubId',
+      method: MethodType.PATCH,
       multipartFilePath: image,
       data: {
         'image' : image,
@@ -131,7 +119,7 @@ class ClubService {
       },
     );
 
-    if (!isClubExists(response, context)) return null;
+    if (!_isClubExists(response, context)) return null;
     return response;
 
   }

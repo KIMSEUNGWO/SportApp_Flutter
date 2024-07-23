@@ -98,7 +98,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    themeLight();
+    themeDark();
   }
 
   @override

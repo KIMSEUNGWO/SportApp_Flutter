@@ -7,8 +7,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_sport/api/comment/comment_service.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
+import 'package:flutter_sport/widgets/pages/comment/comment_page.dart';
 import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
 
 class BoardDetailWidget extends StatefulWidget {
@@ -24,87 +26,315 @@ class BoardDetailWidget extends StatefulWidget {
 
 class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
-  late BoardDetail boardDetail;
-  bool isLoading = true;
+  final GlobalKey<_CommentPageWidgetState> _globalKey = GlobalKey<_CommentPageWidgetState>();
+  late TextEditingController _commentController;
+  final FocusNode _focusNode = FocusNode();
+  bool _isVisible = false;
+  Comment? _reply;
 
-  setLoading(bool data) {
+  late BoardDetail boardDetail;
+  bool boardLoading = true;
+
+  setBoardLoading(bool data) {
     setState(() {
-      isLoading = data;
+      boardLoading = data;
     });
   }
 
   fetchImage() async {
+    if (!boardLoading) return;
+    setBoardLoading(true);
+
     ResponseResult result = await BoardService.getBoardDetail(clubId: widget.clubId, boardId: widget.boardId);
     if (result.resultCode == ResultCode.OK) {
       boardDetail = BoardDetail.fromJson(result.data);
-      setLoading(false);
+
+      setBoardLoading(false);
     }
   }
+
+  sendComment(String text) async {
+    _commentController.text = '';
+
+    final result = await CommentService.sendComment(clubId: widget.clubId, boardId: widget.boardId, parentId: _reply?.commentId, comment: text);
+
+    if (result.resultCode == ResultCode.OK) {
+      _initFocus();
+      await _globalKey.currentState?.reload();
+    }
+  }
+
+  setReply(Comment? comment) {
+    setState(() {
+      _reply = comment;
+    });
+  }
+
+  _handleContainerTap() {
+    if (!_focusNode.hasFocus) {
+      FocusScope.of(context).requestFocus(_focusNode);
+    }
+  }
+
+  _initFocus() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    _commentController.text = '';
+    setState(() {
+      _isVisible = false;
+      _reply = null;
+    });
+  }
+
   @override
   void initState() {
+    _commentController = TextEditingController();
     fetchImage();
+    _focusNode.addListener(() {
+      setState(() {
+        _isVisible = _focusNode.hasFocus;
+      });
+    });
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        scrolledUnderElevation: 0,
-        actions: [
-          GestureDetector(
-            onTap: () => showBottomActionSheet(context),
-            child: Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Icon(Icons.more_horiz_outlined,
-                size: 30,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: (isLoading)
-        ? Center(child: CupertinoActivityIndicator(),)
-        : CustomScrollView(
-          slivers: [
-            const SliverPadding(padding: EdgeInsets.symmetric(vertical: 15)),
+  void dispose() {
+    _commentController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
-            // BoardType
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverToBoxAdapter(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                      ),
-                      child: Text('groupBoardMenus'.tr(gender: boardDetail.boardType.lang),
-                        style: TextStyle(
-                            fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.w600
-                        ),
-                      ),
-                    ),
-                  ],
+  @override
+  Widget build(BuildContext context) {
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    return Padding(
+      padding: EdgeInsets.only(bottom: keyboardHeight),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          scrolledUnderElevation: 0,
+          actions: [
+            GestureDetector(
+              onTap: () => showBottomActionSheet(context),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Icon(Icons.more_horiz_outlined,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
-            const SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
+          ],
+        ),
+        body: (boardLoading)
+          ? const Center(child: CupertinoActivityIndicator(),)
+          : GestureDetector(
+              onTap: () {
+                _initFocus();
+              },
+              child: CustomScrollView(
+                slivers: [
+                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 15)),
 
-            // User
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverToBoxAdapter(
+                // BoardType
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Theme.of(context).colorScheme.secondaryContainer,
+                          ),
+                          child: Text('groupBoardMenus'.tr(gender: boardDetail.boardType.lang),
+                            style: TextStyle(
+                                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontWeight: FontWeight.w600
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
+
+                // User
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        Container(
+                            width: 40, height: 40,
+                            margin: const EdgeInsets.only(right: 10),
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: boardDetail.thumbnailUser ??
+                                const Center(
+                                    child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
+                                )
+                        ),
+                        Text(boardDetail.nickname,
+                          style: TextStyle(
+                              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                              fontWeight: FontWeight.w600
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
+
+                // Board
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(boardDetail.title,
+                          style: TextStyle(
+                              fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.primary,
+                              overflow: TextOverflow.ellipsis
+                          ),
+                        ),
+                        const SizedBox(height: 10,),
+                        Text(boardDetail.content,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: Theme.of(context).textTheme.displayMedium!.fontSize
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
+
+                // BoardImage
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  sliver: SliverList.builder(
+                    itemCount: boardDetail.images.length,
+                    itemBuilder: (context, index) {
+                      BoardImage boardImage = boardDetail.images[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            fullscreenDialog: true,
+                            builder: (context) {
+                              return ImageDetailView(image: boardImage.image);
+                            },
+                          ));
+                        },
+                        child: Container(
+                          clipBehavior: Clip.hardEdge,
+                          margin: EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                  color: Theme.of(context).colorScheme.outline
+                              )
+                          ),
+                          child: boardImage.image,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // 구분선
+                SliverToBoxAdapter(
+                  child: Container(
+                    height: 7,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                ),
+
+                CommentPageWidget(key: _globalKey, clubId: widget.clubId,boardDetail: boardDetail, handleTap: _handleContainerTap, setReply: setReply),
+
+                SliverToBoxAdapter(
+                  child: Container(
+                    height: 7,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                ),
+
+
+            ],
+          ),
+
+          ),
+
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Visibility(
+              visible: !_isVisible,
+              child: SafeArea(
+                child: Container(
+                  height: 50,
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: [
+                      Icon(Icons.image_outlined, size: 30, color: Theme.of(context).colorScheme.secondary,),
+                      const SizedBox(width: 10,),
+                      // Icon(Icons.location_on_outlined, size: 30, color: Theme.of(context).colorScheme.secondary,),
+                      // const SizedBox(width: 15,),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: _handleContainerTap,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Theme.of(context).colorScheme.primaryContainer
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('댓글을 입력해주세요.',
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                  fontWeight: FontWeight.w500,
+
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+
+              ),
+            ),
+            if (_reply != null)
+              Container(
+                margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                        width: 40, height: 40,
+                        width: 30, height: 30,
                         margin: const EdgeInsets.only(right: 10),
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
@@ -116,235 +346,219 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                                 child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
                             )
                     ),
-                    Text(boardDetail.nickname,
-                      style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                        fontWeight: FontWeight.w600
+                    const SizedBox(width: 15,),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_reply!.nickname,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w500,
+                              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
+                            ),
+                          ),
+                          Text(_reply!.content,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w500,
+                              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                              overflow: TextOverflow.ellipsis
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(width: 15,),
+                    GestureDetector(
+                      onTap: () {
+                        setReply(null);
+                      },
+                      child: Icon(Icons.close,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            AnimatedOpacity(
+              opacity: _isVisible ? 1 : 0,
+              duration: const Duration(milliseconds: 500),
+              child: Container(
+                height: _isVisible ? 50 : 0,
+                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  children: [
+                    Icon(Icons.image_outlined, size: 30, color: Theme.of(context).colorScheme.secondary,),
+                    const SizedBox(width: 15,),
+                    Expanded(
+                      child: TextField(
+                        onSubmitted: sendComment,
+                        focusNode: _focusNode,
+                        controller: _commentController,
+                        decoration: InputDecoration(
+                          hintText: '댓글을 적어주세요.',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.primaryContainer
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.primaryContainer,
+                                width: 2
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.primaryContainer,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 15,),
+                    GestureDetector(
+                      onTap: () {
+                        sendComment(_commentController.text);
+                      },
+                      child: Icon(Icons.send,
+                        size: 30,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     )
                   ],
                 ),
               ),
             ),
-            const SliverPadding(padding: EdgeInsets.symmetric(vertical: 10)),
-
-            // Board
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(boardDetail.title,
-                      style: TextStyle(
-                          fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.primary,
-                          overflow: TextOverflow.ellipsis
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                    Text(boardDetail.content,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: Theme.of(context).textTheme.displayMedium!.fontSize
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SliverPadding(padding: EdgeInsets.symmetric(vertical: 20)),
-
-            // BoardImage
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverList.builder(
-                itemCount: boardDetail.images.length,
-                itemBuilder: (context, index) {
-                  BoardImage boardImage = boardDetail.images[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        fullscreenDialog: true,
-                        builder: (context) {
-                          return ImageDetailView(image: boardImage.image);
-                        },
-                      ));
-                    },
-                    child: Container(
-                      clipBehavior: Clip.hardEdge,
-                      margin: EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.outline
-                        )
-                      ),
-                      child: boardImage.image,
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            // 구분선
-            SliverToBoxAdapter(
-              child: Container(
-                height: 7,
-                margin: EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-              ),
-            ),
-
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('댓글 ${boardDetail.comments.length}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-
-                    const SizedBox(height: 20,),
-
-                    // 댓글
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 35, height: 35,
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: boardDetail.thumbnailUser ??
-                            const Center(
-                                child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
-                            )
-                        ),
-                        const SizedBox(width: 15,),
-                        Expanded(
-                          child: Column (
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text('작성자',
-                                            style: TextStyle(
-                                                color: Theme.of(context).colorScheme.primary,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize
-                                            ),
-                                          ),
-                                          const SizedBox(width: 7,),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context).colorScheme.primaryContainer,
-                                              borderRadius: BorderRadius.circular(5),
-                                            ),
-                                            child: Text('작성자',
-                                              style: TextStyle(
-                                                color: Theme.of(context).colorScheme.tertiary,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w500
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Text('3시간 전',
-                                        style: TextStyle(
-                                            color: Theme.of(context).colorScheme.tertiary,
-                                            fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Icon(Icons.more_horiz_outlined,
-                                    color: Theme.of(context).colorScheme.tertiary,
-                                  )
-                                ]
-                              ),
-                              const SizedBox(height: 10,),
-                              Text('댓글내용댓글내용댓글내용댓글내용댓글내용댓글내용댓글내용댓글내용댓글내용댓글내용',
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 0.4
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  ],
-                ),
-              ),
-            ),
-
-            SliverToBoxAdapter(
-              child: Container(
-                height: 7,
-                margin: EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-              ),
-            ),
-            
-
           ],
         ),
+      ),
+    );
+  }
+}
 
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          height: 50,
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          padding: const EdgeInsets.symmetric(vertical: 5),
-          child: Row(
-            children: [
-              Icon(Icons.image_outlined, size: 30, color: Theme.of(context).colorScheme.secondary,),
-              SizedBox(width: 10,),
-              Icon(Icons.location_on_outlined, size: 30, color: Theme.of(context).colorScheme.secondary,),
-              SizedBox(width: 15,),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Theme.of(context).colorScheme.primaryContainer
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('댓글을 입력해주세요.',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.tertiary,
-                        fontWeight: FontWeight.w500,
 
-                      ),
-                    ),
+class CommentPageWidget extends StatefulWidget {
+  const CommentPageWidget({super.key, required this.boardDetail, required this.clubId, required this.handleTap, required this.setReply,});
+
+  final BoardDetail boardDetail;
+  final int clubId;
+
+  final Function() handleTap;
+  final Function(Comment) setReply;
+
+
+  @override
+  State<CommentPageWidget> createState() => _CommentPageWidgetState();
+}
+
+class _CommentPageWidgetState extends State<CommentPageWidget> {
+  late List<Comment> comments;
+  bool commentLoading = true;
+  bool fetchDisabled = false;
+
+  setCommentsLoading(bool data) {
+    setState(() {
+      commentLoading = data;
+    });
+  }
+
+  int getCommentCount() {
+    int count = comments.length;
+    for (var comment in comments) {
+      count += comment.replyComments.length;
+    }
+    return count;
+  }
+
+  fetchComments() async {
+    if (!commentLoading) return;
+    setCommentsLoading(true);
+
+    ResponseResult result = await CommentService.getComments(clubId: widget.clubId, boardId: widget.boardDetail.boardId);
+    if (result.resultCode == ResultCode.OK) {
+      List<Comment> list = [];
+      print(result.data);
+      for (var comment in result.data) {
+        list.add(Comment.fromJson(comment));
+      }
+      setState(() {
+        comments = list;
+      });
+      setCommentsLoading(false);
+    }
+  }
+
+  reload() async {
+    if (fetchDisabled) return;
+    setState(() {
+      fetchDisabled = true;
+      commentLoading = true;
+    });
+    await fetchComments();
+    await Future.delayed(const Duration(seconds: 5));
+    setState(() {
+      fetchDisabled = false;
+    });
+  }
+
+
+  @override
+  void initState() {
+    fetchComments();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (commentLoading) return const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),);
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('댓글 ${getCommentCount()}',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              )
-            ],
-          ),
-        )
+                const SizedBox(width: 10,),
+                GestureDetector(
+                  onTap: () {
+                    reload();
+                  },
+                  child: Icon(Icons.refresh_outlined,
+                    size: 20,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                )
+              ],
+            ),
+
+            const SizedBox(height: 20,),
+
+            (commentLoading)
+                ? const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),)
+                : ListView.builder(
+              itemCount: comments.length,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                Comment comment = comments[index];
+                return CommentWidget(comment: comment, handleTap: widget.handleTap, setReply: widget.setReply);
+              },
+            ),
+            // 댓글
+          ],
+        ),
       ),
     );
   }
