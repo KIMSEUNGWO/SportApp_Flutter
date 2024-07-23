@@ -1,8 +1,5 @@
-
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/api/uri_helper.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 
 class ClubUser {
@@ -14,7 +11,9 @@ class ClubUser {
 
   ClubUser.fromJson(Map<String, dynamic> json):
     userId = json['userId'],
-    thumbnail = json['thumbnail'] == null ? null : Image.network(json['thumbnail'], fit: BoxFit.fill,),
+    thumbnail = json['thumbnail'] == null
+        ? null
+        : ImageHelper.parseImage(imagePath: ImagePath.THUMBNAIL, imageType: ImageType.PROFILE, imageName: json['thumbnail'], fit: BoxFit.fill),
     nickname = json['nickname'],
     authority = Authority.valueOf(json['authority'])!;
 

@@ -84,29 +84,78 @@ class BoardPageWidget extends StatelessWidget {
   }
 }
 
-class BoardNoticeWidget extends StatelessWidget {
+class BoardNoticeWidget extends StatefulWidget {
 
   final int clubId;
 
   const BoardNoticeWidget({super.key, required this.clubId});
 
   @override
+  State<BoardNoticeWidget> createState() => _BoardNoticeWidgetState();
+}
+
+class _BoardNoticeWidgetState extends State<BoardNoticeWidget> {
+
+  late List<Board> _boards = [];
+  bool _isLoading = false;
+
+  setLoading(bool data) {
+    setState(() {
+      _isLoading = data;
+    });
+  }
+
+  _fetchBoards() async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+
+      if (_isLoading) return;
+      setLoading(true);
+
+      ResponseResult result = await BoardService.getBoards(
+        clubId: widget.clubId,
+        boardType: BoardType.NOTICE.name,
+        page: 0,
+        size: 3,
+      );
+
+      if (result.resultCode == ResultCode.OK) {
+        List<Board> list = [];
+        for (var boardJson in result.data) {
+          Board board = Board.fromJson(boardJson);
+          list.add(board);
+        }
+        setState(() {
+          _boards = list;
+        });
+      }
+      setLoading(false);
+    });
+  }
+
+  @override
+  void initState() {
+    _fetchBoards();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_boards.isEmpty) return const SliverToBoxAdapter();
     return SliverPadding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 30),
       sliver: SliverList.separated(
-        itemCount: 3,
+        itemCount: _boards.length,
         separatorBuilder: (context, index) {
           return const SizedBox(height: 5,);
         },
         itemBuilder: (context, index) {
+          Board board = _boards[index];
           return Flex(
             direction: Axis.horizontal,
             children: [
               Container(
                 padding: const EdgeInsets.only(right: 3, top: 5, bottom: 5,),
-                decoration: BoxDecoration(
-                ),
+                decoration: const BoxDecoration(),
                 child: Text('[공지]',
                   style: TextStyle(
                       fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
@@ -119,7 +168,7 @@ class BoardNoticeWidget extends StatelessWidget {
               const SizedBox(width: 10, ),
               Expanded(
                 flex: 3,
-                child: Text('공지사항내용입니다공지사항내용입니다공지사항내용입니다공지사항내용입니다공지사항내용입니다공지사항내용입니다.',
+                child: Text(board.content,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,

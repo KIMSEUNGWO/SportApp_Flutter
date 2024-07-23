@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_service.dart';
+import 'package:flutter_sport/api/uri_helper.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
@@ -51,7 +52,9 @@ class ClubSimp {
 
   ClubSimp.fromJson(Map<String, dynamic> json):
       id = json['id'],
-      thumbnail = json['thumbnail'] != null ? Image.network('${ApiService.server}/images/thumbnail/club/${json['thumbnail']}', fit: BoxFit.fill,) : null,
+      thumbnail = json['thumbnail'] != null
+          ? ImageHelper.parseImage(imagePath: ImagePath.THUMBNAIL, imageType: ImageType.CLUB, imageName: json['thumbnail'], fit: BoxFit.fill)
+          : null,
       title = json['title'],
       intro = json['intro'],
       sport = SportType.valueOf(json['sport']),

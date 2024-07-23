@@ -352,7 +352,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
         borderRadius: BorderRadius.circular(10),
         // color: Color(0xFFD2E7FE),
         // color: Color(0xFFFFFFFF),
-        color: Theme.of(context).colorScheme.primary
+        color: Theme.of(context).colorScheme.tertiary
     );
   }
   BoxDecoration youBoxDecoration(BuildContext context) {
