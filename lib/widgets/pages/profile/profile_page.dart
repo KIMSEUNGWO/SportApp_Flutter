@@ -335,7 +335,7 @@ class ProfileBottomMenuWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(icon, size: 20, color: Colors.grey,),
-            SizedBox(width: 10,),
+            SizedBox(width: 20,),
             Expanded(
               flex: 1,
               child: Text(text, style: TextStyle(fontSize: 16),),

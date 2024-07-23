@@ -57,13 +57,16 @@ class BoardPageWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           color: menu == boardMenus[index]
                               ? Theme.of(context).colorScheme.primaryContainer
-                              : Theme.of(context).colorScheme.onSecondary
+                              : Theme.of(context).colorScheme.secondaryContainer
                         ),
                         child: Text('groupBoardMenus',
                           style: TextStyle(
                               fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                               fontWeight: FontWeight.w500,
-                              color: Theme.of(context).colorScheme.primary
+                              color: menu == boardMenus[index]
+                                ? Colors.white
+                                : Theme.of(context).colorScheme.primary
+
                           ),
                         ).tr(gender: menu.lang),
                       ),

@@ -50,13 +50,13 @@ class _AppState extends State<App> {
     secondary: Color(0xFF686868), // 상세 폰트 컬러
     tertiary: Color(0xFF888888), // 부가 폰트 컬러
 
-    primaryContainer: Color(0xFFE3E3E3), // 선택된 컨테이너 컬러
-    secondaryContainer: Color(0xFFDFDFDF), // 상세 폰트 컨테이너 컬러
+    primaryContainer: Color(0xFF6E6E6E), // 선택된 컨테이너 컬러
+    secondaryContainer: Color(0xFFEDEDED), // 상세 폰트 컨테이너 컬러
     tertiaryContainer: Color(0xFFFBFBFB), // 내 모임 카드 컬러
 
     surface: Color(0xFFF1F1F5), // 이미지 Empty 컬러
 
-    outline: Color(0xFFC8C8C8), // border outline 컬러
+    outline: Color(0xFFF1F1F5), // border outline 컬러
     outlineVariant: Color(0xFFD9D9D9), // border input outline 컬러
 
 
@@ -71,7 +71,7 @@ class _AppState extends State<App> {
     secondary: Color(0xFFD4D4D4), // 상세 폰트 컬러
     tertiary: Color(0xFFC5C5C5), // 부가 폰트 컬러
 
-    primaryContainer: Color(0xFF2A2A32), // 선택된 컨테이너 컬러
+    primaryContainer: Color(0xFF474750), // 선택된 컨테이너 컬러
     secondaryContainer: Color(0xFF2A292C), // 상세 폰트 컨테이너 컬러
     tertiaryContainer: Color(0xFF212227), // 내 모임 카드 컬러
 
@@ -97,13 +97,13 @@ class _AppState extends State<App> {
 
   @override
   void initState() {
-    themeDark();
     super.initState();
+    themeLight();
   }
-
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
