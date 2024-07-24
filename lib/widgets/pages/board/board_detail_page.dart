@@ -526,15 +526,14 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
   @override
   Widget build(BuildContext context) {
     if (_loading) return const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),);
-    
+
     final List<Comment> keys = comments.keys();
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      sliver: SliverToBoxAdapter(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      sliver: SliverMainAxisGroup(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Row(
               children: [
                 Text('댓글 ${comments.totalCount}',
                   style: TextStyle(
@@ -554,28 +553,28 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
                 )
               ],
             ),
+          ),
+          const SliverToBoxAdapter(child: const SizedBox(height: 20,),),
 
-            const SizedBox(height: 20,),
-
-            (_loading) ? const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),)
-            : (keys.isEmpty) ? const Center(
-              child: Column(
-                children: [
-                  Icon(Icons.list_rounded,
-                    size: 80, color: const Color(0xFF878181),
+          (_loading) ? const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),)
+            : (keys.isEmpty) ? const SliverToBoxAdapter(
+              child: Center(
+                  child: Column(
+                    children: [
+                      Icon(Icons.list_rounded,
+                        size: 80, color: Color(0xFF878181),
+                      ),
+                      Text('댓글을 달아주세요',
+                        style: TextStyle(
+                          color: Color(0xFF878181),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text('댓글을 달아주세요',
-                    style: TextStyle(
-                      color: const Color(0xFF878181),
-                    ),
-                  ),
-                ],
-              ),
+                ),
             )
-            : ListView.builder(
+            : SliverList.builder(
                 itemCount: keys.length + (_hasMore ? 1 : 0),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
                 itemBuilder: (context, index) {
                   if (keys.isNotEmpty && index == keys.length) {
                     _fetchPageable();
@@ -585,10 +584,8 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
                   List<Comment> reply = comments.get(comment);
                   return CommentWidget(comment: comment, replyList: reply, handleTap: widget.handleTap, setReply: widget.setReply);
                 },
-              ),
-            // 댓글
-          ],
-        ),
+            )
+        ],
       ),
     );
   }
