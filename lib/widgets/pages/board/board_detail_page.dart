@@ -10,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/api/comment/comment_service.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
+import 'package:flutter_sport/models/comment/comment_collection.dart';
 import 'package:flutter_sport/widgets/pages/comment/comment_page.dart';
 import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
 
@@ -60,7 +61,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
     if (result.resultCode == ResultCode.OK) {
       _initFocus();
-      await _globalKey.currentState?.reload();
+      await _globalKey.currentState?._fetchPageable();
     }
   }
 
@@ -306,7 +307,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
-                                color: Theme.of(context).colorScheme.primaryContainer
+                                color: Theme.of(context).colorScheme.outline
                             ),
                             child: Align(
                               alignment: Alignment.centerLeft,
@@ -404,18 +405,18 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100),
                             borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.primaryContainer
+                                color: Theme.of(context).colorScheme.outline
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100),
                             borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.primaryContainer,
+                                color: Theme.of(context).colorScheme.outline,
                                 width: 2
                             ),
                           ),
                           filled: true,
-                          fillColor: Theme.of(context).colorScheme.primaryContainer,
+                          fillColor: Theme.of(context).colorScheme.outline,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                         ),
                       ),
@@ -457,39 +458,47 @@ class CommentPageWidget extends StatefulWidget {
 }
 
 class _CommentPageWidgetState extends State<CommentPageWidget> {
-  late List<Comment> comments;
-  bool commentLoading = true;
+  late CommentCollection comments;
+  final int _size = 10;
+  bool _hasMore = true;
+  bool _loading = false;
   bool fetchDisabled = false;
 
   setCommentsLoading(bool data) {
     setState(() {
-      commentLoading = data;
+      _loading = data;
+    });
+  }
+  setData(List<Comment> fetchList) {
+    comments.addAll(fetchList);
+    setState(() {
+      _loading = false;
+      _hasMore = fetchList.length == _size;
     });
   }
 
-  int getCommentCount() {
-    int count = comments.length;
-    for (var comment in comments) {
-      count += comment.replyComments.length;
-    }
-    return count;
+  _fetchComments() async {
+      if (_loading) return;
+      setCommentsLoading(true);
+      _fetchPageable();
+      setCommentsLoading(false);
   }
 
-  fetchComments() async {
-    if (!commentLoading) return;
-    setCommentsLoading(true);
-
-    ResponseResult result = await CommentService.getComments(clubId: widget.clubId, boardId: widget.boardDetail.boardId);
+  _fetchPageable() async {
+    print('_CommentPageWidgetState._fetchPageable');
+    ResponseResult result = await CommentService.getComments(
+        clubId: widget.clubId,
+        boardId: widget.boardDetail.boardId,
+        start: comments.size(),
+        size: _size
+    );
     if (result.resultCode == ResultCode.OK) {
+      comments.totalCount = result.data['totalCount'];
       List<Comment> list = [];
-      print(result.data);
-      for (var comment in result.data) {
+      for (var comment in result.data['comments']) {
         list.add(Comment.fromJson(comment));
       }
-      setState(() {
-        comments = list;
-      });
-      setCommentsLoading(false);
+      setData(list);
     }
   }
 
@@ -497,9 +506,9 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
     if (fetchDisabled) return;
     setState(() {
       fetchDisabled = true;
-      commentLoading = true;
     });
-    await fetchComments();
+    comments.clear();
+    await _fetchPageable();
     await Future.delayed(const Duration(seconds: 5));
     setState(() {
       fetchDisabled = false;
@@ -509,13 +518,16 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
 
   @override
   void initState() {
-    fetchComments();
+    comments = CommentCollection();
     super.initState();
+    _fetchComments();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (commentLoading) return const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),);
+    if (_loading) return const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),);
+    
+    final List<Comment> keys = comments.keys();
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       sliver: SliverToBoxAdapter(
@@ -524,7 +536,7 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
           children: [
             Row(
               children: [
-                Text('댓글 ${getCommentCount()}',
+                Text('댓글 ${comments.totalCount}',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontWeight: FontWeight.w600,
@@ -545,17 +557,35 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
 
             const SizedBox(height: 20,),
 
-            (commentLoading)
-                ? const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),)
-                : ListView.builder(
-              itemCount: comments.length,
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                Comment comment = comments[index];
-                return CommentWidget(comment: comment, handleTap: widget.handleTap, setReply: widget.setReply);
-              },
-            ),
+            (_loading) ? const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),)
+            : (keys.isEmpty) ? const Center(
+              child: Column(
+                children: [
+                  Icon(Icons.list_rounded,
+                    size: 80, color: const Color(0xFF878181),
+                  ),
+                  Text('댓글을 달아주세요',
+                    style: TextStyle(
+                      color: const Color(0xFF878181),
+                    ),
+                  ),
+                ],
+              ),
+            )
+            : ListView.builder(
+                itemCount: keys.length + (_hasMore ? 1 : 0),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  if (keys.isNotEmpty && index == keys.length) {
+                    _fetchPageable();
+                    return const Center(child: CupertinoActivityIndicator(),);
+                  }
+                  Comment comment = keys[index];
+                  List<Comment> reply = comments.get(comment);
+                  return CommentWidget(comment: comment, replyList: reply, handleTap: widget.handleTap, setReply: widget.setReply);
+                },
+              ),
             // 댓글
           ],
         ),

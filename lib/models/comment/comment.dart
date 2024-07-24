@@ -14,8 +14,6 @@ class Comment {
   final String nickname;
   final Image? profile;
 
-  final List<Comment> replyComments;
-
   Comment.fromJson(Map<String, dynamic> json):
     parentCommentId = json['parentCommentId'],
     commentId = json['commentId'],
@@ -25,9 +23,17 @@ class Comment {
     userId = json['userId'],
     nickname = json['nickname'],
     profile = json['profile'] == null ? null
-      : ImageHelper.parseImage(imagePath: ImagePath.THUMBNAIL, imageType: ImageType.PROFILE, imageName: json['profile'], fit: BoxFit.contain),
-    replyComments = json['replyComments'] == null ? []
-      : List<Comment>.from(
-          json['replyComments'].map((json) => Comment.fromJson(json))
-        );
+      : ImageHelper.parseImage(imagePath: ImagePath.THUMBNAIL, imageType: ImageType.PROFILE, imageName: json['profile'], fit: BoxFit.contain);
+
+
+  // 동등성 재정의
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Comment && other.commentId == commentId;
+  }
+
+  @override
+  int get hashCode => commentId.hashCode;
 }

@@ -10,11 +10,11 @@ class CommentWidget extends StatelessWidget {
     required this.comment,
     this.handleTap,
     this.setReply,
-    this.parentId,
+    required this.replyList,
   });
 
   final Comment comment;
-  final int? parentId;
+  final List<Comment> replyList;
 
   Function()? handleTap;
   Function(Comment)? setReply;
@@ -61,7 +61,7 @@ class CommentWidget extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer,
+                                color: Theme.of(context).colorScheme.outline,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text('작성자',
@@ -98,7 +98,7 @@ class CommentWidget extends StatelessWidget {
 
               const SizedBox(height: 15,),
 
-              if (parentId == null)
+              if (comment.parentCommentId == null)
                 GestureDetector(
                   onTap: () {
                     handleTap!();
@@ -118,10 +118,10 @@ class CommentWidget extends StatelessWidget {
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: comment.replyComments.length,
+                itemCount: replyList.length,
                 itemBuilder: (context, index) {
-                  Comment reply = comment.replyComments[index];
-                  return CommentWidget(parentId: comment.commentId, comment: reply,);
+                  Comment reply = replyList[index];
+                  return CommentWidget(comment: reply, replyList: [],);
                 },
               ),
 
