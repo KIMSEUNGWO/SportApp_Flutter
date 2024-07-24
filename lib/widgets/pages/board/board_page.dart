@@ -8,6 +8,7 @@ import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
+import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,8 +22,9 @@ class BoardPageWidget extends StatelessWidget {
   final Function(BoardType boardType) onChange;
   final GlobalKey<_BoardListWidgetState> boardListKey = GlobalKey<_BoardListWidgetState>();
   final GlobalKey<_BoardNoticeWidgetState> noticeListKey = GlobalKey<_BoardNoticeWidgetState>();
+  final Authority? authority;
 
-  BoardPageWidget({super.key, required this.boardMenus, required this.index, required this.onChange, required this.clubId});
+  BoardPageWidget({super.key, required this.boardMenus, required this.index, required this.onChange, required this.clubId, this.authority});
 
 
   @override
@@ -82,7 +84,7 @@ class BoardPageWidget extends StatelessWidget {
           ),
         ),
         if (boardMenus[index] == BoardType.ALL) BoardNoticeWidget(key: noticeListKey, clubId: clubId),
-        BoardListWidget(key: boardListKey, clubId: clubId, boardType: boardMenus[index]),
+        BoardListWidget(key: boardListKey, clubId: clubId, boardType: boardMenus[index], authority: authority),
         const SliverToBoxAdapter(child: SizedBox(height: 50,),)
       ],
     );
@@ -194,8 +196,9 @@ class BoardListWidget extends StatefulWidget {
 
   final BoardType boardType;
   final int clubId;
+  final Authority? authority;
 
-  const BoardListWidget({super.key, required this.boardType, required this.clubId});
+  const BoardListWidget({super.key, required this.boardType, required this.clubId, this.authority});
 
   @override
   State<BoardListWidget> createState() => _BoardListWidgetState();
@@ -298,7 +301,7 @@ class _BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAli
           _fetchBoards();
           return const Center(child: CupertinoActivityIndicator(),);
         }
-        return BoardWidget(clubId: widget.clubId, board: _boards[index]);
+        return BoardWidget(clubId: widget.clubId, board: _boards[index], authority: widget.authority);
       },
 
     );
@@ -314,15 +317,16 @@ class _BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAli
 class BoardWidget extends StatelessWidget {
   final Board board;
   final int clubId;
+  final Authority? authority;
 
-  const BoardWidget({super.key, required this.board, required this.clubId});
+  const BoardWidget({super.key, required this.board, required this.clubId, this.authority});
 
   @override
   Widget build(BuildContext context) {
       return GestureDetector(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return BoardDetailWidget(clubId: clubId, boardId: board.boardId);
+            return BoardDetailWidget(clubId: clubId, boardId: board.boardId, authority: authority);
           },));
         },
         child: Container(

@@ -66,7 +66,7 @@ class _GroupDetailWidgetState extends ConsumerState<GroupDetailWidget> with Sing
     });
     tabList = {
       Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(club : club!, reloadClub: readClub),
-      Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(club : club!),
+      Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(club : club!, authority: club!.authority),
       Tab(text: 'groupMenus'.tr(gender: 'group')) : GroupDetailMeetingWidget(club : club!),
       Tab(text: 'groupMenus'.tr(gender: 'chat')) : GroupDetailChatWidget(club : club!)
     };

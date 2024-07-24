@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class UserProfile {
 
+  final int id;
   Image? image;
   String name;
   String? intro;
@@ -16,6 +17,7 @@ class UserProfile {
 
 
   UserProfile.fromJson(Map<String, dynamic> json) :
+    id = json['data']['id'],
     image = json['data']['image'] == null
         ? null
         : ImageHelper.parseImage(imagePath: ImagePath.ORIGINAL, imageType: ImageType.PROFILE, imageName: json['data']['image'], fit: BoxFit.fill),

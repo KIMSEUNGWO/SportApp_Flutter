@@ -28,4 +28,25 @@ class CommentService {
     );
   }
 
+  static Future<ResponseResult> editComment({required int clubId, required int boardId, required int commentId, required String comment}) async {
+    return await ApiService.patch(uri: '/club/$clubId/board/$boardId/comment/$commentId',
+      header: {
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
+      },
+      body: jsonEncode({
+        "comment" : comment
+      })
+    );
+  }
+
+  static Future<ResponseResult> deleteComment({required int clubId, required int boardId, required int commentId}) async {
+    return await ApiService.delete(uri: '/club/$clubId/board/$boardId/comment/$commentId',
+      header: {
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
+      },
+    );
+  }
+
 }

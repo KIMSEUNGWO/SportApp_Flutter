@@ -9,6 +9,7 @@ import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/api/comment/comment_service.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
+import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
 import 'package:flutter_sport/models/comment/comment_collection.dart';
 import 'package:flutter_sport/widgets/pages/comment/comment_page.dart';
@@ -18,8 +19,9 @@ class BoardDetailWidget extends StatefulWidget {
 
   final int clubId;
   final int boardId;
+  final Authority? authority;
 
-  const BoardDetailWidget({super.key, required this.boardId, required this.clubId});
+  const BoardDetailWidget({super.key, required this.boardId, required this.clubId, this.authority});
 
   @override
   State<BoardDetailWidget> createState() => _BoardDetailWidgetState();
@@ -266,7 +268,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                   ),
                 ),
 
-                CommentPageWidget(key: _globalKey, clubId: widget.clubId,boardDetail: boardDetail, handleTap: _handleContainerTap, setReply: setReply),
+                CommentPageWidget(key: _globalKey, clubId: widget.clubId, boardDetail: boardDetail, handleTap: _handleContainerTap, setReply: setReply, authority: widget.authority),
 
                 SliverToBoxAdapter(
                   child: Container(
@@ -388,7 +390,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
               opacity: _isVisible ? 1 : 0,
               duration: const Duration(milliseconds: 500),
               child: Container(
-                height: _isVisible ? 50 : 0,
+                height: _isVisible ? null : 0,
                 margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
@@ -400,6 +402,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                         onSubmitted: sendComment,
                         focusNode: _focusNode,
                         controller: _commentController,
+                        maxLines: null,
                         decoration: InputDecoration(
                           hintText: '댓글을 적어주세요.',
                           enabledBorder: OutlineInputBorder(
@@ -444,10 +447,11 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
 
 class CommentPageWidget extends StatefulWidget {
-  const CommentPageWidget({super.key, required this.boardDetail, required this.clubId, required this.handleTap, required this.setReply,});
+  const CommentPageWidget({super.key, required this.boardDetail, required this.clubId, required this.handleTap, required this.setReply, this.authority,});
 
   final BoardDetail boardDetail;
   final int clubId;
+  final Authority? authority;
 
   final Function() handleTap;
   final Function(Comment) setReply;
@@ -582,7 +586,16 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
                   }
                   Comment comment = keys[index];
                   List<Comment> reply = comments.get(comment);
-                  return CommentWidget(comment: comment, replyList: reply, handleTap: widget.handleTap, setReply: widget.setReply);
+                  return CommentWidget(
+                    comment: comment,
+                    replyList: reply,
+                    handleTap: widget.handleTap,
+                    setReply: widget.setReply,
+                    authority: widget.authority,
+                    clubId: widget.clubId,
+                    boardId: widget.boardDetail.boardId,
+                    reload: reload,
+                  );
                 },
             )
         ],

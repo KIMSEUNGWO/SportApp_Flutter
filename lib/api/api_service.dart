@@ -48,6 +48,26 @@ class ApiService {
     return _decode(response);
   }
 
+  static Future<ResponseResult> patch({required String uri, Map<String, String>? header, Object? body}) async {
+
+    Map<String, String> requestHeader = {};
+    requestHeader.addAll(defaultHeader);
+    if (header != null) requestHeader.addAll(header);
+
+    final response = await http.patch(Uri.parse('$server$uri'), headers: requestHeader, body: body);
+    return _decode(response);
+  }
+
+  static Future<ResponseResult> delete({required String uri, Map<String, String>? header, Object? body}) async {
+
+    Map<String, String> requestHeader = {};
+    requestHeader.addAll(defaultHeader);
+    if (header != null) requestHeader.addAll(header);
+
+    final response = await http.delete(Uri.parse('$server$uri'), headers: requestHeader, body: body);
+    return _decode(response);
+  }
+
   static Future<ResponseResult> multipart(String uri, {required MethodType method, required String? multipartFilePath, required Map<String, dynamic> data}) async {
     var request = http.MultipartRequest(method.name, Uri.parse('$server$uri'));
     request.headers.addAll({

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:flutter_sport/models/board/board_type.dart';
+import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/board/board_page.dart';
 import 'package:flutter_sport/widgets/pages/board/create_board_page.dart';
@@ -10,8 +11,9 @@ import 'package:flutter_sport/widgets/pages/board/create_board_page.dart';
 class GroupDetailBoardWidget extends StatefulWidget {
 
   final ClubDetail club;
+  final Authority? authority;
 
-  const GroupDetailBoardWidget({super.key, required this.club});
+  const GroupDetailBoardWidget({super.key, required this.club, this.authority});
 
   @override
   State<GroupDetailBoardWidget> createState() => _GroupDetailBoardWidgetState();
@@ -56,7 +58,7 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
           physics: const NeverScrollableScrollPhysics(),
           itemCount: _boardMenus.length,
           itemBuilder: (context, index) {
-            return BoardPageWidget(clubId: widget.club.id, boardMenus : _boardMenus, index: index, onChange: onChangeType);
+            return BoardPageWidget(clubId: widget.club.id, boardMenus : _boardMenus, index: index, onChange: onChangeType, authority: widget.authority);
           },
         ),
         if (widget.club.authority != null)

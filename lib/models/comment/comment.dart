@@ -7,7 +7,7 @@ class Comment {
 
   final int? parentCommentId;
   final int commentId;
-  final String content;
+  String content;
   final DateTime createDate;
 
   final int userId;

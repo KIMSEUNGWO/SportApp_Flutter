@@ -79,6 +79,10 @@ class UserNotifier extends StateNotifier<UserProfile?> {
     state!.groupCount = max(0, state!.groupCount - 1);
   }
 
+  int? getId() {
+    return state?.id;
+  }
+
 }
 
 final loginProvider = StateNotifierProvider<UserNotifier, UserProfile?>((ref) => UserNotifier(),);
