@@ -51,6 +51,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
     );
     if (response.resultCode == ResultCode.OK) {
       widget.comment.content = _editingController.text;
+      widget.comment.isUpdate = true;
       exitEdit();
     }
 
@@ -165,11 +166,22 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                             )
                           ],
                         ),
-                        Text(DateTimeFormatter.formatDate(widget.comment.createDate),
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.tertiary,
-                              fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
-                          ),
+                        Row(
+                          children: [
+                            Text(DateTimeFormatter.formatDate(widget.comment.createDate),
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                  fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
+                              ),
+                            ),
+                            if (widget.comment.isUpdate)
+                              Text(' · (수정됨)',
+                                style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
+                                ),
+                              ),
+                          ],
                         ),
                       ],
                     ),

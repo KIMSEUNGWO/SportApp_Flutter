@@ -9,6 +9,7 @@ class Comment {
   final int commentId;
   String content;
   final DateTime createDate;
+  bool isUpdate;
 
   final int userId;
   final String nickname;
@@ -19,6 +20,7 @@ class Comment {
     commentId = json['commentId'],
     content = json['content'],
     createDate = DateTime.parse(json['createDate']),
+    isUpdate = json['update'],
 
     userId = json['userId'],
     nickname = json['nickname'],
