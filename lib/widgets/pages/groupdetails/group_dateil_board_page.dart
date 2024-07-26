@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
@@ -82,19 +83,19 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
           bottom: 70,
           child: GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateBoardWidget(clubId: widget.club.id, authority: widget.club.authority, reload: listReload),
-                fullscreenDialog: true,
-              ));
+              NavigatorHelper.push(context, CreateBoardWidget(clubId: widget.club.id, authority: widget.club.authority, reload: listReload),
+                fullscreenDialog: true
+              );
             },
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
               child: Row(
                 children: [
-                  Icon(Icons.add,
+                  const Icon(Icons.add,
                     size: 30,
                     color: Colors.white,
                   ),

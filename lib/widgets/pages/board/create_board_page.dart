@@ -9,6 +9,7 @@ import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/image.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
@@ -281,12 +282,9 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
                               BoardImage uploadImage = uploadImages[index];
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    fullscreenDialog: true,
-                                    builder: (context) {
-                                      return ImageDetailView(image: uploadImage.image);
-                                    },
-                                  ));
+                                  NavigatorHelper.push(context, ImageDetailView(image: uploadImage.image),
+                                    fullscreenDialog: true
+                                  );
                                 },
                                 child: Stack(
                                   children: [

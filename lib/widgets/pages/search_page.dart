@@ -262,7 +262,7 @@ class _RecentlySearchWordState extends State<RecentlySearchWord> {
             ),
           ],
         ),
-        SizedBox(height: 15,),
+        const SizedBox(height: 15,),
         GridView.builder(
           shrinkWrap: true, // chid 위젯의 크기를 정해주지 않아싿면 true로 지정해줘야한다.
           physics: const NeverScrollableScrollPhysics(), // 스크롤 금지
@@ -325,8 +325,8 @@ class SearchCondition extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              margin: EdgeInsets.only(right: 7),
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+              margin: const EdgeInsets.only(right: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               decoration: BoxDecoration(
                   border: Border.all(
                     color : Theme.of(context).colorScheme.outline,
@@ -334,7 +334,7 @@ class SearchCondition extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(30)
               ),
-              child: Text('야구',
+              child: const Text('야구',
                 style: TextStyle(
                   fontWeight: FontWeight.w500
                 ),
@@ -350,7 +350,7 @@ class SearchCondition extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(30)
               ),
-              child: Text('시부야구',
+              child: const Text('시부야구',
                 style: TextStyle(
                     fontWeight: FontWeight.w500
                 ),

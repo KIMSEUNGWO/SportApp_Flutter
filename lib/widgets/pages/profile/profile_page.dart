@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/alert.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/profile/language_settings.dart';
@@ -41,7 +42,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SettingWidget(themeLight: widget.themeLight, themeDark: widget.themeDark),));
+              NavigatorHelper.push(context, SettingWidget(themeLight: widget.themeLight, themeDark: widget.themeDark));
             },
             child: Container(
                 margin: EdgeInsets.only(right: 20),
@@ -102,7 +103,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
               child: Column(
                 children: [
                   ProfileBottomMenuWidget(
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LanguageSettingsWidget(),)),
+                    onTap: () => NavigatorHelper.push(context, const LanguageSettingsWidget()),
                     icon: Icons.language,
                     text: 'Language',
                   ),
@@ -147,11 +148,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                          return ProfileEditPage();
-                        },)
-                    );
+                    NavigatorHelper.push(context, const ProfileEditPage());
                   },
                   child: Stack(
                       children: [

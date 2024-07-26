@@ -11,7 +11,7 @@ import 'package:flutter_sport/notifiers/region_notifier.dart';
 class RegionSettingsWidget extends ConsumerStatefulWidget {
 
   final bool excludeAll;
-  Function(Region)? setRegion;
+  final Function(Region)? setRegion;
 
   RegionSettingsWidget({super.key, this.excludeAll = false, this.setRegion});
 

@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
 import 'package:flutter_sport/common/alert.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 
@@ -63,9 +64,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
           Navigator.pop(context);
           ref.read(loginProvider.notifier).plusClub();
           widget.clubReload();
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return GroupDetailWidget(id: result.data);
-          },));
+          NavigatorHelper.push(context, GroupDetailWidget(id: result.data));
         }
       );
     } else if (result.resultCode == ResultCode.INVALID_DATA) {
@@ -222,9 +221,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
 
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) {
-                              return RegionSettingsWidget(excludeAll: true, setRegion: selectRegion,);
-                            },));
+                            NavigatorHelper.push(context, RegionSettingsWidget(excludeAll: true, setRegion: selectRegion,));
                           },
                           child: Container(
                             constraints: const BoxConstraints(minWidth: 150),

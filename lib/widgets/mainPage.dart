@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/login_checker.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
 import 'package:flutter_sport/widgets/pages/my_group_page.dart';
 import 'package:flutter_sport/widgets/pages/profile/profile_page.dart';
@@ -52,16 +51,16 @@ class _MainState extends ConsumerState<Main> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: PageView(
         controller: _pageController,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           MainPage(),
-          SearchPage(),
-          MyGroupPage(),
+          const SearchPage(),
+          const MyGroupPage(),
           ProfilePage(themeLight: widget.themeLight, themeDark: widget.themeDark),
         ],
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(color: Color(0xFFF1F1F5), width: 0.2)
           ),
@@ -79,8 +78,7 @@ class _MainState extends ConsumerState<Main> {
               ),
               BottomNavigator(
                 title: 'search', icon: Icons.search,
-                // callback: () => onChangePage(1),
-                callback: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(),)),
+                callback: () => NavigatorHelper.push(context, const SearchPage()),
                 isPressed: _currentIndex == 1,
               ),
               BottomNavigator(
@@ -106,12 +104,12 @@ class BottomNavigator extends StatelessWidget {
   final GestureTapCallback callback;
   final IconData icon;
   final String title;
-  bool isPressed;
+  final bool isPressed;
 
   final Color pressedColor = const Color(0xFF565360);
   final Color defaultColor = const Color(0xFF908E9B);
 
-  BottomNavigator({
+  const BottomNavigator({
     super.key,
     required this.callback,
     required this.icon,

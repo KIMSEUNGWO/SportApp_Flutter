@@ -27,7 +27,7 @@ class ImageDetailView extends StatelessWidget {
               right: 20,
               child: GestureDetector(
                 onTap: () => Navigator.pop(context),
-                child: Icon(Icons.close, size: 30,),
+                child: const Icon(Icons.close, size: 30,),
               ),
             ),
           ]

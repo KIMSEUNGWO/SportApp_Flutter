@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';
@@ -247,9 +248,7 @@ class _GroupDetailWidgetState extends ConsumerState<GroupDetailWidget> with Sing
               CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ClubEditWidget(club: club!, reload: readClub);
-                },));
+                NavigatorHelper.push(context, ClubEditWidget(club: club!, reload: readClub));
               },
               child: Text('방 설정 변경',
                 style: TextStyle(

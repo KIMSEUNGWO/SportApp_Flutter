@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
@@ -34,9 +35,7 @@ class SmallListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(context, MaterialPageRoute(
-          builder: (context) => GroupDetailWidget(id: id,),)
-      ),
+      onTap: () => NavigatorHelper.push(context, GroupDetailWidget(id: id,)),
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),
         child: Row(

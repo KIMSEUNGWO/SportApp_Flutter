@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/dateformat.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
@@ -119,14 +120,12 @@ class BoardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
       return GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return BoardDetailWidget(
+          NavigatorHelper.push(context, BoardDetailWidget(
               clubId: clubId,
               boardId: board.boardId,
               authority: authority,
               boardListReload: boardListReload
-            );
-          },));
+          ));
         },
         child: Container(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),

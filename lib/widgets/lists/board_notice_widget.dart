@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
@@ -77,18 +78,12 @@ class BoardNoticeWidgetState extends State<BoardNoticeWidget> {
           Board board = _boards[index];
           return GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return BoardDetailWidget(
-                      clubId: widget.clubId,
-                      boardId: board.boardId,
-                      authority: widget.authority,
-                      boardListReload: widget.refresh
-                    );
-                  },
-                ),
-              );
+              NavigatorHelper.push(context, BoardDetailWidget(
+                  clubId: widget.clubId,
+                  boardId: board.boardId,
+                  authority: widget.authority,
+                  boardListReload: widget.refresh
+              ));
             },
             child: Flex(
               direction: Axis.horizontal,

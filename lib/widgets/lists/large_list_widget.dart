@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -40,7 +41,7 @@ class LargeListWidget extends StatelessWidget {
       extraWidget.add(extraInfo!);
     }
     return GestureDetector(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => GroupDetailWidget(id: id,),)),
+      onTap: () => NavigatorHelper.push(context, GroupDetailWidget(id: id,)),
       child: SizedBox(
         width: 210,
         child: Column(

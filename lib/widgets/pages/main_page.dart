@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
@@ -33,7 +34,7 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
   Widget build(BuildContext context) {
     super.build(context);
     return CustomScrollView(
-      physics: AlwaysScrollableScrollPhysics(
+      physics: const AlwaysScrollableScrollPhysics(
         parent: BouncingScrollPhysics(),
       ),
       slivers: [
@@ -43,13 +44,13 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
           refreshIndicatorExtent: 50.0,
           onRefresh: () async {
             // 위로 새로고침
-            await Future.delayed(Duration(seconds: 2));
+            await Future.delayed(const Duration(seconds: 2));
           },
         ),
         const InfinityBanner(),
-        Menus(),
+        const Menus(),
         const SliverToBoxAdapter(child: SizedBox(height: 40,),),
-        if (!ref.read(recentlyClubNotifier.notifier).isEmpty())
+        if (ref.read(recentlyClubNotifier.notifier).length() != 0)
           SliverToBoxAdapter(
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: margin),
@@ -67,9 +68,7 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                       ),
                     ).tr(),
                     GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => RecentlyVisitPages(clubs: ref.read(recentlyClubNotifier.notifier).state),)
-                      ),
+                      onTap: () => NavigatorHelper.push(context, const RecentlyVisitPages()),
                       child: Text('more',
                         style: TextStyle(
                           fontSize: 15,
@@ -216,11 +215,7 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(
-              builder: (context) => page,
-            )
-        );
+        NavigatorHelper.push(context, page);
       },
       child: SizedBox(
         width: 100,

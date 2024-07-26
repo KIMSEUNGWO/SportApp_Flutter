@@ -10,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/api/comment/comment_service.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/dateformat.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
@@ -299,16 +300,13 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                       BoardImage boardImage = boardDetail.images[index];
                       return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (context) {
-                              return ImageDetailView(image: boardImage.image);
-                            },
-                          ));
+                          NavigatorHelper.push(context, ImageDetailView(image: boardImage.image),
+                            fullscreenDialog: true
+                          );
                         },
                         child: Container(
                           clipBehavior: Clip.hardEdge,
-                          margin: EdgeInsets.only(bottom: 10),
+                          margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(
@@ -540,12 +538,9 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
             CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return EditBoardWidget(clubId: widget.clubId, boardDetail: boardDetail, authority: widget.authority, reload: _boardReload);
-                    },
-                    fullscreenDialog: true
-                ));
+                NavigatorHelper.push(context, EditBoardWidget(clubId: widget.clubId, boardDetail: boardDetail, authority: widget.authority, reload: _boardReload),
+                  fullscreenDialog: true
+                );
               },
               child: Text('게시글 수정',
                 style: TextStyle(

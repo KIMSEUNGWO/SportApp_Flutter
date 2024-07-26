@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 import 'package:flutter_sport/notifiers/region_notifier.dart';
@@ -37,8 +38,8 @@ class SoccerPage extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
               icon: const Icon(Icons.search, size: 30,),
-              onPressed: () => {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchPage(),))
+              onPressed: () {
+              NavigatorHelper.push(context, const SearchPage());
               },
             ),
           )

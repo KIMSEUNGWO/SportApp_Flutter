@@ -7,8 +7,13 @@ class RecentlyClubNotifier extends StateNotifier<List<ClubSimp>> {
   RecentlyClubNotifier() : super([]);
 
   add(ClubSimp clubSimp) async {
+    print('add 됨');
     Set<ClubSimp> set = {...state, clubSimp};
     state = set.toList();
+  }
+
+  get() {
+    return state;
   }
 
   length() {

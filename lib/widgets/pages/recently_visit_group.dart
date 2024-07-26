@@ -1,14 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
+import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
 
-class RecentlyVisitPages extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-  final List<ClubSimp> clubs;
+class RecentlyVisitPages extends ConsumerStatefulWidget {
 
-  RecentlyVisitPages({super.key, required this.clubs});
+  const RecentlyVisitPages({super.key});
 
+  @override
+  ConsumerState<RecentlyVisitPages> createState() => _RecentlyVisitPagesState();
+}
+
+class _RecentlyVisitPagesState extends ConsumerState<RecentlyVisitPages> {
+  late List<ClubSimp> clubs;
+
+  init() {
+    clubs = ref.read(recentlyClubNotifier.notifier).get();
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

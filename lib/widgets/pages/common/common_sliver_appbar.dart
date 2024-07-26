@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/common/alert.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/notification/notifications_widget.dart';
@@ -25,7 +26,7 @@ class CustomSliverAppBar extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       title: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => RegionSettingsWidget(),));
+          NavigatorHelper.push(context, RegionSettingsWidget());
         },
         child: Row(
           children: [
@@ -52,7 +53,7 @@ class CustomSliverAppBar extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: IconButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchPage(),)),
+            onPressed: () => NavigatorHelper.push(context, const SearchPage()),
             icon: const Icon(Icons.search, size: 30,),
           ),
         ),
@@ -73,21 +74,13 @@ class CustomSliverAppBar extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: IconButton(
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationsWidget(),)),
+                  onPressed: () => NavigatorHelper.push(context, const NotificationsWidget()),
                   icon: const Icon(Icons.notifications_none, size: 30,),
                 ),
               );
             }
           },
         ),
-
-        // Padding(
-        //   padding: const EdgeInsets.only(right: 20),
-        //   child: IconButton(
-        //     onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const OneToOneMessageWidget(),)),
-        //     icon: const Icon(Icons.send, size: 30),
-        //   ),
-        // ),
       ],
     );
   }

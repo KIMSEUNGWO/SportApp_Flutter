@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
+import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
 import 'package:flutter_sport/widgets/pages/create_group_page.dart';
@@ -90,9 +91,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                       if (club.sport != null && club.region != null) {
                         return GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) {
-                              return GroupDetailWidget(id: club.id);
-                            },));
+                            NavigatorHelper.push(context, GroupDetailWidget(id: club.id));
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -149,7 +148,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                                     ),
                                     Container(
                                         width: 65, height: 65,
-                                        margin: EdgeInsets.only(left: 15),
+                                        margin: const EdgeInsets.only(left: 15),
                                         clipBehavior: Clip.hardEdge,
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).colorScheme.surface,
