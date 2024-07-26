@@ -16,17 +16,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/models/user/club_member.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class GroupDetailHomeWidget extends ConsumerStatefulWidget {
+class ClubDetailHomeWidget extends ConsumerStatefulWidget {
 
   final ClubDetail club;
   final Function() reloadClub;
-  const GroupDetailHomeWidget({super.key, required this.club, required this.reloadClub});
+  const ClubDetailHomeWidget({super.key, required this.club, required this.reloadClub});
 
   @override
-  ConsumerState<GroupDetailHomeWidget> createState() => _GroupDetailHomeWidgetState();
+  ConsumerState<ClubDetailHomeWidget> createState() => _GroupDetailHomeWidgetState();
 }
 
-class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> with AutomaticKeepAliveClientMixin {
+class _GroupDetailHomeWidgetState extends ConsumerState<ClubDetailHomeWidget> with AutomaticKeepAliveClientMixin {
 
   bool joinBtnDisabled = false;
 

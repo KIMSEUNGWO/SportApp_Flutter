@@ -15,7 +15,7 @@ import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
-import 'package:flutter_sport/widgets/pages/create_group_page.dart';
+import 'package:flutter_sport/widgets/pages/create_club_page.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

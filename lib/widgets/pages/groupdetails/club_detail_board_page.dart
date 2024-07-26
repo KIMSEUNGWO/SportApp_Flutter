@@ -9,19 +9,19 @@ import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/board/board_page.dart';
 import 'package:flutter_sport/widgets/pages/board/create_board_page.dart';
 
-class GroupDetailBoardWidget extends StatefulWidget {
+class ClubDetailBoardWidget extends StatefulWidget {
 
   final ClubDetail club;
   final Authority? authority;
 
-  const GroupDetailBoardWidget({super.key, required this.club, this.authority});
+  const ClubDetailBoardWidget({super.key, required this.club, this.authority});
 
   @override
-  State<GroupDetailBoardWidget> createState() => _GroupDetailBoardWidgetState();
+  State<ClubDetailBoardWidget> createState() => _ClubDetailBoardWidgetState();
 }
 
 
-class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with AutomaticKeepAliveClientMixin{
+class _ClubDetailBoardWidgetState extends State<ClubDetailBoardWidget> with AutomaticKeepAliveClientMixin{
 
   final List<GlobalKey<BoardPageWidgetState>> _boardGlobalKeys = [];
   final List<BoardType> _boardMenus = BoardType.values;

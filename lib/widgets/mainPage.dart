@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/login_checker.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/widgets/pages/main_page.dart';
-import 'package:flutter_sport/widgets/pages/my_group_page.dart';
+import 'package:flutter_sport/widgets/pages/my_club_page.dart';
 import 'package:flutter_sport/widgets/pages/profile/profile_page.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
 
@@ -56,7 +56,7 @@ class _MainState extends ConsumerState<Main> {
         children: [
           MainPage(),
           const SearchPage(),
-          const MyGroupPage(),
+          const MyClubPage(),
           ProfilePage(themeLight: widget.themeLight, themeDark: widget.themeDark),
         ],
       ),

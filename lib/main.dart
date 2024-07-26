@@ -9,7 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sport/widgets/mainPage.dart';
 import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_page.dart';
 import 'package:flutter_sport/widgets/pages/profile/profile_page.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
 import 'package:go_router/go_router.dart';
@@ -137,7 +137,7 @@ class _AppState extends ConsumerState<App> {
           path: '/club/:clubId',
           builder: (context, state) {
             final String clubId = state.pathParameters['clubId']!;
-            return GroupDetailWidget(id: int.parse(clubId));
+            return ClubDetailWidget(id: int.parse(clubId));
           },
           routes: [
             GoRoute(

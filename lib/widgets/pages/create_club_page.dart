@@ -14,21 +14,21 @@ import 'package:flutter_sport/models/club/sport_type.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_page.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateGroupWidget extends ConsumerStatefulWidget {
+class CreateClubWidget extends ConsumerStatefulWidget {
 
   final Function() clubReload;
-  const CreateGroupWidget({super.key, required this.clubReload});
+  const CreateClubWidget({super.key, required this.clubReload});
 
   @override
-  ConsumerState<CreateGroupWidget> createState() => _CreateGroupWidgetState();
+  ConsumerState<CreateClubWidget> createState() => _CreateGroupWidgetState();
 }
 
-class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
+class _CreateGroupWidgetState extends ConsumerState<CreateClubWidget> {
 
   late TextEditingController _titleController;
   late TextEditingController _introController;
@@ -65,7 +65,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
           Navigator.pop(context);
           ref.read(loginProvider.notifier).plusClub();
           widget.clubReload();
-          NavigatorHelper.push(context, GroupDetailWidget(id: result.data));
+          NavigatorHelper.push(context, ClubDetailWidget(id: result.data));
         }
       );
     } else if (result.resultCode == ResultCode.INVALID_DATA) {

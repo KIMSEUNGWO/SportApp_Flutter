@@ -5,26 +5,26 @@ import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_dateil_board_page.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_chat_page.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_home_page.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_meeting_page.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_board_page.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_chat_page.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_home_page.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_meeting_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_edit_page.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/club_edit_page.dart';
 
-class GroupDetailWidget extends ConsumerStatefulWidget {
+class ClubDetailWidget extends ConsumerStatefulWidget {
 
   final int id;
 
-  const GroupDetailWidget({super.key, required this.id});
+  const ClubDetailWidget({super.key, required this.id});
 
   @override
-  ConsumerState<GroupDetailWidget> createState() => _GroupDetailWidgetState();
+  ConsumerState<ClubDetailWidget> createState() => _GroupDetailWidgetState();
 }
 
-class _GroupDetailWidgetState extends ConsumerState<GroupDetailWidget> with SingleTickerProviderStateMixin {
+class _GroupDetailWidgetState extends ConsumerState<ClubDetailWidget> with SingleTickerProviderStateMixin {
 
   Map<Tab, Widget> tabList = {
     Tab(text: 'groupMenus'.tr(gender: 'home')) : const SizedBox(),
@@ -66,10 +66,10 @@ class _GroupDetailWidgetState extends ConsumerState<GroupDetailWidget> with Sing
       isLoading = false;
     });
     tabList = {
-      Tab(text: 'groupMenus'.tr(gender: 'home')) : GroupDetailHomeWidget(club : club!, reloadClub: readClub),
-      Tab(text: 'groupMenus'.tr(gender: 'board')) : GroupDetailBoardWidget(club : club!, authority: club!.authority),
-      Tab(text: 'groupMenus'.tr(gender: 'group')) : GroupDetailMeetingWidget(club : club!),
-      Tab(text: 'groupMenus'.tr(gender: 'chat')) : GroupDetailChatWidget(club : club!)
+      Tab(text: 'groupMenus'.tr(gender: 'home')) : ClubDetailHomeWidget(club : club!, reloadClub: readClub),
+      Tab(text: 'groupMenus'.tr(gender: 'board')) : ClubDetailBoardWidget(club : club!, authority: club!.authority),
+      Tab(text: 'groupMenus'.tr(gender: 'group')) : ClubDetailMeetingWidget(club : club!),
+      Tab(text: 'groupMenus'.tr(gender: 'chat')) : ClubDetailChatWidget(club : club!)
     };
 
     ClubSimp clubSimp = ClubSimp(club!.id, club!.thumbnail, club!.title, club!.intro, club!.sport, club!.region, club!.personCount, club!.createDate);

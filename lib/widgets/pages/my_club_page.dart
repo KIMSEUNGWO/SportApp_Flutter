@@ -4,22 +4,22 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
-import 'package:flutter_sport/widgets/pages/create_group_page.dart';
+import 'package:flutter_sport/widgets/pages/create_club_page.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 
-class MyGroupPage extends ConsumerStatefulWidget {
+class MyClubPage extends ConsumerStatefulWidget {
 
-  const MyGroupPage({super.key});
+  const MyClubPage({super.key});
 
   @override
-  ConsumerState<MyGroupPage> createState() => _MyGroupPageState();
+  ConsumerState<MyClubPage> createState() => _MyGroupPageState();
 }
 
-class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAliveClientMixin {
+class _MyGroupPageState extends ConsumerState<MyClubPage> with AutomaticKeepAliveClientMixin {
 
   late List<ClubSimp> myClubs;
   bool isLoading = true;
@@ -179,7 +179,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
               bottom: 20,
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateGroupWidget(clubReload: readMyClubs),
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateClubWidget(clubReload: readMyClubs),
                     fullscreenDialog: true,
                   ));
                 },
