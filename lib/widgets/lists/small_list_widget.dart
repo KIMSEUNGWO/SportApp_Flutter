@@ -37,7 +37,8 @@ class SmallListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push('/club/$id');
+        // context.push('/club/$id');
+        NavigatorHelper.push(context, ClubDetailWidget(id: id));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),

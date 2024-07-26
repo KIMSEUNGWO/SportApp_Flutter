@@ -117,7 +117,7 @@ class _AppState extends ConsumerState<App> {
   void initState() {
     super.initState();
     init();
-    themeDark();
+    themeLight();
   }
 
   @override
@@ -160,50 +160,47 @@ class _AppState extends ConsumerState<App> {
         )
       ],
     );
-    return MaterialApp.router(
-      routerConfig: _router,
-    // routeInformaterProvider : 라우트 상태를 전달해주는 함수
-    // routeInformationParser: URI String을 상태 및 GoRouter에서 사용할 수 있는 형태로 변환해주는 함수
-    // routerDelegate: routeInformationParser에서 변환된 값을 어떤 라우트로 보여줄 지 정하는 함수
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      theme: ThemeData(
-        fontFamily: 'Pretendard',
-        colorScheme: currentColorScheme,
-        cardColor: currentCardColor,
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            fontSize: 21,
-          ),
-          displayMedium: TextStyle(
-            fontSize: 17,
-          ),
-          displaySmall: TextStyle(
-            fontSize: 13,
-          ),
-
-          bodyLarge: TextStyle(
-              fontSize: 18
-          ),
-          bodyMedium: TextStyle(
-              fontSize: 16
-          ),
-          bodySmall: TextStyle(
-            fontSize: 14,
-          ),
-        ),
-
-      ),
-    );
+    // return MaterialApp.router(
+    //   routerConfig: _router,
+    // // routeInformaterProvider : 라우트 상태를 전달해주는 함수
+    // // routeInformationParser: URI String을 상태 및 GoRouter에서 사용할 수 있는 형태로 변환해주는 함수
+    // // routerDelegate: routeInformationParser에서 변환된 값을 어떤 라우트로 보여줄 지 정하는 함수
+    //   localizationsDelegates: context.localizationDelegates,
+    //   supportedLocales: context.supportedLocales,
+    //   locale: context.locale,
+    //   theme: ThemeData(
+    //     fontFamily: 'Pretendard',
+    //     colorScheme: currentColorScheme,
+    //     cardColor: currentCardColor,
+    //     textTheme: const TextTheme(
+    //       displayLarge: TextStyle(
+    //         fontSize: 21,
+    //       ),
+    //       displayMedium: TextStyle(
+    //         fontSize: 17,
+    //       ),
+    //       displaySmall: TextStyle(
+    //         fontSize: 13,
+    //       ),
+    //
+    //       bodyLarge: TextStyle(
+    //           fontSize: 18
+    //       ),
+    //       bodyMedium: TextStyle(
+    //           fontSize: 16
+    //       ),
+    //       bodySmall: TextStyle(
+    //         fontSize: 14,
+    //       ),
+    //     ),
+    //
+    //   ),
+    // );
     return MaterialApp(
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
+      home: InitPage(themeLight: themeLight, themeDark: themeDark),
       locale: context.locale,
-      initialRoute: '/',
-      routes: {
-        '/' : (c) => Main(themeLight: themeLight, themeDark: themeDark),
-      },
       theme: ThemeData(
         fontFamily: 'Pretendard',
         colorScheme: currentColorScheme,
