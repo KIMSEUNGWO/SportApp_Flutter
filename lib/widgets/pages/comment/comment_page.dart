@@ -18,7 +18,7 @@ class CommentWidget extends ConsumerStatefulWidget {
     required this.comment,
     this.handleTap,
     this.setReply,
-    required this.replyList, this.authority, required this.clubId, required this.boardId, required this.reload,
+    required this.replyList, this.authority, required this.clubId, required this.boardId, required this.setAllVisible, required this.reload,
   });
 
   final int clubId;
@@ -26,10 +26,11 @@ class CommentWidget extends ConsumerStatefulWidget {
   final Comment comment;
   final List<Comment> replyList;
   final Authority? authority;
-  final Function() reload;
 
-  Function()? handleTap;
-  Function(Comment)? setReply;
+  final Function({required bool reload}) reload;
+  final Function()? handleTap;
+  final Function(Comment)? setReply;
+  final Function(bool data) setAllVisible;
 
   @override
   ConsumerState<CommentWidget> createState() => _CommentWidgetState();
@@ -63,7 +64,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
         commentId: widget.comment.commentId,
     );
     if (response.resultCode == ResultCode.OK) {
-      widget.reload();
+      widget.reload(reload: false);
       Alert.message(context: context, text: Text('댓글을 삭제했습니다.'));
     }
   }
@@ -207,6 +208,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                       Expanded(
                         child: TextField(
                           controller: _editingController,
+                          autofocus: true,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w500,
@@ -219,6 +221,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                       const SizedBox(width: 20,),
                       GestureDetector(
                         onTap: () {
+                          widget.setAllVisible(true);
                           exitEdit();
                         },
                         child: Text('취소',
@@ -230,6 +233,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                       const SizedBox(width: 15,),
                       GestureDetector(
                         onTap: () {
+                          widget.setAllVisible(true);
                           editComment();
                         },
                         child: Text('수정',
@@ -267,7 +271,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                 itemCount: widget.replyList.length,
                 itemBuilder: (context, index) {
                   Comment reply = widget.replyList[index];
-                  return CommentWidget(comment: reply, replyList: [], clubId: widget.clubId, boardId: widget.boardId, reload: widget.reload,);
+                  return CommentWidget(comment: reply, replyList: [], clubId: widget.clubId, boardId: widget.boardId, reload: widget.reload, setAllVisible: widget.setAllVisible,);
                 },
               ),
 
@@ -298,10 +302,11 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
         PopupMenuItem<String>(
           child: Text('댓글 수정',
             style: TextStyle(
-                color: Theme.of(context).colorScheme.primary
+              color: Theme.of(context).colorScheme.primary
             ),
           ),
           onTap: () {
+            widget.setAllVisible(false);
             setEdit(widget.comment.content);
           },
         ),

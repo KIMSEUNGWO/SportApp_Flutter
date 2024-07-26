@@ -8,6 +8,7 @@ import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/api/comment/comment_service.dart';
+import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
@@ -33,6 +34,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
   late TextEditingController _commentController;
   final FocusNode _focusNode = FocusNode();
   bool _isVisible = false;
+  bool _allVisible = true;
   Comment? _reply;
 
   late BoardDetail boardDetail;
@@ -63,13 +65,19 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
     if (result.resultCode == ResultCode.OK) {
       _initFocus();
-      await _globalKey.currentState?._fetchPageable();
+      await _globalKey.currentState?._fetchPageable(reload: true);
     }
   }
 
   setReply(Comment? comment) {
     setState(() {
       _reply = comment;
+    });
+  }
+
+  setAllVisible(bool data) {
+    setState(() {
+      _allVisible = data;
     });
   }
 
@@ -185,11 +193,23 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                                     child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
                                 )
                         ),
-                        Text(boardDetail.nickname,
-                          style: TextStyle(
-                              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                              fontWeight: FontWeight.w600
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(boardDetail.nickname,
+                              style: TextStyle(
+                                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                fontWeight: FontWeight.w600
+                              ),
+                            ),
+                            Text(DateTimeFormatter.formatDate(boardDetail.createDate),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                                fontWeight: FontWeight.w500
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),
@@ -268,7 +288,15 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                   ),
                 ),
 
-                CommentPageWidget(key: _globalKey, clubId: widget.clubId, boardDetail: boardDetail, handleTap: _handleContainerTap, setReply: setReply, authority: widget.authority),
+                CommentPageWidget(
+                  key: _globalKey,
+                  clubId: widget.clubId,
+                  boardDetail: boardDetail,
+                  handleTap: _handleContainerTap,
+                  setReply: setReply,
+                  authority: widget.authority,
+                  setAllVisible: setAllVisible,
+                ),
 
                 SliverToBoxAdapter(
                   child: Container(
@@ -286,7 +314,8 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
           ),
 
-        bottomNavigationBar: Column(
+        bottomNavigationBar: (!_allVisible) ? null :
+        Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
@@ -447,7 +476,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
 
 class CommentPageWidget extends StatefulWidget {
-  const CommentPageWidget({super.key, required this.boardDetail, required this.clubId, required this.handleTap, required this.setReply, this.authority,});
+  const CommentPageWidget({super.key, required this.boardDetail, required this.clubId, required this.handleTap, required this.setReply, this.authority, required this.setAllVisible,});
 
   final BoardDetail boardDetail;
   final int clubId;
@@ -455,6 +484,7 @@ class CommentPageWidget extends StatefulWidget {
 
   final Function() handleTap;
   final Function(Comment) setReply;
+  final Function(bool data) setAllVisible;
 
 
   @override
@@ -481,20 +511,20 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
     });
   }
 
-  _fetchComments() async {
+  _fetchInitComments() async {
       if (_loading) return;
       setCommentsLoading(true);
-      _fetchPageable();
+      _fetchPageable(reload: false);
       setCommentsLoading(false);
   }
 
-  _fetchPageable() async {
-    print('_CommentPageWidgetState._fetchPageable');
+  _fetchPageable({required bool reload}) async {
     ResponseResult result = await CommentService.getComments(
         clubId: widget.clubId,
         boardId: widget.boardDetail.boardId,
         start: comments.size(),
-        size: _size
+        size: _size,
+        reload: reload
     );
     if (result.resultCode == ResultCode.OK) {
       comments.totalCount = result.data['totalCount'];
@@ -506,13 +536,13 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
     }
   }
 
-  reload() async {
+  reload({required bool reload}) async {
     if (fetchDisabled) return;
     setState(() {
       fetchDisabled = true;
     });
     comments.clear();
-    await _fetchPageable();
+    await _fetchPageable(reload: reload);
     await Future.delayed(const Duration(seconds: 5));
     setState(() {
       fetchDisabled = false;
@@ -524,7 +554,7 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
   void initState() {
     comments = CommentCollection();
     super.initState();
-    _fetchComments();
+    _fetchInitComments();
   }
 
   @override
@@ -548,7 +578,7 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
                 const SizedBox(width: 10,),
                 GestureDetector(
                   onTap: () {
-                    reload();
+                    reload(reload : false);
                   },
                   child: Icon(Icons.refresh_outlined,
                     size: 20,
@@ -581,7 +611,7 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
                 itemCount: keys.length + (_hasMore ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (keys.isNotEmpty && index == keys.length) {
-                    _fetchPageable();
+                    _fetchPageable(reload: false);
                     return const Center(child: CupertinoActivityIndicator(),);
                   }
                   Comment comment = keys[index];
@@ -595,6 +625,7 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
                     clubId: widget.clubId,
                     boardId: widget.boardDetail.boardId,
                     reload: reload,
+                    setAllVisible: widget.setAllVisible
                   );
                 },
             )
