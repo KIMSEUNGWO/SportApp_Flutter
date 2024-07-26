@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
@@ -37,7 +38,7 @@ class BoardNoticeWidgetState extends State<BoardNoticeWidget> {
       if (_isLoading) return;
       setLoading(true);
 
-      ResponseResult result = await BoardService.getBoards(
+      ResponseResult result = await BoardService.of(context).getBoards(
         clubId: widget.clubId,
         boardType: BoardType.NOTICE.name,
         page: 0,

@@ -27,7 +27,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
 
   readMyClubs() async {
     loading(true);
-    myClubs = await ClubService.getMyClubs();
+    myClubs = await ClubService.of(context).getMyClubs();
     loading(false);
   }
   loading(bool data) {

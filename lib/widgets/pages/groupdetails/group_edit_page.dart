@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/image.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
@@ -55,14 +56,13 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
 
   _submit(BuildContext context) async {
     if (!_valid(context)) return;
-    final ResponseResult? result = await ClubService.clubEdit(
+    final ResponseResult? result = await ClubService.of(context).clubEdit(
       clubId: widget.club.id,
       image: editProfileImagePath,
       sportType: sportType != widget.club.sport ? sportType : null,
       region: region != widget.club.region ? region : null,
       title: _titleController.text.isEmpty ? null : _titleController.text,
       intro: _introController.text.isEmpty ? null : _introController.text,
-      context: context
     );
     if (result == null) return;
 

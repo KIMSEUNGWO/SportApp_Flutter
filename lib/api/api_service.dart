@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/method_type.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/api/social_result.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/notification.dart';

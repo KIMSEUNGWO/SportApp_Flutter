@@ -60,7 +60,7 @@ class _GroupDetailWidgetState extends ConsumerState<GroupDetailWidget> with Sing
 
 
   readClub() async {
-    club = await ClubService.clubData(context: context, clubId: widget.id);
+    club = await ClubService.of(context).clubData(context: context, clubId: widget.id);
     if (club == null) return;
     setState(() {
       isLoading = false;

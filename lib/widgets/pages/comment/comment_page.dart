@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/comment/comment_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/models/club/authority.dart';
@@ -43,7 +44,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
 
   editComment() async {
 
-    final response = await CommentService.editComment(
+    final response = await CommentService.of(context).editComment(
       clubId: widget.clubId,
       boardId: widget.boardId,
       commentId: widget.comment.commentId,
@@ -59,7 +60,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
 
   deleteComment() async {
 
-    final response = await CommentService.deleteComment(
+    final response = await CommentService.of(context).deleteComment(
         clubId: widget.clubId,
         boardId: widget.boardId,
         commentId: widget.comment.commentId,

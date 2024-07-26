@@ -13,7 +13,7 @@ class RegionSettingsWidget extends ConsumerStatefulWidget {
   final bool excludeAll;
   final Function(Region)? setRegion;
 
-  RegionSettingsWidget({super.key, this.excludeAll = false, this.setRegion});
+  const RegionSettingsWidget({super.key, this.excludeAll = false, this.setRegion});
 
   @override
   ConsumerState<RegionSettingsWidget> createState() => _RegionSettingsWidgetState();

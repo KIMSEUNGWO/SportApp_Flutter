@@ -8,6 +8,7 @@ import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/api/comment/comment_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
@@ -50,11 +51,14 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
     });
   }
 
-  fetchImage() async {
+  fetchBoardDetail() async {
     if (!boardLoading) return;
     setBoardLoading(true);
 
-    ResponseResult result = await BoardService.getBoardDetail(clubId: widget.clubId, boardId: widget.boardId);
+    ResponseResult result = await BoardService.of(context).getBoardDetail(
+      clubId: widget.clubId,
+      boardId: widget.boardId,
+    );
     if (result.resultCode == ResultCode.OK) {
       boardDetail = BoardDetail.fromJson(result.data);
 
@@ -64,13 +68,13 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
   _boardReload() async {
     setBoardLoading(true);
-    await fetchImage();
+    await fetchBoardDetail();
   }
 
   sendComment(String text) async {
     _commentController.text = '';
 
-    final result = await CommentService.sendComment(clubId: widget.clubId, boardId: widget.boardId, parentId: _reply?.commentId, comment: text);
+    final result = await CommentService.of(context).sendComment(clubId: widget.clubId, boardId: widget.boardId, parentId: _reply?.commentId, comment: text);
 
     if (result.resultCode == ResultCode.OK) {
       _initFocus();
@@ -108,7 +112,11 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
   }
 
   deleteBoard() async {
-    ResponseResult response = await BoardService.deleteBoard(clubId: widget.clubId, boardId: boardDetail.boardId);
+    ResponseResult response = await BoardService.of(context).deleteBoard(
+
+      clubId: widget.clubId,
+      boardId: boardDetail.boardId,
+    );
 
     if (response.resultCode == ResultCode.OK) {
       Navigator.pop(context);
@@ -129,7 +137,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
   @override
   void initState() {
     _commentController = TextEditingController();
-    fetchImage();
+    fetchBoardDetail();
     _focusNode.addListener(() {
       setState(() {
         _isVisible = _focusNode.hasFocus;
@@ -620,7 +628,7 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
   }
 
   _fetchPageable({required bool reload}) async {
-    ResponseResult result = await CommentService.getComments(
+    ResponseResult result = await CommentService.of(context).getComments(
         clubId: widget.clubId,
         boardId: widget.boardDetail.boardId,
         start: comments.size(),

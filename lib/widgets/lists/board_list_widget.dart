@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
@@ -62,7 +63,7 @@ class BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAliv
       if (_isLoading) return;
       setLoading(true);
 
-      ResponseResult result = await BoardService.getBoards(
+      ResponseResult result = await BoardService.of(context).getBoards(
         clubId: widget.clubId,
         boardType: widget.boardType == BoardType.ALL ? null : widget.boardType.name,
         page: _page,

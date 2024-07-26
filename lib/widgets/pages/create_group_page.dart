@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
@@ -49,7 +50,7 @@ class _CreateGroupWidgetState extends ConsumerState<CreateGroupWidget> {
 
   _submit(BuildContext context) async {
     if (!_valid(context)) return;
-    final ResponseResult result = await ClubService.clubCreate(
+    final ResponseResult result = await ClubService.of(context).clubCreate(
         sportType: sportType!,
         region: region!,
         title: _titleController.text,

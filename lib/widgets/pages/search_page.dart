@@ -60,6 +60,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   onSubmit(String word) {
+    if (word.isEmpty) return;
     addWord(word); // 최근
     print('onSubmit $word' );// 검색어 추가
   }

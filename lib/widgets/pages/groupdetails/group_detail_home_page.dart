@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/login_checker.dart';
 import 'package:flutter_sport/models/club/authority.dart';
@@ -35,7 +36,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
 
   joinClub() async {
     joinDisabled(false);
-    ResponseResult? result = await ClubService.joinClub(clubId: widget.club.id, context: context);
+    ResponseResult? result = await ClubService.of(context).joinClub(clubId: widget.club.id);
     if (result == null) return;
     if (result.resultCode == ResultCode.OK) {
       Alert.message(context: context, text: Text('가입이 완료되었습니다.'),
@@ -271,7 +272,7 @@ class _ClubUserListWidgetState extends State<ClubUserListWidget> {
 
 
   _initClubUsers() async {
-    _userList = await ClubService.getClubUsers(clubId: widget.clubId);
+    _userList = await ClubService.of(context).getClubUsers(clubId: widget.clubId);
     setState(() {});
   }
 

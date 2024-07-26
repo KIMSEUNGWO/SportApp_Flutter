@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/image.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
@@ -62,7 +63,7 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
   _submit() async {
     if (!_valid()) return;
 
-    ResponseResult result = await BoardService.createBoard(
+    ResponseResult result = await BoardService.of(context).createBoard(
       clubId: widget.clubId,
       images: uploadImages,
       boardType: boardType!,
