@@ -3,49 +3,54 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/api/api_result.dart';
-import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
+import 'package:flutter_sport/widgets/lists/board_list_widget.dart';
 import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
+import 'package:flutter_sport/widgets/lists/board_notice_widget.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class BoardPageWidget extends StatelessWidget {
+class BoardPageWidget extends StatefulWidget {
 
   final int clubId;
   final List<BoardType> boardMenus;
   final int index;
   final Function(BoardType boardType) onChange;
-  final GlobalKey<_BoardListWidgetState> boardListKey = GlobalKey<_BoardListWidgetState>();
-  final GlobalKey<_BoardNoticeWidgetState> noticeListKey = GlobalKey<_BoardNoticeWidgetState>();
   final Authority? authority;
 
-  BoardPageWidget({super.key, required this.boardMenus, required this.index, required this.onChange, required this.clubId, this.authority});
+  const BoardPageWidget({super.key, required this.boardMenus, required this.index, required this.onChange, required this.clubId, this.authority});
 
-  refresh() {
-    boardListKey.currentState?._fetchRefresh();
+  @override
+  State<BoardPageWidget> createState() => BoardPageWidgetState();
+}
+
+class BoardPageWidgetState extends State<BoardPageWidget> {
+
+  final GlobalKey<BoardListWidgetState> boardListKey = GlobalKey<BoardListWidgetState>();
+  final GlobalKey<BoardNoticeWidgetState> noticeListKey = GlobalKey<BoardNoticeWidgetState>();
+
+  refresh() async {
+    boardListKey.currentState?.fetchRefresh();
+    if (widget.boardMenus[widget.index] == BoardType.ALL) {
+      await noticeListKey.currentState?.fetchBoards();
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        // TODO
         CupertinoSliverRefreshControl(
           refreshTriggerPullDistance: 100.0,
           refreshIndicatorExtent: 80.0,
           onRefresh: () async {
             // 위로 새로고침
             await Future.delayed(const Duration(seconds: 1));
-            await boardListKey.currentState?._fetchRefresh();
-            if (boardMenus[index] == BoardType.ALL) {
-              await noticeListKey.currentState?._fetchBoards();
-            }
+            refresh();
           },
         ),
         SliverToBoxAdapter(
@@ -55,18 +60,18 @@ class BoardPageWidget extends StatelessWidget {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: boardMenus
+                children: widget.boardMenus
                     .map((menu) =>
                     GestureDetector(
                       onTap: () {
-                        onChange(menu);
+                        widget.onChange(menu);
                       },
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 7),
                         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: menu == boardMenus[index]
+                          color: menu == widget.boardMenus[widget.index]
                               ? Theme.of(context).colorScheme.primaryContainer
                               : Theme.of(context).colorScheme.secondaryContainer
                         ),
@@ -74,7 +79,7 @@ class BoardPageWidget extends StatelessWidget {
                           style: TextStyle(
                               fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                               fontWeight: FontWeight.w500,
-                              color: menu == boardMenus[index]
+                              color: menu == widget.boardMenus[widget.index]
                                 ? Colors.white
                                 : Theme.of(context).colorScheme.primary
 
@@ -87,286 +92,20 @@ class BoardPageWidget extends StatelessWidget {
             ),
           ),
         ),
-        if (boardMenus[index] == BoardType.ALL)
+        if (widget.boardMenus[widget.index] == BoardType.ALL)
           BoardNoticeWidget(
             key: noticeListKey,
-            clubId: clubId,
-            authority: authority,
+            clubId: widget.clubId,
+            authority: widget.authority,
             refresh: refresh
           ),
-        BoardListWidget(key: boardListKey, clubId: clubId, boardType: boardMenus[index], authority: authority),
+        BoardListWidget(key: boardListKey, clubId: widget.clubId, boardType: widget.boardMenus[widget.index], authority: widget.authority),
         const SliverToBoxAdapter(child: SizedBox(height: 50,),)
       ],
     );
   }
 }
 
-class BoardNoticeWidget extends StatefulWidget {
-
-  final int clubId;
-  final Authority? authority;
-  final Function() refresh;
-
-  const BoardNoticeWidget({super.key, required this.clubId, this.authority, required this.refresh});
-
-  @override
-  State<BoardNoticeWidget> createState() => _BoardNoticeWidgetState();
-}
-
-class _BoardNoticeWidgetState extends State<BoardNoticeWidget> {
-
-  late List<Board> _boards = [];
-  bool _isLoading = false;
-
-  setLoading(bool data) {
-    setState(() {
-      _isLoading = data;
-    });
-  }
-
-  _fetchBoards() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-
-      if (_isLoading) return;
-      setLoading(true);
-
-      ResponseResult result = await BoardService.getBoards(
-        clubId: widget.clubId,
-        boardType: BoardType.NOTICE.name,
-        page: 0,
-        size: 3,
-      );
-
-      if (result.resultCode == ResultCode.OK) {
-        List<Board> list = [];
-        for (var boardJson in result.data) {
-          Board board = Board.fromJson(boardJson);
-          list.add(board);
-        }
-        setState(() {
-          _boards = list;
-        });
-      }
-      setLoading(false);
-    });
-  }
-
-  @override
-  void initState() {
-    _fetchBoards();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_boards.isEmpty) return const SliverToBoxAdapter();
-    return SliverPadding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 30),
-      sliver: SliverList.separated(
-        itemCount: _boards.length,
-        separatorBuilder: (context, index) {
-          return const SizedBox(height: 5,);
-        },
-        itemBuilder: (context, index) {
-          Board board = _boards[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return BoardDetailWidget(
-                    clubId: widget.clubId,
-                    boardId: board.boardId,
-                    authority: widget.authority,
-                    boardListReload: widget.refresh
-                );
-              },));
-            },
-            child: Flex(
-              direction: Axis.horizontal,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(right: 3, top: 5, bottom: 5,),
-                  decoration: const BoxDecoration(),
-                  child: Text('[공지]',
-                    style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
-                        fontWeight: FontWeight.w600,
-                        // color: Color(0xFFF35353),
-                        color: Theme.of(context).colorScheme.onPrimary
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10, ),
-                Expanded(
-                  flex: 3,
-                  child: Text(board.content,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.primary
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class BoardListWidget extends StatefulWidget {
-
-  final BoardType boardType;
-  final int clubId;
-  final Authority? authority;
-
-  const BoardListWidget({super.key, required this.boardType, required this.clubId, this.authority});
-
-  @override
-  State<BoardListWidget> createState() => _BoardListWidgetState();
-}
-
-class _BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAliveClientMixin {
-
-  late List<Board> _boards = [];
-  int _page = 0; // 페이지 번호
-  int _size = 20; // 페이지 별 개수
-  bool _isLoading = false;
-  bool _hasMore = true;
-  bool _isDone = false;
-
-  _setData(List<Board> boards) {
-    _boards.addAll(boards);
-    setState(() {
-      _page++;
-      _isLoading = false;
-      _hasMore = boards.length == _size;
-      _isDone = true;
-    });
-  }
-
-  _setInit() {
-    setState(() {
-      _page = 0;
-      _isLoading = false;
-      _hasMore = true;
-      _isDone = false;
-      _boards = [];
-    });
-  }
-
-  _fetchRefresh() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      _setInit();
-      await _fetchBoards();
-    });
-  }
-
-  _fetchBoards() async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-
-      if (_isLoading) return;
-      setLoading(true);
-
-      ResponseResult result = await BoardService.getBoards(
-        clubId: widget.clubId,
-        boardType: widget.boardType == BoardType.ALL ? null : widget.boardType.name,
-        page: _page,
-        size: _size,
-      );
-      if (result.resultCode == ResultCode.OK) {
-        List<Board> list = [];
-        for (var boardJson in result.data) {
-          Board board = Board.fromJson(boardJson);
-          list.add(board);
-        }
-        _setData(list);
-      } else {
-        setLoading(false);
-      }
-    });
-  }
-
-  setLoading(bool data) {
-    setState(() {
-      _isLoading = data;
-    });
-  }
-
-  @override
-  void initState() {
-    _fetchBoards();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    if (!_isDone) {
-      return const SliverFillRemaining(
-        child: Center(
-          child: CupertinoActivityIndicator(),
-        ),
-      );
-    }
-    if (_boards.isEmpty) {
-      return SliverFillRemaining(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.dashboard_customize_rounded,
-                size: 40,
-                color: Theme.of(context).colorScheme.surfaceVariant,
-              ),
-              SizedBox(height: 10,),
-              Text('등록된 게시물이 없습니다.',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.surfaceVariant,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return SliverList.separated(
-      separatorBuilder: (context, index) =>
-          Container(
-            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            height: 1,
-            decoration: BoxDecoration(
-              // color: Color(0xFFE4DDDD),
-                color: Theme.of(context).colorScheme.outline
-            ),
-          ),
-      itemCount: _boards.length + (_hasMore ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (_boards.isNotEmpty && index == _boards.length) {
-          _fetchBoards();
-          return const Center(child: CupertinoActivityIndicator(),);
-        }
-        return BoardWidget(
-          clubId: widget.clubId,
-          board: _boards[index],
-          authority: widget.authority,
-          boardListReload: _fetchRefresh
-        );
-      },
-
-    );
-
-  }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
-
-}
 
 class BoardWidget extends StatelessWidget {
   final Board board;
@@ -394,7 +133,7 @@ class BoardWidget extends StatelessWidget {
           constraints: const BoxConstraints(
             minHeight: 160,
           ),
-          decoration: BoxDecoration(),
+          decoration: const BoxDecoration(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -472,7 +211,7 @@ class BoardWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.favorite,
+                      const Icon(Icons.favorite,
                         color: Colors.grey,
                         size: 17,
                       ),
@@ -498,7 +237,7 @@ class BoardWidget extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       color: Theme.of(context).colorScheme.secondaryContainer,

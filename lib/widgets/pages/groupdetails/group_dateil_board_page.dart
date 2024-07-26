@@ -19,11 +19,16 @@ class GroupDetailBoardWidget extends StatefulWidget {
   State<GroupDetailBoardWidget> createState() => _GroupDetailBoardWidgetState();
 }
 
+
 class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with AutomaticKeepAliveClientMixin{
 
+  final List<GlobalKey<BoardPageWidgetState>> _boardGlobalKeys = [];
   final List<BoardType> _boardMenus = BoardType.values;
   final PageController _pageController = PageController();
 
+  listReload() {
+    _boardGlobalKeys[_pageController.page!.round()].currentState?.refresh();
+  }
   onChangePage(int index) {
     _pageController.jumpToPage(index);
     // _pageController.animateToPage(
@@ -44,6 +49,15 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    // 전체, 공지사항, ... 메뉴별 글로벌키 생성
+    for (int i = 0; i< _boardMenus.length; i++) {
+      _boardGlobalKeys.add(GlobalKey<BoardPageWidgetState>());
+    }
+  }
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
@@ -51,6 +65,7 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Stack(
       children: [
         PageView.builder(
@@ -58,7 +73,7 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
           physics: const NeverScrollableScrollPhysics(),
           itemCount: _boardMenus.length,
           itemBuilder: (context, index) {
-            return BoardPageWidget(clubId: widget.club.id, boardMenus : _boardMenus, index: index, onChange: onChangeType, authority: widget.authority);
+            return BoardPageWidget(key: _boardGlobalKeys[index], clubId: widget.club.id, boardMenus : _boardMenus, index: index, onChange: onChangeType, authority: widget.authority);
           },
         ),
         if (widget.club.authority != null)
@@ -67,7 +82,7 @@ class _GroupDetailBoardWidgetState extends State<GroupDetailBoardWidget> with Au
           bottom: 70,
           child: GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateBoardWidget(clubId: widget.club.id, authority: widget.club.authority),
+              Navigator.push(context, MaterialPageRoute(builder: (context) => CreateBoardWidget(clubId: widget.club.id, authority: widget.club.authority, reload: listReload),
                 fullscreenDialog: true,
               ));
             },

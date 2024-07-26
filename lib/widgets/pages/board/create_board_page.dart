@@ -17,8 +17,9 @@ import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
 class CreateBoardWidget extends StatefulWidget {
   final int clubId;
   final Authority? authority;
+  final Function() reload;
 
-  const CreateBoardWidget({super.key, required this.clubId, this.authority});
+  const CreateBoardWidget({super.key, required this.clubId, this.authority, required this.reload});
 
   @override
   State<CreateBoardWidget> createState() => _CreateBoardWidgetState();
@@ -68,10 +69,9 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
       content: _contentController.text,
     );
 
-    print(result.resultCode);
-
     if (result.resultCode == ResultCode.OK) {
       Navigator.pop(context);
+      widget.reload();
       Alert.message(
         context: context,
         text: Text('게시글이 등록되었습니다.'),

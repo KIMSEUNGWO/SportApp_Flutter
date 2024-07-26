@@ -14,8 +14,20 @@ class CommentCollection {
   void addAll(List<Comment> comments) {
     if (comments.isEmpty) return;
     for (var comment in comments) {
-      add(comment);
+      if (!isDistinct(comment)) {
+        add(comment);
+      }
     }
+  }
+
+  bool isDistinct(Comment compare) {
+    if (_data.containsKey(compare)) return true;
+    for (var replyList in _data.values) {
+      for (var comment in replyList) {
+        if (comment.commentId == compare.commentId) return true;
+      }
+    }
+    return false;
   }
 
   void add(Comment comment) {
