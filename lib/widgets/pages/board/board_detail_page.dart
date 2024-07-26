@@ -8,11 +8,13 @@ import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/api/comment/comment_service.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
 import 'package:flutter_sport/models/comment/comment_collection.dart';
+import 'package:flutter_sport/widgets/pages/board/edit_board_page.dart';
 import 'package:flutter_sport/widgets/pages/comment/comment_page.dart';
 import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
 
@@ -21,8 +23,9 @@ class BoardDetailWidget extends StatefulWidget {
   final int clubId;
   final int boardId;
   final Authority? authority;
+  final Function() boardListReload;
 
-  const BoardDetailWidget({super.key, required this.boardId, required this.clubId, this.authority});
+  const BoardDetailWidget({super.key, required this.boardId, required this.clubId, this.authority, required this.boardListReload});
 
   @override
   State<BoardDetailWidget> createState() => _BoardDetailWidgetState();
@@ -58,6 +61,11 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
     }
   }
 
+  _boardReload() async {
+    setBoardLoading(true);
+    await fetchImage();
+  }
+
   sendComment(String text) async {
     _commentController.text = '';
 
@@ -84,6 +92,27 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
   _handleContainerTap() {
     if (!_focusNode.hasFocus) {
       FocusScope.of(context).requestFocus(_focusNode);
+    }
+  }
+
+  tryDelete() {
+    Alert.confirmMessageTemplate(
+      context: context,
+      onPressedText: '삭제',
+      onPressed: () {
+        deleteBoard();
+      },
+      message: '댓글을 삭제하면 대댓글도 함께 삭제됩니다.\n삭제하시겠습니까?',
+    );
+  }
+
+  deleteBoard() async {
+    ResponseResult response = await BoardService.deleteBoard(clubId: widget.clubId, boardId: boardDetail.boardId);
+
+    if (response.resultCode == ResultCode.OK) {
+      Navigator.pop(context);
+      widget.boardListReload();
+      Alert.message(context: context, text: Text('게시글을 삭제했습니다.'));
     }
   }
 
@@ -127,7 +156,11 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
           scrolledUnderElevation: 0,
           actions: [
             GestureDetector(
-              onTap: () => showBottomActionSheet(context),
+              onTap: () {
+                showBottomActionSheet(context,
+
+                );
+              },
               child: Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: Icon(Icons.more_horiz_outlined,
@@ -202,12 +235,24 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                                 fontWeight: FontWeight.w600
                               ),
                             ),
-                            Text(DateTimeFormatter.formatDate(boardDetail.createDate),
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.tertiary,
-                                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
-                                fontWeight: FontWeight.w500
-                              ),
+                            Row(
+                              children: [
+                                Text(DateTimeFormatter.formatDate(boardDetail.createDate),
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.tertiary,
+                                    fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                                    fontWeight: FontWeight.w500
+                                  ),
+                                ),
+                                if (boardDetail.isUpdate)
+                                  Text(' · (수정됨)',
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.tertiary,
+                                      fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                                      fontWeight: FontWeight.w500
+                                    ),
+                                  ),
+                              ],
                             ),
                           ],
                         )
@@ -472,6 +517,67 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
       ),
     );
   }
+
+  void showBottomActionSheet(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: () {
+                // Chat 탭 처리
+                Navigator.of(context).pop();
+              },
+              child: const Text('게시글 신고하기',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return EditBoardWidget(clubId: widget.clubId, boardDetail: boardDetail, authority: widget.authority, reload: _boardReload);
+                    },
+                    fullscreenDialog: true
+                ));
+              },
+              child: Text('게시글 수정',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(context);
+                tryDelete();
+              },
+              child: Text('게시글 삭제',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('cancel').tr(),
+          ),
+        );
+      },
+    );
+  }
+
 }
 
 
@@ -591,22 +697,27 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
           const SliverToBoxAdapter(child: const SizedBox(height: 20,),),
 
           (_loading) ? const SliverToBoxAdapter(child: Center(child: CupertinoActivityIndicator(),),)
-            : (keys.isEmpty) ? const SliverToBoxAdapter(
-              child: Center(
-                  child: Column(
-                    children: [
-                      Icon(Icons.list_rounded,
-                        size: 80, color: Color(0xFF878181),
-                      ),
-                      Text('댓글을 달아주세요',
-                        style: TextStyle(
-                          color: Color(0xFF878181),
+            : (keys.isEmpty)
+              ? SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 150,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.list_rounded,
+                          size: 50, color: Theme.of(context).colorScheme.surfaceVariant,
                         ),
-                      ),
-                    ],
+                        Text('댓글을 달아주세요',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-            )
+              )
             : SliverList.builder(
                 itemCount: keys.length + (_hasMore ? 1 : 0),
                 itemBuilder: (context, index) {
@@ -633,57 +744,8 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
       ),
     );
   }
+
 }
 
-void showBottomActionSheet(BuildContext context) {
-  showCupertinoModalPopup(
-    context: context,
-    builder: (context) {
-      return CupertinoActionSheet(
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () {
-              // Chat 탭 처리
-              Navigator.of(context).pop();
-            },
-            child: const Text('게시글 신고하기',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
 
-            CupertinoActionSheetAction(
-              onPressed: () {
 
-              },
-              child: Text('게시글 수정',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          CupertinoActionSheetAction(
-              onPressed: () {
-
-              },
-              child: Text('게시글 삭제',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('cancel').tr(),
-        ),
-      );
-    },
-  );
-}

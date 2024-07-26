@@ -59,6 +59,8 @@ class _AppState extends State<App> {
     outline: Color(0xFFF1F1F5), // border outline 컬러
     outlineVariant: Color(0xFFD9D9D9), // border input outline 컬러
 
+    surfaceVariant: Color(0xFFD9D9D9), // List Empty Center 알림 문구 컬러
+
 
   );
 
@@ -79,6 +81,9 @@ class _AppState extends State<App> {
 
     outline: Color(0xFF26262A), // border outline 컬러
     outlineVariant: Color(0xFFD9D9D9), // border input outline 컬러
+
+    surfaceVariant: Color(0xFF3E3B3B), // List Empty Center 알림 문구 컬러
+
   );
 
   themeLight() {
@@ -98,7 +103,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    themeLight();
+    themeDark();
   }
 
   @override

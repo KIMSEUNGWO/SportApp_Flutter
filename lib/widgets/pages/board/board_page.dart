@@ -26,6 +26,10 @@ class BoardPageWidget extends StatelessWidget {
 
   BoardPageWidget({super.key, required this.boardMenus, required this.index, required this.onChange, required this.clubId, this.authority});
 
+  refresh() {
+    boardListKey.currentState?._fetchRefresh();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +87,13 @@ class BoardPageWidget extends StatelessWidget {
             ),
           ),
         ),
-        if (boardMenus[index] == BoardType.ALL) BoardNoticeWidget(key: noticeListKey, clubId: clubId),
+        if (boardMenus[index] == BoardType.ALL)
+          BoardNoticeWidget(
+            key: noticeListKey,
+            clubId: clubId,
+            authority: authority,
+            refresh: refresh
+          ),
         BoardListWidget(key: boardListKey, clubId: clubId, boardType: boardMenus[index], authority: authority),
         const SliverToBoxAdapter(child: SizedBox(height: 50,),)
       ],
@@ -94,8 +104,10 @@ class BoardPageWidget extends StatelessWidget {
 class BoardNoticeWidget extends StatefulWidget {
 
   final int clubId;
+  final Authority? authority;
+  final Function() refresh;
 
-  const BoardNoticeWidget({super.key, required this.clubId});
+  const BoardNoticeWidget({super.key, required this.clubId, this.authority, required this.refresh});
 
   @override
   State<BoardNoticeWidget> createState() => _BoardNoticeWidgetState();
@@ -157,34 +169,46 @@ class _BoardNoticeWidgetState extends State<BoardNoticeWidget> {
         },
         itemBuilder: (context, index) {
           Board board = _boards[index];
-          return Flex(
-            direction: Axis.horizontal,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(right: 3, top: 5, bottom: 5,),
-                decoration: const BoxDecoration(),
-                child: Text('[공지]',
-                  style: TextStyle(
-                      fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
-                      fontWeight: FontWeight.w600,
-                      // color: Color(0xFFF35353),
-                      color: Theme.of(context).colorScheme.onPrimary
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return BoardDetailWidget(
+                    clubId: widget.clubId,
+                    boardId: board.boardId,
+                    authority: widget.authority,
+                    boardListReload: widget.refresh
+                );
+              },));
+            },
+            child: Flex(
+              direction: Axis.horizontal,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(right: 3, top: 5, bottom: 5,),
+                  decoration: const BoxDecoration(),
+                  child: Text('[공지]',
+                    style: TextStyle(
+                        fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                        fontWeight: FontWeight.w600,
+                        // color: Color(0xFFF35353),
+                        color: Theme.of(context).colorScheme.onPrimary
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10, ),
-              Expanded(
-                flex: 3,
-                child: Text(board.content,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.primary
+                const SizedBox(width: 10, ),
+                Expanded(
+                  flex: 3,
+                  child: Text(board.content,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.primary
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -234,8 +258,10 @@ class _BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAli
   }
 
   _fetchRefresh() async {
-    _setInit();
-    await _fetchBoards();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      _setInit();
+      await _fetchBoards();
+    });
   }
 
   _fetchBoards() async {
@@ -279,16 +305,39 @@ class _BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAli
   Widget build(BuildContext context) {
     super.build(context);
     if (!_isDone) {
-      return SliverToBoxAdapter(
+      return const SliverFillRemaining(
         child: Center(
-          child: Text('게시글을 불러오고 있습니다.'),
+          child: CupertinoActivityIndicator(),
+        ),
+      );
+    }
+    if (_boards.isEmpty) {
+      return SliverFillRemaining(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.dashboard_customize_rounded,
+                size: 40,
+                color: Theme.of(context).colorScheme.surfaceVariant,
+              ),
+              SizedBox(height: 10,),
+              Text('등록된 게시물이 없습니다.',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }
     return SliverList.separated(
       separatorBuilder: (context, index) =>
           Container(
-            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             height: 1,
             decoration: BoxDecoration(
               // color: Color(0xFFE4DDDD),
@@ -301,7 +350,12 @@ class _BoardListWidgetState extends State<BoardListWidget> with AutomaticKeepAli
           _fetchBoards();
           return const Center(child: CupertinoActivityIndicator(),);
         }
-        return BoardWidget(clubId: widget.clubId, board: _boards[index], authority: widget.authority);
+        return BoardWidget(
+          clubId: widget.clubId,
+          board: _boards[index],
+          authority: widget.authority,
+          boardListReload: _fetchRefresh
+        );
       },
 
     );
@@ -318,15 +372,21 @@ class BoardWidget extends StatelessWidget {
   final Board board;
   final int clubId;
   final Authority? authority;
+  final Function() boardListReload;
 
-  const BoardWidget({super.key, required this.board, required this.clubId, this.authority});
+  const BoardWidget({super.key, required this.board, required this.clubId, this.authority, required this.boardListReload});
 
   @override
   Widget build(BuildContext context) {
       return GestureDetector(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return BoardDetailWidget(clubId: clubId, boardId: board.boardId, authority: authority);
+            return BoardDetailWidget(
+              clubId: clubId,
+              boardId: board.boardId,
+              authority: authority,
+              boardListReload: boardListReload
+            );
           },));
         },
         child: Container(

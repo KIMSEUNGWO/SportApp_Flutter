@@ -27,7 +27,6 @@ class GroupDetailHomeWidget extends ConsumerStatefulWidget {
 
 class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> with AutomaticKeepAliveClientMixin {
 
-  List<ClubUser> _userList = [];
   bool joinBtnDisabled = false;
 
   bool login() {
@@ -160,7 +159,6 @@ class _GroupDetailHomeWidgetState extends ConsumerState<GroupDetailHomeWidget> w
                     context: context,
                     onPressedText: '참여',
                     onPressed: () {
-                      Navigator.pop(context);
                       joinClub();
                     },
                     message: '이 모임에 참여하시나요?'

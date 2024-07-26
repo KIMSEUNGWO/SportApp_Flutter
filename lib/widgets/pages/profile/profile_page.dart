@@ -116,7 +116,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
                               onPressedText: '로그아웃',
                               onPressed: () {
                                 ref.watch(loginProvider.notifier).logout();
-                                Navigator.pop(context);
                               },
                               message: '로그아웃 하시겠습니까?');
                           },

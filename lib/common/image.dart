@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sport/models/upload_image.dart';
+import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -86,7 +86,7 @@ class ImagePick {
     }
   }
 
-  Future<List<UploadImage>> getMulti() async {
+  Future<List<BoardImage>> getMulti() async {
     final status = await _getPermission();
     if (status.isGranted) {
       List<XFile> images = await _pickMultiImage();
@@ -96,8 +96,8 @@ class ImagePick {
     }
   }
 
-  UploadImage convert(XFile xFile) {
-    return UploadImage(xFile.path);
+  BoardImage convert(XFile xFile) {
+    return BoardImage.upload(xFile.path);
   }
 
   Future<CroppedFile?> getAndCrop(BuildContext context) async {

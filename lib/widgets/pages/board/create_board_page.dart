@@ -9,9 +9,9 @@ import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/image.dart';
+import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
-import 'package:flutter_sport/models/upload_image.dart';
 import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
 
 class CreateBoardWidget extends StatefulWidget {
@@ -28,7 +28,7 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
 
   late TextEditingController _titleController;
   late TextEditingController _contentController;
-  List<UploadImage> uploadImages = [];
+  List<BoardImage> uploadImages = [];
 
   String? _titleErrorText;
   String? _contentErrorText;
@@ -46,7 +46,7 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
   }
 
   selectImages() async {
-    List<UploadImage> images = await ImagePick().getMulti();
+    List<BoardImage> images = await ImagePick().getMulti();
     uploadImages.addAll(images);
     setState(() {});
   }
@@ -278,7 +278,7 @@ class _CreateBoardWidgetState extends State<CreateBoardWidget> {
                             itemCount: uploadImages.length,
                             itemBuilder: (context, index) {
 
-                              UploadImage uploadImage = uploadImages[index];
+                              BoardImage uploadImage = uploadImages[index];
                               return GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(

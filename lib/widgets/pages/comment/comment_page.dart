@@ -89,7 +89,6 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
         context: context,
         onPressedText: '삭제',
         onPressed: () {
-          Navigator.pop(context);
           deleteComment();
         },
         message: '댓글을 삭제하면 대댓글도 함께 삭제됩니다.\n삭제하시겠습니까?',

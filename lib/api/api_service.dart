@@ -105,7 +105,11 @@ static Future<ResponseResult> multipartList(String uri, {required MethodType met
 
     for (String key in data.keys) {
       if (data[key] == null) continue;
-      request.fields[key] = data[key];
+      if (data[key] is List) {
+        request.fields[key] = jsonEncode(data[key]);
+      } else {
+        request.fields[key] = data[key];
+      }
     }
 
     final response = await request.send();

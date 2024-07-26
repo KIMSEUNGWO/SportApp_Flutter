@@ -12,7 +12,6 @@ import 'package:flutter_sport/common/image.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
-import 'package:flutter_sport/models/upload_image.dart';
 import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
 
 class EditBoardWidget extends StatefulWidget {
@@ -20,8 +19,9 @@ class EditBoardWidget extends StatefulWidget {
   final int clubId;
   final BoardDetail boardDetail;
   final Authority? authority;
+  final Function() reload;
 
-  const EditBoardWidget({super.key, required this.clubId, required this.boardDetail, required this.authority});
+  const EditBoardWidget({super.key, required this.clubId, required this.boardDetail, required this.authority, required this.reload});
 
   @override
   State<EditBoardWidget> createState() => _EditBoardWidgetState();
@@ -31,7 +31,8 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
 
   late TextEditingController _titleController;
   late TextEditingController _contentController;
-  List<UploadImage> uploadImages = [];
+  List<BoardImage> uploadImages = [];
+  List<int> removeImages = [];
 
   String? _titleErrorText;
   String? _contentErrorText;
@@ -49,12 +50,20 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
   }
 
   selectImages() async {
-    List<UploadImage> images = await ImagePick().getMulti();
+    List<BoardImage> images = await ImagePick().getMulti();
+    _uploadImageUpdate(images);
+
+  }
+  _uploadImageUpdate(List<BoardImage> images) {
     uploadImages.addAll(images);
     setState(() {});
   }
 
   removeImage(int index) {
+    int? removeImageId = uploadImages[index].imageId;
+    if (removeImageId != null) {
+      removeImages.add(removeImageId);
+    }
     setState(() {
       uploadImages.removeAt(index);
     });
@@ -63,28 +72,27 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
   _submit() async {
     if (!_valid()) return;
 
-    ResponseResult result = await BoardService.createBoard(
+    ResponseResult result = await BoardService.editBoard(
       clubId: widget.clubId,
-      images: uploadImages,
-      boardType: boardType!,
+      boardId: widget.boardDetail.boardId,
+      images: uploadImages.where((uploadImage) => uploadImage.imageId == null).toList(),
+      removeImages: removeImages,
+      boardType: boardType,
       title: _titleController.text,
       content: _contentController.text,
     );
 
-    print(result.resultCode);
-
     if (result.resultCode == ResultCode.OK) {
       Navigator.pop(context);
+      widget.reload();
       Alert.message(
         context: context,
         text: Text('게시글이 수정되었습니다.'),
-        onPressed: () {
-        }
       );
     } else if (result.resultCode == ResultCode.CLUB_NOT_EXISTS) {
       Alert.message(
         context: context,
-        text: Text('존재하지 않는 모임이니다,'),
+        text: Text('존재하지 않는 모임입니다,'),
         onPressed: () {
           Navigator.pop(context);
         }
@@ -122,7 +130,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
     return true;
   }
   bool _categoryValid() {
-    if (boardType == null || boardType == BoardType.ALL) {
+    if (boardType == BoardType.ALL) {
       Alert.message(
         context: context,
         text: Text('카테고리를 선택해주세요.'),
@@ -167,18 +175,25 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
     return true;
   }
 
+
+  editInit() {
+    boardType = widget.boardDetail.boardType;
+
+    _titleController = TextEditingController();
+    _titleController.text = widget.boardDetail.title;
+    _contentController = TextEditingController();
+    _contentController.text = widget.boardDetail.content;
+
+    List<BoardImage> boardImages = widget.boardDetail.images;
+    _uploadImageUpdate(boardImages);
+  }
   @override
   void initState() {
     if (widget.authority == null) {
       Navigator.pop(context);
       Alert.message(context: context, text: Text('잘못된 접근입니다.'));
     }
-    _titleController = TextEditingController();
-    _contentController = TextEditingController();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      showBottomActionSheet(context, setBoardType, widget.authority!);
-    });
+    editInit();
     super.initState();
   }
 
@@ -196,7 +211,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text('글쓰기',
+        title: Text('게시글 수정',
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w600,
@@ -210,7 +225,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
             },
             child: Container(
               margin: const EdgeInsets.only(right: 20),
-              child: Text('등록',
+              child: Text('완료',
                 style: TextStyle(
                   fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
                   color: Theme.of(context).colorScheme.primary,
@@ -281,7 +296,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
                             itemCount: uploadImages.length,
                             itemBuilder: (context, index) {
 
-                              UploadImage uploadImage = uploadImages[index];
+                              BoardImage uploadImage = uploadImages[index];
                               return GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -302,7 +317,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
                                           width: 1,
                                         ),
                                       ),
-                                      child: uploadImage.image,
+                                      child: Image(image: uploadImage.image.image, fit: BoxFit.fill,),
                                     ),
 
                                     Positioned(
@@ -311,7 +326,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
                                         onTap: () {
                                           removeImage(index);
                                         },
-                                        child: Icon(Icons.cancel,),
+                                        child: const Icon(Icons.cancel,),
                                       ),
                                     ),
                                   ],
@@ -358,14 +373,13 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    if (boardType != null)
-                                      Text('groupBoardMenus',
+                                    Text('groupBoardMenus',
                                       style: TextStyle(
                                           fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                                           fontWeight: FontWeight.w500,
                                           color: Theme.of(context).colorScheme.primary
                                       ),
-                                    ).tr(gender: boardType!.lang),
+                                    ).tr(gender: boardType.lang),
                                     const SizedBox(width: 10,),
                                     const Icon(Icons.arrow_forward_ios, size: 20,)
                                   ],
@@ -377,19 +391,19 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
                         const SizedBox(height: 40,),
                         TextField(
                           controller: _titleController,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                 color: Color(0xFFD9D9D9),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                   color: Color(0xFFD9E7F6),
                                   width: 2
                               ),
@@ -403,14 +417,14 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
                             ),
                             focusedErrorBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                   color: Color(0xFFFA5252),
                                   width: 2
                               ),
                             ),
                             hintText: '제목을 입력해주세요.',
                             errorText: _titleErrorText,
-                            errorStyle: TextStyle(
+                            errorStyle: const TextStyle(
                               color: Color(0xFFFA5252),
                             ),
                           ),
