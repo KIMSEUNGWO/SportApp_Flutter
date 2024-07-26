@@ -5,12 +5,15 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
+import 'package:flutter_sport/api/error_handler/club_path_data.dart';
 import 'package:flutter_sport/api/method_type.dart';
 import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
+
+import 'package:go_router/go_router.dart';
 
 class BoardService {
 
@@ -26,12 +29,12 @@ class _BoardProvider {
 
   Future<ResponseResult> getBoardDetail({required int boardId, required int clubId}) async {
     final response = await ApiService.get(
-        uri: '/club/123/board/$boardId',
+        uri: '/club/$clubId/board/$boardId',
         header: {
           "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
         }
     );
-    boardError.defaultErrorHandle(response);
+    boardError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
   }
 
@@ -47,7 +50,7 @@ class _BoardProvider {
         multipartFilePathList: images.map((e) => e.path).toList(),
         data: body
     );
-    boardError.defaultErrorHandle(response);
+    boardError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
   }
 
@@ -57,7 +60,7 @@ class _BoardProvider {
           "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
         }
     );
-    boardError.defaultErrorHandle(response);
+    boardError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
   }
 
@@ -71,14 +74,14 @@ class _BoardProvider {
         'boardType' : boardType.name
       },
     );
-    boardError.defaultErrorHandle(response);
+    boardError.defaultErrorHandle(response, ClubPath(clubId: clubId));
     return response;
   }
 
   Future<ResponseResult> getBoards({required int clubId, required int page, required int size, required String? boardType}) async {
     final response = await ApiService.get(uri: '/club/$clubId/board?boardType=$boardType&page=$page&size=$size');
 
-    boardError.defaultErrorHandle(response);
+    boardError.defaultErrorHandle(response, ClubPath(clubId: clubId));
     return response;
   }
 
@@ -89,16 +92,19 @@ class BoardError extends ClubError {
   BoardError(super.context);
 
   @override
-  bool defaultErrorHandle(ResponseResult response) {
-    if (!super.defaultErrorHandle(response)) {
+  bool defaultErrorHandle(ResponseResult response, ClubPath clubPath) {
+    if (!super.defaultErrorHandle(response, clubPath)) {
       return false;
     }
 
     if (context.mounted) {
       ResultCode resultCode = response.resultCode;
       if (resultCode == ResultCode.BOARD_NOT_EXISTS) {
-        Navigator.pop(context);
-        Alert.message(context: context, text: Text('삭제된 게시글입니다.'));
+        Alert.message(context: context, text: Text('삭제된 게시글입니다.'),
+          onPressed: () {
+            context.pop();
+          }
+        );
         return false;
       }
 

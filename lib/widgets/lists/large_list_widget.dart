@@ -1,9 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sport/common/navigator_helper.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 
 class LargeListWidget extends StatelessWidget {
 
@@ -41,7 +40,9 @@ class LargeListWidget extends StatelessWidget {
       extraWidget.add(extraInfo!);
     }
     return GestureDetector(
-      onTap: () => NavigatorHelper.push(context, GroupDetailWidget(id: id,)),
+      onTap: () {
+        context.push('/club/$id');
+      },
       child: SizedBox(
         width: 210,
         child: Column(

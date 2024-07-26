@@ -6,6 +6,7 @@ import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart'
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 
 class SmallListWidget extends StatelessWidget {
@@ -35,7 +36,9 @@ class SmallListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => NavigatorHelper.push(context, GroupDetailWidget(id: id,)),
+      onTap: () {
+        context.push('/club/$id');
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 15),
         child: Row(

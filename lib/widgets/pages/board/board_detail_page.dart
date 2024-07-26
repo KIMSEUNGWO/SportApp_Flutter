@@ -628,7 +628,7 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
   }
 
   _fetchPageable({required bool reload}) async {
-    ResponseResult result = await CommentService.of(context).getComments(
+    ResponseResult result = await CommentService.of(context) .getComments(
         clubId: widget.clubId,
         boardId: widget.boardDetail.boardId,
         start: comments.size(),

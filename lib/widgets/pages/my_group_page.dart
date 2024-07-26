@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
-import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
 import 'package:flutter_sport/widgets/pages/create_group_page.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 
 class MyGroupPage extends ConsumerStatefulWidget {
 
@@ -91,7 +90,7 @@ class _MyGroupPageState extends ConsumerState<MyGroupPage> with AutomaticKeepAli
                       if (club.sport != null && club.region != null) {
                         return GestureDetector(
                           onTap: () {
-                            NavigatorHelper.push(context, GroupDetailWidget(id: club.id));
+                            context.push('/club/${club.id}');
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),

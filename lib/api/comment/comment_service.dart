@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
+import 'package:flutter_sport/api/error_handler/club_path_data.dart';
 import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/secure_strage.dart';
@@ -29,7 +30,7 @@ class _CommentProvider {
           "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
         }
     );
-    commentError.defaultErrorHandle(response);
+    commentError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
   }
 
@@ -45,7 +46,7 @@ class _CommentProvider {
         },
         body: jsonEncode(body)
     );
-    commentError.defaultErrorHandle(response);
+    commentError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
   }
 
@@ -59,7 +60,7 @@ class _CommentProvider {
           "comment" : comment
         })
     );
-    commentError.defaultErrorHandle(response);
+    commentError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId, commentId: commentId));
     return response;
   }
 
@@ -71,7 +72,7 @@ class _CommentProvider {
       },
     );
 
-    commentError.defaultErrorHandle(response);
+    commentError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId, commentId: commentId));
     return response;
   }
 
@@ -82,14 +83,13 @@ class CommentError extends BoardError {
   CommentError(super.context);
 
   @override
-  bool defaultErrorHandle(ResponseResult response) {
-    if (!super.defaultErrorHandle(response)) {
+  bool defaultErrorHandle(ResponseResult response, ClubPath clubPath) {
+    if (!super.defaultErrorHandle(response, clubPath)) {
       return false;
     }
 
     if (context.mounted) {
       if (response.resultCode == ResultCode.NOT_EXISTS_COMMENT) {
-        Navigator.pop(context);
         Alert.message(context: context, text: Text('삭제된 댓글입니다.'));
         return false;
       }

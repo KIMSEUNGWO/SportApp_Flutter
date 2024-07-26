@@ -11,6 +11,8 @@ import 'package:flutter_sport/widgets/notification/notifications_widget.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
 
+import 'package:go_router/go_router.dart';
+
 class CustomSliverAppBar extends StatelessWidget {
   const CustomSliverAppBar({
     super.key,
@@ -74,7 +76,10 @@ class CustomSliverAppBar extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: IconButton(
-                  onPressed: () => NavigatorHelper.push(context, const NotificationsWidget()),
+                  onPressed: () {
+                    context.push('/search');
+                    // NavigatorHelper.push(context, const NotificationsWidget());
+                  },
                   icon: const Icon(Icons.notifications_none, size: 30,),
                 ),
               );

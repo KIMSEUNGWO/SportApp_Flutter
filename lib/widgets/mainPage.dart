@@ -10,6 +10,7 @@ import 'package:flutter_sport/widgets/pages/search_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class Main extends ConsumerStatefulWidget {
 
@@ -78,7 +79,9 @@ class _MainState extends ConsumerState<Main> {
               ),
               BottomNavigator(
                 title: 'search', icon: Icons.search,
-                callback: () => NavigatorHelper.push(context, const SearchPage()),
+                callback: () {
+                  context.push('/search');
+                },
                 isPressed: _currentIndex == 1,
               ),
               BottomNavigator(

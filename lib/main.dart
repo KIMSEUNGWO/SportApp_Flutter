@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sport/models/club/authority.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
+import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/initPage.dart';
 
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sport/widgets/mainPage.dart';
+import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
+import 'package:flutter_sport/widgets/pages/groupdetails/group_detail_page.dart';
+import 'package:flutter_sport/widgets/pages/profile/profile_page.dart';
+import 'package:flutter_sport/widgets/pages/search_page.dart';
+import 'package:go_router/go_router.dart';
 
 void main() async {
   const String channelId = '2005763087';
@@ -25,14 +34,14 @@ void main() async {
   );
 }
 
-class App extends StatefulWidget {
+class App extends ConsumerStatefulWidget {
   const App({super.key});
 
   @override
-  State<App> createState() => _AppState();
+  ConsumerState<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends ConsumerState<App> {
 
   late ColorScheme currentColorScheme;
   late Color currentCardColor;
@@ -99,21 +108,102 @@ class _AppState extends State<App> {
       currentCardColor = darkCardColor;
     });
   }
+  init() async {
+    await ref.read(loginProvider.notifier).readUser();
+    await ref.read(regionProvider.notifier).init();
+  }
 
   @override
   void initState() {
     super.initState();
+    init();
     themeDark();
   }
 
   @override
   Widget build(BuildContext context) {
+    final _router = GoRouter(
+      initialLocation: "/",
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => Main(themeLight: themeLight, themeDark: themeDark),
+        ),
+        GoRoute(
+          path: '/search',
+          builder: (context, state) => const SearchPage(),
+        ),
+        GoRoute(
+          path: '/club/:clubId',
+          builder: (context, state) {
+            final String clubId = state.pathParameters['clubId']!;
+            return GroupDetailWidget(id: int.parse(clubId));
+          },
+          routes: [
+            GoRoute(
+              path: 'board/:boardId',
+              builder: (context, state) {
+                final String clubId = state.pathParameters['clubId']!;
+                final String boardId = state.pathParameters['boardId']!;
+                Map<String, dynamic> map = state.extra as Map<String, dynamic>;
+                return BoardDetailWidget(
+                    clubId: int.parse(clubId),
+                    boardId: int.parse(boardId),
+                    authority: map['authority'],
+                    boardListReload: map['reload']
+                );
+              },
 
+            ),
+          ]
+
+        )
+      ],
+    );
+    return MaterialApp.router(
+      routerConfig: _router,
+    // routeInformaterProvider : 라우트 상태를 전달해주는 함수
+    // routeInformationParser: URI String을 상태 및 GoRouter에서 사용할 수 있는 형태로 변환해주는 함수
+    // routerDelegate: routeInformationParser에서 변환된 값을 어떤 라우트로 보여줄 지 정하는 함수
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      theme: ThemeData(
+        fontFamily: 'Pretendard',
+        colorScheme: currentColorScheme,
+        cardColor: currentCardColor,
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            fontSize: 21,
+          ),
+          displayMedium: TextStyle(
+            fontSize: 17,
+          ),
+          displaySmall: TextStyle(
+            fontSize: 13,
+          ),
+
+          bodyLarge: TextStyle(
+              fontSize: 18
+          ),
+          bodyMedium: TextStyle(
+              fontSize: 16
+          ),
+          bodySmall: TextStyle(
+            fontSize: 14,
+          ),
+        ),
+
+      ),
+    );
     return MaterialApp(
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: InitPage(themeLight: themeLight, themeDark: themeDark),
+      initialRoute: '/',
+      routes: {
+        '/' : (c) => Main(themeLight: themeLight, themeDark: themeDark),
+      },
       theme: ThemeData(
         fontFamily: 'Pretendard',
         colorScheme: currentColorScheme,

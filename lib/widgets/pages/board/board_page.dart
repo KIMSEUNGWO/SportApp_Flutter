@@ -14,6 +14,7 @@ import 'package:flutter_sport/widgets/lists/board_notice_widget.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 
 class BoardPageWidget extends StatefulWidget {
 
@@ -120,12 +121,12 @@ class BoardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
       return GestureDetector(
         onTap: () {
-          NavigatorHelper.push(context, BoardDetailWidget(
-              clubId: clubId,
-              boardId: board.boardId,
-              authority: authority,
-              boardListReload: boardListReload
-          ));
+          context.push('/club/$clubId/board/${board.boardId}',
+            extra: {
+              'authority' : authority,
+              'reload' : boardListReload
+            }
+          );
         },
         child: Container(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
