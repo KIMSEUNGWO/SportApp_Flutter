@@ -126,12 +126,13 @@ class BoardWidget extends ConsumerWidget {
         onTap: () {
           final hasLogin = ref.read(loginProvider.notifier).has();
           if (hasLogin) {
-            context.push('/club/$clubId/board/${board.boardId}',
-              extra: {
-                'authority' : authority,
-                'reload' : boardListReload
-              }
-            );
+            NavigatorHelper.push(context, BoardDetailWidget(boardId: board.boardId, clubId: clubId, boardListReload: boardListReload));
+            // context.push('/club/$clubId/board/${board.boardId}',
+            //   extra: {
+            //     'authority' : authority,
+            //     'reload' : boardListReload
+            //   }
+            // );
           } else {
             Alert.message(context: context, text: Text('참여한 회원만 열람할 수 있습니다.'));
           }

@@ -38,8 +38,6 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
   final GlobalKey<_CommentPageWidgetState> _globalKey = GlobalKey<_CommentPageWidgetState>();
   late TextEditingController _commentController;
   final FocusNode _focusNode = FocusNode();
-  bool _isVisible = false;
-  bool _allVisible = true;
   Comment? _reply;
 
   late BoardDetail boardDetail;
@@ -86,11 +84,8 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
     setState(() {
       _reply = comment;
     });
-  }
-
-  setAllVisible(bool data) {
-    setState(() {
-      _allVisible = data;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _handleContainerTap();
     });
   }
 
@@ -128,21 +123,13 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
   _initFocus() {
     FocusManager.instance.primaryFocus?.unfocus();
     _commentController.text = '';
-    setState(() {
-      _isVisible = false;
-      _reply = null;
-    });
+
   }
 
   @override
   void initState() {
     _commentController = TextEditingController();
     fetchBoardDetail();
-    _focusNode.addListener(() {
-      setState(() {
-        _isVisible = _focusNode.hasFocus;
-      });
-    });
     super.initState();
   }
 
@@ -346,7 +333,6 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                   handleTap: _handleContainerTap,
                   setReply: setReply,
                   authority: widget.authority,
-                  setAllVisible: setAllVisible,
                 ),
 
                 SliverToBoxAdapter(
@@ -365,112 +351,69 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
           ),
 
-        bottomNavigationBar: (!_allVisible) ? null :
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Visibility(
-              visible: !_isVisible,
-              child: SafeArea(
-                child: Container(
-                  height: 50,
-                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  padding: const EdgeInsets.symmetric(vertical: 5),
+        bottomNavigationBar: SafeArea(
+          bottom: keyboardHeight <= 50,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (_reply != null)
+                Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.image_outlined, size: 30, color: Theme.of(context).colorScheme.secondary,),
-                      const SizedBox(width: 10,),
-                      // Icon(Icons.location_on_outlined, size: 30, color: Theme.of(context).colorScheme.secondary,),
-                      // const SizedBox(width: 15,),
+                      Container(
+                          width: 30, height: 30,
+                          margin: const EdgeInsets.only(right: 10),
+                          clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: boardDetail.thumbnailUser ??
+                              const Center(
+                                  child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
+                              )
+                      ),
+                      const SizedBox(width: 15,),
                       Expanded(
-                        child: GestureDetector(
-                          onTap: _handleContainerTap,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Theme.of(context).colorScheme.outline
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('댓글을 입력해주세요.',
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.tertiary,
-                                  fontWeight: FontWeight.w500,
-
-                                ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(_reply!.nickname,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
                               ),
                             ),
-                          ),
+                            Text(_reply!.content,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                overflow: TextOverflow.ellipsis
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(width: 15,),
+                      GestureDetector(
+                        onTap: () {
+                          setReply(null);
+                        },
+                        child: Icon(Icons.close,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       )
                     ],
                   ),
-                )
-
-              ),
-            ),
-            if (_reply != null)
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        width: 30, height: 30,
-                        margin: const EdgeInsets.only(right: 10),
-                        clipBehavior: Clip.hardEdge,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: boardDetail.thumbnailUser ??
-                            const Center(
-                                child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
-                            )
-                    ),
-                    const SizedBox(width: 15,),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(_reply!.nickname,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w500,
-                              fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
-                            ),
-                          ),
-                          Text(_reply!.content,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w500,
-                              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                              overflow: TextOverflow.ellipsis
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(width: 15,),
-                    GestureDetector(
-                      onTap: () {
-                        setReply(null);
-                      },
-                      child: Icon(Icons.close,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    )
-                  ],
                 ),
-              ),
-            AnimatedOpacity(
-              opacity: _isVisible ? 1 : 0,
-              duration: const Duration(milliseconds: 500),
-              child: Container(
-                height: _isVisible ? null : 0,
+              Container(
+                height: 50,
                 margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
@@ -517,8 +460,8 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -585,7 +528,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
 
 class CommentPageWidget extends StatefulWidget {
-  const CommentPageWidget({super.key, required this.boardDetail, required this.clubId, required this.handleTap, required this.setReply, this.authority, required this.setAllVisible,});
+  const CommentPageWidget({super.key, required this.boardDetail, required this.clubId, required this.handleTap, required this.setReply, this.authority,});
 
   final BoardDetail boardDetail;
   final int clubId;
@@ -593,7 +536,6 @@ class CommentPageWidget extends StatefulWidget {
 
   final Function() handleTap;
   final Function(Comment) setReply;
-  final Function(bool data) setAllVisible;
 
 
   @override
@@ -739,7 +681,6 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
                     clubId: widget.clubId,
                     boardId: widget.boardDetail.boardId,
                     reload: reload,
-                    setAllVisible: widget.setAllVisible
                   );
                 },
             )

@@ -14,12 +14,12 @@ import 'package:flutter_sport/notifiers/login_notifier.dart';
 
 
 class CommentWidget extends ConsumerStatefulWidget {
-  CommentWidget({
+  const CommentWidget({
     super.key,
     required this.comment,
     this.handleTap,
     this.setReply,
-    required this.replyList, this.authority, required this.clubId, required this.boardId, required this.setAllVisible, required this.reload,
+    required this.replyList, this.authority, required this.clubId, required this.boardId, required this.reload,
   });
 
   final int clubId;
@@ -31,7 +31,6 @@ class CommentWidget extends ConsumerStatefulWidget {
   final Function({required bool reload}) reload;
   final Function()? handleTap;
   final Function(Comment)? setReply;
-  final Function(bool data) setAllVisible;
 
   @override
   ConsumerState<CommentWidget> createState() => _CommentWidgetState();
@@ -233,7 +232,6 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                       const SizedBox(width: 20,),
                       GestureDetector(
                         onTap: () {
-                          widget.setAllVisible(true);
                           exitEdit();
                         },
                         child: Text('취소',
@@ -245,7 +243,6 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                       const SizedBox(width: 15,),
                       GestureDetector(
                         onTap: () {
-                          widget.setAllVisible(true);
                           editComment();
                         },
                         child: Text('수정',
@@ -263,7 +260,6 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
               if (widget.comment.parentCommentId == null)
                 GestureDetector(
                   onTap: () {
-                    widget.handleTap!();
                     widget.setReply!(widget.comment);
                   },
                   child: Text('답글쓰기',
@@ -283,7 +279,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                 itemCount: widget.replyList.length,
                 itemBuilder: (context, index) {
                   Comment reply = widget.replyList[index];
-                  return CommentWidget(comment: reply, replyList: [], clubId: widget.clubId, boardId: widget.boardId, reload: widget.reload, setAllVisible: widget.setAllVisible,);
+                  return CommentWidget(comment: reply, replyList: [], clubId: widget.clubId, boardId: widget.boardId, reload: widget.reload,);
                 },
               ),
 
@@ -318,7 +314,6 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
             ),
           ),
           onTap: () {
-            widget.setAllVisible(false);
             setEdit(widget.comment.content);
           },
         ),
