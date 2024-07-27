@@ -17,7 +17,6 @@ class LineAPI {
         accessToken: result.accessToken.value,
       );
 
-
     } on PlatformException catch(e) {
       print('LINE API : PlatformException !!!');
       print(e);

@@ -3,11 +3,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/lists/board_list_widget.dart';
 import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
 import 'package:flutter_sport/widgets/lists/board_notice_widget.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_sport/widgets/lists/board_notice_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BoardPageWidget extends StatefulWidget {
 
@@ -109,7 +112,7 @@ class BoardPageWidgetState extends State<BoardPageWidget> {
 }
 
 
-class BoardWidget extends StatelessWidget {
+class BoardWidget extends ConsumerWidget {
   final Board board;
   final int clubId;
   final Authority? authority;
@@ -118,15 +121,20 @@ class BoardWidget extends StatelessWidget {
   const BoardWidget({super.key, required this.board, required this.clubId, this.authority, required this.boardListReload});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
       return GestureDetector(
         onTap: () {
-          context.push('/club/$clubId/board/${board.boardId}',
-            extra: {
-              'authority' : authority,
-              'reload' : boardListReload
-            }
-          );
+          final hasLogin = ref.read(loginProvider.notifier).has();
+          if (hasLogin) {
+            context.push('/club/$clubId/board/${board.boardId}',
+              extra: {
+                'authority' : authority,
+                'reload' : boardListReload
+              }
+            );
+          } else {
+            Alert.message(context: context, text: Text('참여한 회원만 열람할 수 있습니다.'));
+          }
         },
         child: Container(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),

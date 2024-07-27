@@ -14,13 +14,13 @@ import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/models/user/club_member.dart';
+import 'package:flutter_sport/notifiers/reload_notifier.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ClubDetailHomeWidget extends ConsumerStatefulWidget {
 
   final ClubDetail club;
-  final Function() reloadClub;
-  const ClubDetailHomeWidget({super.key, required this.club, required this.reloadClub});
+  const ClubDetailHomeWidget({super.key, required this.club});
 
   @override
   ConsumerState<ClubDetailHomeWidget> createState() => _GroupDetailHomeWidgetState();
@@ -34,6 +34,10 @@ class _GroupDetailHomeWidgetState extends ConsumerState<ClubDetailHomeWidget> wi
     return LoginChecker.loginCheck(context, ref);
   }
 
+  reload() {
+    ref.read(reloadProvider.notifier).reload(ReloadType.CLUB_RELOAD);
+  }
+
   joinClub() async {
     joinDisabled(false);
     ResponseResult? result = await ClubService.of(context).joinClub(clubId: widget.club.id);
@@ -41,13 +45,21 @@ class _GroupDetailHomeWidgetState extends ConsumerState<ClubDetailHomeWidget> wi
     if (result.resultCode == ResultCode.OK) {
       Alert.message(context: context, text: Text('가입이 완료되었습니다.'),
         onPressed: () {
-          widget.reloadClub();
+          reload();
         }
       );
     } else if (result.resultCode == ResultCode.CLUB_JOIN_FULL) {
-      Alert.message(context: context, text: Text('모임이 가득 찼습니다.'));
+      Alert.message(context: context, text: Text('모임이 가득 찼습니다.'),
+        onPressed: () {
+          reload();
+        }
+      );
     } else if (result.resultCode == ResultCode.CLUB_ALREADY_JOINED) {
-      Alert.message(context: context, text: Text('이미 참여 중인 모임입니다.'));
+      Alert.message(context: context, text: Text('이미 참여 중인 모임입니다.'),
+        onPressed: () {
+          reload();
+        }
+      );
     } else if (result.resultCode == ResultCode.EXCEED_MAX_CLUB) {
       Alert.message(context: context, text: Text('참여할 수 있는 모임을 초과했습니다.'));
     }
@@ -76,7 +88,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<ClubDetailHomeWidget> wi
                 onRefresh: () async {
                   // 위로 새로고침
                   await Future.delayed(const Duration(seconds: 1));
-                  await widget.reloadClub();
+                  await reload();
                 },
               ),
               SliverToBoxAdapter(

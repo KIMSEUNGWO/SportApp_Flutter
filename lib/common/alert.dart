@@ -193,7 +193,6 @@ class Alert {
   );
 
   static void _pageMoveToLoginPage(BuildContext context) {
-    Navigator.pop(context); // Alert 닫음
     Navigator.push(context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => LoginPageWidget(),

@@ -100,11 +100,10 @@ class BoardError extends ClubError {
     if (context.mounted) {
       ResultCode resultCode = response.resultCode;
       if (resultCode == ResultCode.BOARD_NOT_EXISTS) {
-        Alert.message(context: context, text: Text('삭제된 게시글입니다.'),
-          onPressed: () {
-            context.pop();
-          }
-        );
+        Alert.message(context: context, text: Text('삭제된 게시글입니다.'), onPressed: () => context.pop());
+        return false;
+      } else if (resultCode == ResultCode.ACCESS_TOKEN_REQUIRE) {
+        Alert.message(context: context, text: Text('참여한 회원만 열람할 수 있습니다.'), onPressed: () => context.pop());
         return false;
       }
 
