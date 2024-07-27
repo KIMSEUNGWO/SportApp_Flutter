@@ -35,7 +35,6 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
       "nickname" : "asdfasdf"
     }),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -45,6 +44,14 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
           CustomScrollView(
             slivers: [
               const SliverPadding(padding: EdgeInsets.only(top: 30)),
+
+              // TODO 이전 모임도 함께 볼거지 선택하는 스위치 구현예정
+              SliverToBoxAdapter(
+                child: Center(
+                  child: IOSStyleToggleButton(),
+                ),
+              ),
+
               SliverList.builder(
                 itemCount: 3,
                 itemBuilder: (context, index) {
@@ -53,27 +60,79 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 10, bottom: 10),
-                        child: Text('2024-09-01 (화)',
+                        child: Text('2024-09-01 (화) 20:00 ~ 24:00',
                           style: TextStyle(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.primary,
                             fontSize: 16
                           ),
                         ),
                       ),
                       Container(
-                        height: 150,
+                        height: 130,
                         margin: const EdgeInsets.only(bottom: 10),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.background,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: Color(0xFFD7D7D7),
+                            color: const Color(0xFFD7D7D7),
                             width: 0.2
                           ),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(color: Color(0xFFE4E4E4), offset: Offset(4, 4), blurRadius: 10)
                           ]
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 110,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            const SizedBox(width: 15,),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('일정이름일정이름일정이름일정이름일정이름',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Theme.of(context).colorScheme.primary,
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                      Text('인천광역시 남동구 간석동 772',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Theme.of(context).colorScheme.secondary,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      userProfile(context, diameter: 20, image: null),
+                                      SizedBox(width: 10,),
+                                      Text('이름이름',
+                                        style: TextStyle(
+                                          color: Theme.of(context).colorScheme.secondary,
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       _JoinUsersWidget(users: testData),
@@ -189,5 +248,52 @@ class _OverlappingCircles extends StatelessWidget {
   }
 }
 
+
+class IOSStyleToggleButton extends StatefulWidget {
+  @override
+  _IOSStyleToggleButtonState createState() => _IOSStyleToggleButtonState();
+}
+
+class _IOSStyleToggleButtonState extends State<IOSStyleToggleButton> {
+  bool isToggled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isToggled = !isToggled;
+        });
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        width: 70,
+        height: 35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: isToggled ? Colors.green : Colors.grey,
+        ),
+        child: Stack(
+          children: [
+            AnimatedPositioned(
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeIn,
+              left: isToggled ? 35.0 : 0.0,
+              right: isToggled ? 0.0 : 35.0,
+              child: Container(
+                width: 35,
+                height: 35,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 
