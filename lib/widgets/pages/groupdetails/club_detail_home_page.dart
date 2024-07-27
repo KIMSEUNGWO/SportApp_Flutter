@@ -336,11 +336,11 @@ class ClubUserWidget extends StatelessWidget {
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(100),
             ),
-            child: clubUser.thumbnail ?? const Center(child: Icon(Icons.person, size: 30, color: const Color(0xFF878181),))
+            child: clubUser.user.thumbnailUser ?? const Center(child: Icon(Icons.person, size: 30, color: const Color(0xFF878181),))
           ),
           const SizedBox(width: 5,),
           Expanded(
-            child: Text(clubUser.nickname,
+            child: Text(clubUser.user.nickname,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: Theme.of(context).textTheme.displayMedium!.fontSize

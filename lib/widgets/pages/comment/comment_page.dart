@@ -122,7 +122,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
               borderRadius: BorderRadius.circular(100),
               color: Theme.of(context).colorScheme.surface,
             ),
-            child: widget.comment.profile ??
+            child: widget.comment.user.thumbnailUser ??
                 const Center(
                     child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
                 )
@@ -141,7 +141,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                       children: [
                         Row(
                           children: [
-                            Text(widget.comment.nickname,
+                            Text(widget.comment.user.nickname,
                               style: TextStyle(
                                   color: Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.w500,
@@ -194,7 +194,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                         borderRadius: BorderRadius.circular(10)
                       ),
                       itemBuilder: (BuildContext context) {
-                        return commentPopupList(context, ref, commentUserId: widget.comment.userId);
+                        return commentPopupList(context, ref, commentUserId: widget.comment.user.userId);
                       },
                     ),
                     // Icon(Icons.more_horiz_outlined,

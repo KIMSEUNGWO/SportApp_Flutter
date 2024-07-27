@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/uri_helper.dart';
+import 'package:flutter_sport/models/response_user.dart';
 
 class Comment {
 
@@ -11,9 +12,7 @@ class Comment {
   final DateTime createDate;
   bool isUpdate;
 
-  final int userId;
-  final String nickname;
-  final Image? profile;
+  final UserSimp user;
 
   Comment.fromJson(Map<String, dynamic> json):
     parentCommentId = json['parentCommentId'],
@@ -21,11 +20,7 @@ class Comment {
     content = json['content'],
     createDate = DateTime.parse(json['createDate']),
     isUpdate = json['update'],
-
-    userId = json['userId'],
-    nickname = json['nickname'],
-    profile = json['profile'] == null ? null
-      : ImageHelper.parseImage(imagePath: ImagePath.THUMBNAIL, imageType: ImageType.PROFILE, imageName: json['profile'], fit: BoxFit.contain);
+    user = UserSimp.fromJson(json['user']);
 
 
   // 동등성 재정의

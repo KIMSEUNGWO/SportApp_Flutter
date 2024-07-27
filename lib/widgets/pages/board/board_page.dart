@@ -158,12 +158,12 @@ class BoardWidget extends ConsumerWidget {
                             color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(100),
                           ),
-                          child: board.thumbnailUser ??
+                          child: board.user.thumbnailUser ??
                             const Center(
                                 child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
                             )
                       ),
-                      Text(board.nickname,
+                      Text(board.user.nickname,
                         style: TextStyle(
                             fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
                         ),

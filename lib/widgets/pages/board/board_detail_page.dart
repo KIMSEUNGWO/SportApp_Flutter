@@ -217,7 +217,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                               color: Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(100),
                             ),
-                            child: boardDetail.thumbnailUser ??
+                            child: boardDetail.user.thumbnailUser ??
                                 const Center(
                                     child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
                                 )
@@ -225,7 +225,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(boardDetail.nickname,
+                            Text(boardDetail.user.nickname,
                               style: TextStyle(
                                 fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                                 fontWeight: FontWeight.w600
@@ -370,7 +370,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                             color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(100),
                           ),
-                          child: boardDetail.thumbnailUser ??
+                          child: boardDetail.user.thumbnailUser ??
                               const Center(
                                   child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
                               )
@@ -380,7 +380,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(_reply!.nickname,
+                            Text(_reply!.user.nickname,
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.w500,

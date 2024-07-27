@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sport/api/uri_helper.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
+import 'package:flutter_sport/models/response_user.dart';
 
 class BoardDetail {
 
@@ -19,9 +20,7 @@ class BoardDetail {
 
   final int likeCount;
 
-  final int userId;
-  final Image? thumbnailUser;
-  final String nickname;
+  final UserSimp user;
 
   BoardDetail.fromJson(Map<String, dynamic> json):
     boardId = json['boardId'],
@@ -34,12 +33,7 @@ class BoardDetail {
         : List<BoardImage>.from(json['images'].map((image) => BoardImage.fromJson(image))),
     likeCount = json['likeCount'],
     createDate = DateTime.parse(json['createDate']),
-
-    userId = json['userId'],
-    thumbnailUser = json['thumbnailUser'] != null
-        ? ImageHelper.parseImage(imagePath: ImagePath.THUMBNAIL, imageType: ImageType.PROFILE, imageName: json['thumbnailUser'], fit: BoxFit.fill,)
-        : null,
-    nickname = json['nickname'];
+    user = UserSimp.fromJson(json['user']);
 }
 
 class BoardImage {
