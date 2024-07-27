@@ -5,7 +5,6 @@ import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';
-import 'package:flutter_sport/notifiers/reload_notifier.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_board_page.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_chat_page.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_home_page.dart';
@@ -67,7 +66,7 @@ class _GroupDetailWidgetState extends ConsumerState<ClubDetailWidget> with Singl
       isLoading = false;
     });
     tabList = {
-      Tab(text: 'groupMenus'.tr(gender: 'home')) : ClubDetailHomeWidget(club : club!),
+      Tab(text: 'groupMenus'.tr(gender: 'home')) : ClubDetailHomeWidget(club : club!, reloadClub: readClub),
       Tab(text: 'groupMenus'.tr(gender: 'board')) : ClubDetailBoardWidget(club : club!, authority: club!.authority),
       Tab(text: 'groupMenus'.tr(gender: 'group')) : ClubDetailMeetingWidget(club : club!),
       Tab(text: 'groupMenus'.tr(gender: 'chat')) : ClubDetailChatWidget(club : club!)
@@ -87,14 +86,12 @@ class _GroupDetailWidgetState extends ConsumerState<ClubDetailWidget> with Singl
       vsync: this,
       initialIndex: 0
     );
-    ref.read(reloadProvider.notifier).setReload(reloadType: ReloadType.CLUB_RELOAD, reload: readClub);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
-    ref.read(reloadProvider.notifier).remove(ReloadType.CLUB_RELOAD);
   }
 
   @override
@@ -105,7 +102,6 @@ class _GroupDetailWidgetState extends ConsumerState<ClubDetailWidget> with Singl
           Scaffold(
             appBar: AppBar(
               backgroundColor: Theme.of(context).colorScheme.background,
-              scrolledUnderElevation: 0,
               actions: const [
                 Padding(
                   padding: EdgeInsets.only(right: 15),
