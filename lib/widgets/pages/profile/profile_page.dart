@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
+import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/profile/language_settings.dart';
@@ -153,7 +154,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
                   child: Stack(
                       children: [
                         (profile.image == null)
-                            ? EmptyProfileImage()
+                            ? EmptyProfileImage(context)
                             : Container(
                                 width: 100, height: 100,
                                 decoration: BoxDecoration(
@@ -241,7 +242,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
       child: Row(
         children: [
-          EmptyProfileImage(),
+          EmptyProfileImage(context),
           const SizedBox(width: 20,),
           GestureDetector(
             onTap: () {
@@ -271,16 +272,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
   bool get wantKeepAlive => true;
 }
 
-Container EmptyProfileImage() {
-  return Container(
-    width: 100, height: 100,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(100),
-      color: Color(0xFFB1ACAC),
-    ),
-    clipBehavior: Clip.hardEdge,
-    child: Icon(Icons.person, size: 100, color: Color(0xFF979696),),
-  );
+Widget EmptyProfileImage(BuildContext context) {
+  return userProfile(context, diameter: 100, image: null);
 }
 
 

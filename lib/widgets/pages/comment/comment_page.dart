@@ -10,6 +10,7 @@ import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 
 
@@ -115,18 +116,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-            width: 35, height: 35,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Theme.of(context).colorScheme.surface,
-            ),
-            child: widget.comment.user.thumbnailUser ??
-                const Center(
-                    child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
-                )
-        ),
+        userProfile(context, diameter: 35, image: widget.comment.user.thumbnailUser),
         const SizedBox(width: 15,),
         Expanded(
           child: Column (

@@ -9,6 +9,7 @@ import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
+import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/lists/board_list_widget.dart';
 import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
@@ -150,19 +151,8 @@ class BoardWidget extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Container(
-                          width: 25, height: 25,
-                          margin: const EdgeInsets.only(right: 10),
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: board.user.thumbnailUser ??
-                            const Center(
-                                child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
-                            )
-                      ),
+                      userProfile(context, diameter: 25, image: board.user.thumbnailUser),
+                      const SizedBox(width: 10,),
                       Text(board.user.nickname,
                         style: TextStyle(
                             fontSize: Theme.of(context).textTheme.bodySmall!.fontSize

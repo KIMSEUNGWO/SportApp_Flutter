@@ -13,6 +13,7 @@ import 'package:flutter_sport/models/club/club_data.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/models/user/club_member.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -328,17 +329,8 @@ class ClubUserWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            width: 40, height: 40,
-            margin: const EdgeInsets.only(right: 10),
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: clubUser.user.thumbnailUser ?? const Center(child: Icon(Icons.person, size: 30, color: const Color(0xFF878181),))
-          ),
-          const SizedBox(width: 5,),
+          userProfile(context, diameter: 40, image: clubUser.user.thumbnailUser),
+          const SizedBox(width: 15,),
           Expanded(
             child: Text(clubUser.user.nickname,
               style: TextStyle(

@@ -16,6 +16,7 @@ import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
 import 'package:flutter_sport/models/comment/comment_collection.dart';
+import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/widgets/pages/board/edit_board_page.dart';
 import 'package:flutter_sport/widgets/pages/comment/comment_page.dart';
 import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
@@ -209,19 +210,8 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                   sliver: SliverToBoxAdapter(
                     child: Row(
                       children: [
-                        Container(
-                            width: 40, height: 40,
-                            margin: const EdgeInsets.only(right: 10),
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: boardDetail.user.thumbnailUser ??
-                                const Center(
-                                    child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
-                                )
-                        ),
+                        userProfile(context, diameter: 40, image: boardDetail.user.thumbnailUser),
+                        const SizedBox(width: 10,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -362,20 +352,8 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                          width: 30, height: 30,
-                          margin: const EdgeInsets.only(right: 10),
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: boardDetail.user.thumbnailUser ??
-                              const Center(
-                                  child: Icon(Icons.person, size: 20, color: const Color(0xFF878181),)
-                              )
-                      ),
-                      const SizedBox(width: 15,),
+                      userProfile(context, diameter: 30, image: boardDetail.user.thumbnailUser),
+                      const SizedBox(width: 25,),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

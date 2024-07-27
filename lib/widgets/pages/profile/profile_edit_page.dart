@@ -147,32 +147,32 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                         selectImage();
                       },
                       child: Stack(
-                          children: [
-                            (editImage == null)
-                                ? EmptyProfileImage()
-                                : Container(
-                                width: 100, height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                                child: editImage
+                        children: [
+                          (editImage == null)
+                            ? EmptyProfileImage(context)
+                            : Container(
+                            width: 100, height: 100,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
                             ),
-                            Positioned(
-                              bottom: 0, right: 0,
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: Colors.black,
-                                ),
-                                child: Icon(Icons.camera_alt,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
+                            clipBehavior: Clip.hardEdge,
+                            child: editImage
+                          ),
+                          Positioned(
+                            bottom: 0, right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.black,
+                              ),
+                              child: const Icon(Icons.camera_alt,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
-                          ]
+                          ),
+                        ]
                       ),
                     ),
                     SizedBox(

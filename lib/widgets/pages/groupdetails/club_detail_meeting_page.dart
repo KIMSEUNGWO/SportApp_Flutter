@@ -8,6 +8,8 @@ import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/main.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
+import 'package:flutter_sport/models/common/user_profile.dart';
+import 'package:flutter_sport/models/response_user.dart';
 
 class ClubDetailMeetingWidget extends StatefulWidget {
 
@@ -21,6 +23,18 @@ class ClubDetailMeetingWidget extends StatefulWidget {
 
 class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with AutomaticKeepAliveClientMixin {
 
+  final List<UserSimp> testData = [
+    UserSimp.fromJson({
+      "userId" : 1,
+      "thumbnailUser" : null,
+      "nickname" : "asdfasdf"
+    }),
+    UserSimp.fromJson({
+      "userId" : 1,
+      "thumbnailUser" : null,
+      "nickname" : "asdfasdf"
+    }),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -62,15 +76,7 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
                           ]
                         ),
                       ),
-                      _JoinUsersWidget(images: [
-                        Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                        Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                        Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                        Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                        Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                        Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                        Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
-                      ]),
+                      _JoinUsersWidget(users: testData),
                       const SizedBox(height: 40,),
                     ],
                   );
@@ -129,22 +135,22 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
 
 class _JoinUsersWidget extends StatelessWidget {
 
-  final List<Image> images;
+  final List<UserSimp> users;
   final int maxCount = 5;
 
-  const _JoinUsersWidget({super.key, required this.images});
+  const _JoinUsersWidget({super.key, required this.users});
 
   maxLength() {
-    return min(images.length, maxCount);
+    return min(users.length, maxCount);
   }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _OverlappingCircles(images: images.sublist(0, maxLength())),
+        _OverlappingCircles(users: users.sublist(0, maxLength())),
         const SizedBox(width: 10,),
-        Text('${images.length}명 참여',
+        Text('${users.length}명 참여',
           style: TextStyle(
             color: Theme.of(context).colorScheme.tertiary,
             fontWeight: FontWeight.w500
@@ -157,36 +163,26 @@ class _JoinUsersWidget extends StatelessWidget {
 
 class _OverlappingCircles extends StatelessWidget {
 
-  final List<Image> images;
+  final List<UserSimp> users;
   final double circleDiameter = 35.0;
   final double overlapPercentage = 0.5;
 
-  const _OverlappingCircles({super.key, required this.images});
+  const _OverlappingCircles({super.key, required this.users});
 
   @override
   Widget build(BuildContext context) {
+    if (users.isEmpty) return SizedBox(height: circleDiameter,);
     final double overlapAmount = circleDiameter * overlapPercentage;
 
     return SizedBox(
-      width: circleDiameter + (images.length - 1) * (circleDiameter - overlapAmount),
+      width: circleDiameter + max(users.length - 1, 0) * (circleDiameter - overlapAmount),
       height: circleDiameter,
       child: Stack(
-        children: List.generate(images.length, (index) =>
-            Positioned(
-              left: index * (circleDiameter - overlapAmount),
-              child: Container(
-                width: circleDiameter, height: circleDiameter,
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
-                    color: Color(0xFFD7D7D7),
-                    width: 0.1
-                  )
-                ),
-                child: images[index],
-              ),
-            ),
+        children: List.generate(users.length, (index) =>
+          Positioned(
+            left: index * (circleDiameter - overlapAmount),
+            child: userProfile(context, diameter: circleDiameter, image: users[index].thumbnailUser)
+          ),
         ),
       ),
     );
