@@ -124,21 +124,24 @@ class _FindResultRegionWidgetState extends ConsumerState<FindResultRegionWidget>
         }
         Navigator.pop(context);
       },
-      child: Row(
-        children: [
-          Text(name,
-            style: TextStyle(
-              // fontSize: 16,
-              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize
+      child: Container(
+        decoration: const BoxDecoration(),
+        child: Row(
+          children: [
+            Text(name,
+              style: TextStyle(
+                // fontSize: 16,
+                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize
+              ),
             ),
-          ),
-          SizedBox(width: 10,),
-          Text(fullName,
-            style: TextStyle(
-              color: Color(0xFF6B656E),
+            const SizedBox(width: 10,),
+            Text(fullName,
+              style: const TextStyle(
+                color: Color(0xFF6B656E),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

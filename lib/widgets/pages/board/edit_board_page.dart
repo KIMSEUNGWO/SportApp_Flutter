@@ -20,7 +20,7 @@ class EditBoardWidget extends StatefulWidget {
 
   final int clubId;
   final BoardDetail boardDetail;
-  final Authority? authority;
+  final Authority authority;
   final Function() reload;
 
   const EditBoardWidget({super.key, required this.clubId, required this.boardDetail, required this.authority, required this.reload});
@@ -119,7 +119,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
   }
 
   bool _authorityValid() {
-    if (widget.authority == null) {
+    if (widget.authority == Authority.USER) {
       Alert.message(
           context: context,
           text: Text('모임장만 공지사항을 등록할 수 있습니다.'),
@@ -142,7 +142,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
       );
       return false;
     }
-    if (boardType == BoardType.NOTICE && !widget.authority!.isOwner()) {
+    if (boardType == BoardType.NOTICE && widget.authority.isOwner()) {
       Alert.message(
         context: context,
         text: Text('모임장만 공지사항을 등록할 수 있습니다.'),
@@ -191,10 +191,6 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
   }
   @override
   void initState() {
-    if (widget.authority == null) {
-      Navigator.pop(context);
-      Alert.message(context: context, text: Text('잘못된 접근입니다.'));
-    }
     editInit();
     super.initState();
   }
@@ -364,7 +360,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
 
                             GestureDetector(
                               onTap: () {
-                                showBottomActionSheet(context, setBoardType, widget.authority!);
+                                showBottomActionSheet(context, setBoardType, widget.authority);
                               },
                               child: Container(
                                 constraints: const BoxConstraints(minWidth: 150),

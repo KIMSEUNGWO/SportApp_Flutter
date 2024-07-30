@@ -97,7 +97,7 @@ class Alert {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
-                        fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                        fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

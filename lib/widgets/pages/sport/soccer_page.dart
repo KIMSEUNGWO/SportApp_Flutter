@@ -55,15 +55,15 @@ class SoccerPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text('mostActiveGroups',
                     style: TextStyle(
-                      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                      fontWeight: FontWeight.w500,
+                      fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                      fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.primary
                     ),
                   ).tr(),
                 ),
                 const SizedBox(height: 10,),
                 SizedBox(
-                  height: 200,
+                  height: 170,
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     scrollDirection: Axis.horizontal,
@@ -75,7 +75,7 @@ class SoccerPage extends ConsumerWidget {
                         image: Image.asset('assets/groupImages/sample1.jpeg', fit: BoxFit.fill,),
                         title: '모임제목모임제목모임제목모임제목모임제목모임제목',
                         region: '시부야구',
-                        personCount: 3,
+                        personCount: 300,
                         extraInfo: const Text('recentlyChat',
                           style: TextStyle(
                             color: Color(0xFFF34C4C),
@@ -98,15 +98,15 @@ class SoccerPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text('newGroups',
                     style: TextStyle(
-                      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                      fontWeight: FontWeight.w500,
+                      fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                      fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.primary
                     ),
                   ).tr(),
                 ),
                 const SizedBox(height: 10,),
                 SizedBox(
-                  height: 200,
+                  height: 170,
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     scrollDirection: Axis.horizontal,
@@ -140,8 +140,8 @@ class SoccerPage extends ConsumerWidget {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               child : Text('activateIn',
                 style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                  fontWeight: FontWeight.w500
+                  fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                  fontWeight: FontWeight.w600,
                 ),
               ).tr(args: [translationRegionTitle]),
             ),

@@ -46,11 +46,11 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
               const SliverPadding(padding: EdgeInsets.only(top: 30)),
 
               // TODO 이전 모임도 함께 볼거지 선택하는 스위치 구현예정
-              SliverToBoxAdapter(
-                child: Center(
-                  child: IOSStyleToggleButton(),
-                ),
-              ),
+              // SliverToBoxAdapter(
+              //   child: Center(
+              //     child: IOSStyleToggleButton(),
+              //   ),
+              // ),
 
               SliverList.builder(
                 itemCount: 3,

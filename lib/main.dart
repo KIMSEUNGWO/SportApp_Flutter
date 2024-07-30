@@ -217,13 +217,13 @@ class _AppState extends ConsumerState<App> {
           ),
 
           bodyLarge: TextStyle(
-            fontSize: 18
+            fontSize: 14
           ),
           bodyMedium: TextStyle(
-            fontSize: 16
+            fontSize: 12
           ),
           bodySmall: TextStyle(
-            fontSize: 14,
+            fontSize: 10,
           ),
         ),
 

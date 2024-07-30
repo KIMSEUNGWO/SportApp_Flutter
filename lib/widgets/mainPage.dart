@@ -60,21 +60,20 @@ class _MainState extends ConsumerState<Main> {
           ProfilePage(themeLight: widget.themeLight, themeDark: widget.themeDark),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Color(0xFFF1F1F5), width: 0.2)
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.only(top: 10),
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Color(0xFFF1F1F5), width: 0.2)
+            )
           ),
-        ),
-        child: BottomAppBar(
-          elevation: 0,
-          color: Theme.of(context).colorScheme.background,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               BottomNavigator(
-                title: 'home', icon: Icons.home,
+                title: 'home', icon: Icons.home_rounded,
                 callback: () => onChangePage(0), isPressed: _currentIndex == 0,
               ),
               BottomNavigator(
@@ -96,6 +95,43 @@ class _MainState extends ConsumerState<Main> {
           ),
         ),
       ),
+      // bottomNavigationBar: Container(
+      //   decoration: const BoxDecoration(
+      //     border: Border(
+      //       top: BorderSide(color: Color(0xFFF1F1F5), width: 0.2)
+      //     ),
+      //   ),
+      //   child: BottomAppBar(
+      //     elevation: 0,
+      //     // color: Theme.of(context).colorScheme.background,
+      //     color: Colors.green,
+      //     child: Row(
+      //       mainAxisSize: MainAxisSize.min,
+      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //       children: [
+      //         BottomNavigator(
+      //           title: 'home', icon: Icons.home,
+      //           callback: () => onChangePage(0), isPressed: _currentIndex == 0,
+      //         ),
+      //         BottomNavigator(
+      //           title: 'search', icon: Icons.search,
+      //           callback: () {
+      //             context.push('/search');
+      //           },
+      //           isPressed: _currentIndex == 1,
+      //         ),
+      //         BottomNavigator(
+      //           title: 'myGroups', icon: Icons.chat_bubble,
+      //           callback: () => onChangePage(2), isPressed: _currentIndex == 2,
+      //         ),
+      //         BottomNavigator(
+      //           title: 'profile', icon: Icons.person,
+      //           callback: () => onChangePage(3), isPressed: _currentIndex == 3,
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
 
     );
   }
@@ -125,20 +161,21 @@ class BottomNavigator extends StatelessWidget {
     return GestureDetector(
       onTap: callback,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon,
-            size: 35,
+            size: 28,
             color: isPressed
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.secondary,
+                : Theme.of(context).colorScheme.tertiary,
           ),
           Text('bottomAppBarMenus',
             style: TextStyle(
               color: isPressed
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.secondary,
+                : Theme.of(context).colorScheme.tertiary,
               fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
-              fontWeight: FontWeight.w500
+              fontWeight: FontWeight.w600
             ),
           ).tr(gender: title),
         ],

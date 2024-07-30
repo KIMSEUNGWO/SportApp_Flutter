@@ -29,7 +29,7 @@ class LargeListWidget extends StatelessWidget {
   TextStyle detailStyle (BuildContext context) {
     return TextStyle(
       color: Theme.of(context).colorScheme.secondary,
-      fontSize: 13,
+      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
     );
   }
   @override
@@ -47,12 +47,12 @@ class LargeListWidget extends StatelessWidget {
         NavigatorHelper.push(context, ClubDetailWidget(id: id));
       },
       child: SizedBox(
-        width: 210,
+        width: 170,
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              height: 130,
+              height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -66,7 +66,7 @@ class LargeListWidget extends StatelessWidget {
                 children: [
                   Text(title,
                     style: TextStyle(
-                      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                      fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,
                       overflow: TextOverflow.ellipsis,
@@ -77,6 +77,10 @@ class LargeListWidget extends StatelessWidget {
                     children: [
                       Text(region, style: detailStyle(context),),
                       dot(context),
+                      Icon(Icons.people_alt,
+                        size: 15,
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
                       Text('person', style: detailStyle(context),).tr(args: [personCount.toString()]),
                       ...extraWidget
                     ],

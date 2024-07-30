@@ -127,7 +127,7 @@ class BoardWidget extends ConsumerWidget {
         onTap: () {
           final hasLogin = ref.read(loginProvider.notifier).has();
           if (hasLogin) {
-            NavigatorHelper.push(context, BoardDetailWidget(boardId: board.boardId, clubId: clubId, boardListReload: boardListReload));
+            NavigatorHelper.push(context, BoardDetailWidget(boardId: board.boardId, clubId: clubId, boardListReload: boardListReload, authority: authority,));
             // context.push('/club/$clubId/board/${board.boardId}',
             //   extra: {
             //     'authority' : authority,

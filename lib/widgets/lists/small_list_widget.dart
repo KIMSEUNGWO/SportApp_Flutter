@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
+import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_page.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -45,19 +46,12 @@ class SmallListWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-                width: 65, height: 65,
-                margin: const EdgeInsets.only(right: 15),
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: image ?? Center(
-                    child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-                      width: 40, height: 40, color: const Color(0xFF878181),
-                    )
-                )
+            clubImage(context,
+              width: 55,
+              height: 55,
+              image: image,
+              margin: const EdgeInsets.only(right: 10),
+              circle: 10,
             ),
             Expanded(
               child: Container(
@@ -92,7 +86,7 @@ class SmallListWidget extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1.5),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Theme.of(context).colorScheme.secondaryContainer
@@ -100,7 +94,7 @@ class SmallListWidget extends StatelessWidget {
                           child: Text('sportTitle',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 12,
+                              fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                               fontWeight: FontWeight.w500,
                               letterSpacing: 1
                             ),
@@ -112,7 +106,7 @@ class SmallListWidget extends StatelessWidget {
                         ),
                         dot(context),
                         Icon(Icons.people_alt,
-                          size: 17,
+                          size: 15,
                           color: Theme.of(context).colorScheme.tertiary,
                         ),
                         Text('person'.tr(args: [personCount.toString()]),
@@ -134,7 +128,7 @@ class SmallListWidget extends StatelessWidget {
   TextStyle detailStyle(BuildContext context) {
     return TextStyle(
       color: Theme.of(context).colorScheme.tertiary,
-      fontSize: 12,
+      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
     );
   }
 

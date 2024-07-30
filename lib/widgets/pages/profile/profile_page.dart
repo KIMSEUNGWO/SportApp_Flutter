@@ -46,8 +46,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
               NavigatorHelper.push(context, SettingWidget(themeLight: widget.themeLight, themeDark: widget.themeDark));
             },
             child: Container(
-                margin: EdgeInsets.only(right: 20),
-                child: Icon(Icons.settings, size: 30,)
+                margin: const EdgeInsets.only(right: 20),
+                child: const Icon(Icons.settings, size: 25,)
             ),
           )
         ],
@@ -252,12 +252,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
               children: [
                 Text('goToLogin',
                   style: TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.w600
+                    fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                    fontWeight: FontWeight.w600
                   ),
                 ).tr(),
-                SizedBox(width: 5,),
-                Icon(Icons.arrow_forward_ios, size: 18,)
+                const SizedBox(width: 5,),
+                const Icon(Icons.arrow_forward_ios, size: 15,)
               ],
             ),
           ),
@@ -273,7 +273,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
 }
 
 Widget EmptyProfileImage(BuildContext context) {
-  return userProfile(context, diameter: 100, image: null);
+  return userProfile(context, diameter: 80, image: null);
 }
 
 

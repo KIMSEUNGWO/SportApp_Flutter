@@ -36,7 +36,7 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    final Color lineColor = const Color(0xFF06C755);
+    const Color lineColor = Color(0xFF06C755);
     return Stack(
       children: [
         Scaffold(

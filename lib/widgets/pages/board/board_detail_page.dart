@@ -25,6 +25,7 @@ class BoardDetailWidget extends StatefulWidget {
 
   final int clubId;
   final int boardId;
+  // TODO 여기에서 Authority가 null일 수가 있나? 확인하고 게시글 수정, 삭제 로직 다시 수정하자
   final Authority? authority;
   final Function() boardListReload;
 
@@ -467,7 +468,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
             CupertinoActionSheetAction(
               onPressed: () {
                 Navigator.pop(context);
-                NavigatorHelper.push(context, EditBoardWidget(clubId: widget.clubId, boardDetail: boardDetail, authority: widget.authority, reload: _boardReload),
+                NavigatorHelper.push(context, EditBoardWidget(clubId: widget.clubId, boardDetail: boardDetail, authority: widget.authority!, reload: _boardReload),
                   fullscreenDialog: true
                 );
               },
