@@ -32,10 +32,8 @@ class _ClubProvider {
 
   Future<ClubDetail?> clubData({required BuildContext context, required int clubId}) async {
     ResponseResult response = await ApiService.get(
-        uri: '/club/$clubId',
-        header : {
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
-        }
+      uri: '/club/$clubId',
+      authorization: true,
     );
     clubError.defaultErrorHandle(response, ClubPath(clubId: clubId));
     return ClubDetail.fromJson(response.data);
@@ -65,10 +63,8 @@ class _ClubProvider {
   Future<List<ClubSimp>> getMyClubs() async {
 
     ResponseResult response = await ApiService.get(
-        uri: '/user/clubs',
-        header: {
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
-        }
+      uri: '/user/clubs',
+      authorization: true,
     );
     clubError.defaultErrorHandle(response, ClubPath());
     return _getClubSimp(response);
@@ -77,9 +73,7 @@ class _ClubProvider {
 
     ResponseResult response = await ApiService.post(
         uri: '/club/$clubId',
-        header: {
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
-        }
+        authorization: true,
     );
     clubError.defaultErrorHandle(response, ClubPath(clubId: clubId));
     return response;
@@ -89,9 +83,9 @@ class _ClubProvider {
 
     final response = await ApiService.post(
         uri : '/club',
+        authorization: true,
         header: {
           "Content-Type" : "application/json",
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}"
         },
         body: jsonEncode({
           "sportType" : sportType.name,
@@ -106,7 +100,7 @@ class _ClubProvider {
 
   Future<List<ClubUser>> getClubUsers({required int clubId}) async {
 
-    ResponseResult response = await ApiService.get(uri: '/club/$clubId/users');
+    ResponseResult response = await ApiService.get(uri: '/club/$clubId/users', authorization: false);
     clubError.defaultErrorHandle(response, ClubPath(clubId: clubId));
 
     if (response.resultCode != ResultCode.OK) return [];

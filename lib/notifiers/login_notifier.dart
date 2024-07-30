@@ -8,6 +8,8 @@ import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/api/line_api.dart';
 import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/api/social_result.dart';
+import 'package:flutter_sport/api/token/token_service.dart';
+import 'package:flutter_sport/api/user/user_service.dart';
 import 'package:flutter_sport/models/user/profile.dart';
 import 'package:flutter_sport/widgets/pages/register_page.dart';
 
@@ -27,7 +29,7 @@ class UserNotifier extends StateNotifier<UserProfile?> {
       return ResultCode.SOCIAL_LOGIN_FAILD;
     }
     loading(true);
-    final result = await ApiService.login(socialResult);
+    final result = await UserService.login(socialResult);
     if (result == ResultCode.OK) {
       readUser();
       Navigator.pop(context);
@@ -39,7 +41,7 @@ class UserNotifier extends StateNotifier<UserProfile?> {
   }
 
   Future<bool> register({required String nickname, required String? intro, required String sex, required String birth, required SocialResult social}) async {
-    final response = await ApiService.register(
+    final response = await UserService.register(
       nickname: nickname,
       intro: intro,
       sex: sex,
@@ -63,9 +65,9 @@ class UserNotifier extends StateNotifier<UserProfile?> {
   }
 
   readUser() async {
-    final result = await ApiService.readUser();
+    final result = await TokenService.readUser();
     if (result) {
-      state = await ApiService.getProfile();
+      state = await UserService.getProfile();
     } else {
       logout();
     }

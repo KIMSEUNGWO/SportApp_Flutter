@@ -7,6 +7,7 @@ import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/api/method_type.dart';
 import 'package:flutter_sport/api/result_code.dart';
+import 'package:flutter_sport/api/user/user_service.dart';
 import 'package:flutter_sport/common/image.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
@@ -48,7 +49,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
     ResponseResult responseResult = await ApiService.multipart('/user/edit', method: MethodType.POST, multipartFilePath: editProfileImagePath, data: data);
 
     if (responseResult.resultCode == ResultCode.OK) {
-      final response = await ApiService.getProfile();
+      final response = await UserService.getProfile();
       if (response != null) {
         ref.watch(loginProvider.notifier).setProfile(response);
       }

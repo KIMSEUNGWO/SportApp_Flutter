@@ -26,9 +26,7 @@ class _CommentProvider {
 
   Future<ResponseResult> getComments({required int clubId, required int boardId, required int start, required int size, required bool reload}) async {
     final response = await ApiService.get(uri: '/club/$clubId/board/$boardId/comment?start=$start&size=$size&reload=$reload',
-        header: {
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
-        }
+      authorization: true,
     );
     commentError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
@@ -40,9 +38,9 @@ class _CommentProvider {
       body.addAll({"parentId" : parentId.toString()});
     }
     final response = await ApiService.post(uri: '/club/$clubId/board/$boardId/comment',
+        authorization: true,
         header: {
           "Content-Type" : "application/json",
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
         },
         body: jsonEncode(body)
     );
@@ -52,9 +50,9 @@ class _CommentProvider {
 
   Future<ResponseResult> editComment({required int clubId, required int boardId, required int commentId, required String comment}) async {
     final response =  await ApiService.patch(uri: '/club/$clubId/board/$boardId/comment/$commentId',
+        authorization: true,
         header: {
           "Content-Type" : "application/json",
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
         },
         body: jsonEncode({
           "comment" : comment
@@ -68,8 +66,8 @@ class _CommentProvider {
     final response = await ApiService.delete(uri: '/club/$clubId/board/$boardId/comment/$commentId',
       header: {
         "Content-Type" : "application/json",
-        "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
       },
+      authorization: true
     );
 
     commentError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId, commentId: commentId));

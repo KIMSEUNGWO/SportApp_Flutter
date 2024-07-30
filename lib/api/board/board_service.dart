@@ -9,7 +9,6 @@ import 'package:flutter_sport/api/error_handler/club_path_data.dart';
 import 'package:flutter_sport/api/method_type.dart';
 import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
-import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 
@@ -29,10 +28,8 @@ class _BoardProvider {
 
   Future<ResponseResult> getBoardDetail({required int boardId, required int clubId}) async {
     final response = await ApiService.get(
-        uri: '/club/$clubId/board/$boardId',
-        header: {
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
-        }
+      uri: '/club/$clubId/board/$boardId',
+      authorization: true
     );
     boardError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
@@ -56,9 +53,7 @@ class _BoardProvider {
 
   Future<ResponseResult> deleteBoard({required int clubId, required int boardId}) async {
     final response = await ApiService.delete(uri: '/club/$clubId/board/$boardId',
-        header: {
-          "Authorization" : "Bearer ${await SecureStorage.readAccessToken()}",
-        }
+      authorization: true,
     );
     boardError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
@@ -79,7 +74,10 @@ class _BoardProvider {
   }
 
   Future<ResponseResult> getBoards({required int clubId, required int page, required int size, required String? boardType}) async {
-    final response = await ApiService.get(uri: '/club/$clubId/board?boardType=$boardType&page=$page&size=$size');
+    final response = await ApiService.get(
+      uri: '/club/$clubId/board?boardType=$boardType&page=$page&size=$size',
+      authorization: false
+    );
 
     boardError.defaultErrorHandle(response, ClubPath(clubId: clubId));
     return response;

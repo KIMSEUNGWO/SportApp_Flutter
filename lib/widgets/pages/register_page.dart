@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_service.dart';
 import 'package:flutter_sport/api/social_result.dart';
+import 'package:flutter_sport/api/user/user_service.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:intl/intl.dart';
 
@@ -83,7 +84,7 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
   }
 
   tryDistinctNickname() async {
-    isDistinct = await ApiService.isDistinctNickname(_textNicknameController.text);
+    isDistinct = await UserService.isDistinctNickname(_textNicknameController.text);
     setState(() {
 
     });
