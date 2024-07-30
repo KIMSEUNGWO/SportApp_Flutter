@@ -115,22 +115,9 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
   }
 
   bool _valid() {
-    return _authorityValid() && _categoryValid() && _titleValid() && _contentValid();
+    return _categoryValid() && _titleValid() && _contentValid();
   }
 
-  bool _authorityValid() {
-    if (widget.authority == Authority.USER) {
-      Alert.message(
-          context: context,
-          text: Text('모임장만 공지사항을 등록할 수 있습니다.'),
-          onPressed: () {
-            Navigator.pop(context);
-          }
-      );
-      return false;
-    }
-    return true;
-  }
   bool _categoryValid() {
     if (boardType == BoardType.ALL) {
       Alert.message(
@@ -142,10 +129,10 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
       );
       return false;
     }
-    if (boardType == BoardType.NOTICE && widget.authority.isOwner()) {
+    if (boardType == BoardType.NOTICE && widget.authority.isUser()) {
       Alert.message(
         context: context,
-        text: Text('모임장만 공지사항을 등록할 수 있습니다.'),
+        text: Text('모임장만 공지사항을 수정할 수 있습니다.'),
         onPressed: () {
           Navigator.pop(context);
         }
@@ -209,9 +196,11 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
+        scrolledUnderElevation: 0,
         title: Text('게시글 수정',
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
+            fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
             fontWeight: FontWeight.w600,
             letterSpacing: 1
           ),
@@ -225,9 +214,9 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
               margin: const EdgeInsets.only(right: 20),
               child: Text('완료',
                 style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                  fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                   color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 1.1
                 ),
               ),
@@ -247,7 +236,7 @@ class _EditBoardWidgetState extends State<EditBoardWidget> {
                 children: [
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Container(
                       height: 200,
                       child: Row(

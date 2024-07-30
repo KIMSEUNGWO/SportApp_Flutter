@@ -210,7 +210,7 @@ class _AppState extends ConsumerState<App> {
             fontSize: 21,
           ),
           displayMedium: TextStyle(
-            fontSize: 17,
+            fontSize: 16,
           ),
           displaySmall: TextStyle(
             fontSize: 13,

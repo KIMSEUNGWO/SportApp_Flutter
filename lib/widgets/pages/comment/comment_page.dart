@@ -7,6 +7,7 @@ import 'package:flutter_sport/api/comment/comment_service.dart';
 import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/dateformat.dart';
+import 'package:flutter_sport/models/board/board_detail.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,11 +21,11 @@ class CommentWidget extends ConsumerStatefulWidget {
     required this.comment,
     this.handleTap,
     this.setReply,
-    required this.replyList, this.authority, required this.clubId, required this.boardId, required this.reload,
+    required this.replyList, this.authority, required this.clubId, required this.boardDetail, required this.reload,
   });
 
   final int clubId;
-  final int boardId;
+  final BoardDetail boardDetail;
   final Comment comment;
   final List<Comment> replyList;
   final Authority? authority;
@@ -46,7 +47,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
 
     final response = await CommentService.of(context).editComment(
       clubId: widget.clubId,
-      boardId: widget.boardId,
+      boardId: widget.boardDetail.boardId,
       commentId: widget.comment.commentId,
       comment: _editingController.text
     );
@@ -62,7 +63,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
 
     final response = await CommentService.of(context).deleteComment(
         clubId: widget.clubId,
-        boardId: widget.boardId,
+        boardId: widget.boardDetail.boardId,
         commentId: widget.comment.commentId,
     );
     if (response.resultCode == ResultCode.OK) {
@@ -134,25 +135,26 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                             Text(widget.comment.user.nickname,
                               style: TextStyle(
                                   color: Theme.of(context).colorScheme.secondary,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize
                               ),
                             ),
                             const SizedBox(width: 7,),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.outline,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text('작성자',
-                                style: TextStyle(
-                                    color: Theme.of(context).colorScheme.tertiary,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500
+                            if (widget.boardDetail.user.userId == widget.comment.user.userId)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.outline,
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
-                              ),
-                            )
+                                child: Text('작성자',
+                                  style: TextStyle(
+                                      color: Theme.of(context).colorScheme.tertiary,
+                                      fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                                      fontWeight: FontWeight.w500
+                                  ),
+                                ),
+                              )
                           ],
                         ),
                         Row(
@@ -160,14 +162,14 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                             Text(DateTimeFormatter.formatDate(widget.comment.createDate),
                               style: TextStyle(
                                   color: Theme.of(context).colorScheme.tertiary,
-                                  fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
+                                  fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize
                               ),
                             ),
                             if (widget.comment.isUpdate)
                               Text(' · (수정됨)',
                                 style: TextStyle(
                                 color: Theme.of(context).colorScheme.tertiary,
-                                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
+                                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize
                                 ),
                               ),
                           ],
@@ -198,7 +200,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w500,
-                    fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                    fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
                     letterSpacing: 0.4
                   ),
                 )
@@ -269,7 +271,7 @@ class _CommentWidgetState extends ConsumerState<CommentWidget> {
                 itemCount: widget.replyList.length,
                 itemBuilder: (context, index) {
                   Comment reply = widget.replyList[index];
-                  return CommentWidget(comment: reply, replyList: [], clubId: widget.clubId, boardId: widget.boardId, reload: widget.reload,);
+                  return CommentWidget(comment: reply, replyList: [], clubId: widget.clubId, boardDetail: widget.boardDetail, reload: widget.reload,);
                 },
               ),
 

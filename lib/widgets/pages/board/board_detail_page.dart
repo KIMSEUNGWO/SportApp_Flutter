@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/board/board_service.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/api/comment/comment_service.dart';
 import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
@@ -17,11 +16,16 @@ import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/comment/comment.dart';
 import 'package:flutter_sport/models/comment/comment_collection.dart';
 import 'package:flutter_sport/models/common/user_profile.dart';
+import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/board/edit_board_page.dart';
 import 'package:flutter_sport/widgets/pages/comment/comment_page.dart';
 import 'package:flutter_sport/widgets/pages/common/image_detail_view.dart';
 
-class BoardDetailWidget extends StatefulWidget {
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+
+class BoardDetailWidget extends ConsumerStatefulWidget {
 
   final int clubId;
   final int boardId;
@@ -32,10 +36,10 @@ class BoardDetailWidget extends StatefulWidget {
   const BoardDetailWidget({super.key, required this.boardId, required this.clubId, this.authority, required this.boardListReload});
 
   @override
-  State<BoardDetailWidget> createState() => _BoardDetailWidgetState();
+  ConsumerState<BoardDetailWidget> createState() => _BoardDetailWidgetState();
 }
 
-class _BoardDetailWidgetState extends State<BoardDetailWidget> {
+class _BoardDetailWidgetState extends ConsumerState<BoardDetailWidget> {
 
   final GlobalKey<_CommentPageWidgetState> _globalKey = GlobalKey<_CommentPageWidgetState>();
   late TextEditingController _commentController;
@@ -80,6 +84,9 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
       _initFocus();
       await _globalKey.currentState?._fetchPageable(reload: true);
     }
+    setState(() {
+      _reply = null;
+    });
   }
 
   setReply(Comment? comment) {
@@ -128,6 +135,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
 
   }
 
+
   @override
   void initState() {
     _commentController = TextEditingController();
@@ -156,7 +164,9 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
             GestureDetector(
               onTap: () {
                 showBottomActionSheet(context,
-
+                  boardDetail: boardDetail,
+                  authority: widget.authority,
+                  userId : ref.read(loginProvider.notifier).getId()
                 );
               },
               child: Padding(
@@ -186,14 +196,14 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                     child: Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             color: Theme.of(context).colorScheme.secondaryContainer,
                           ),
                           child: Text('groupBoardMenus'.tr(gender: boardDetail.boardType.lang),
                             style: TextStyle(
-                                fontSize: Theme.of(context).textTheme.bodySmall!.fontSize,
+                                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
                                 color: Theme.of(context).colorScheme.secondary,
                                 fontWeight: FontWeight.w600
                             ),
@@ -218,7 +228,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                           children: [
                             Text(boardDetail.user.nickname,
                               style: TextStyle(
-                                fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                                 fontWeight: FontWeight.w600
                               ),
                             ),
@@ -227,7 +237,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                                 Text(DateTimeFormatter.formatDate(boardDetail.createDate),
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.tertiary,
-                                    fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                                    fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                                     fontWeight: FontWeight.w500
                                   ),
                                 ),
@@ -235,7 +245,7 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                                   Text(' · (수정됨)',
                                     style: TextStyle(
                                       color: Theme.of(context).colorScheme.tertiary,
-                                      fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
+                                      fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                                       fontWeight: FontWeight.w500
                                     ),
                                   ),
@@ -407,6 +417,9 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
                         maxLines: null,
                         decoration: InputDecoration(
                           hintText: '댓글을 적어주세요.',
+                          hintStyle: TextStyle(
+                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize
+                          ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100),
                             borderSide: BorderSide(
@@ -446,7 +459,11 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
     );
   }
 
-  void showBottomActionSheet(BuildContext context) {
+  void showBottomActionSheet(BuildContext context, {required BoardDetail boardDetail, required int? userId, required Authority? authority}) {
+
+    bool hasEditAuthority = (boardDetail.user.userId == userId);
+    bool hasDeleteAuthority = hasEditAuthority || (authority != null && !authority.isUser());
+
     showCupertinoModalPopup(
       context: context,
       builder: (context) {
@@ -465,32 +482,35 @@ class _BoardDetailWidgetState extends State<BoardDetailWidget> {
               ),
             ),
 
-            CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.pop(context);
-                NavigatorHelper.push(context, EditBoardWidget(clubId: widget.clubId, boardDetail: boardDetail, authority: widget.authority!, reload: _boardReload),
-                  fullscreenDialog: true
-                );
-              },
-              child: Text('게시글 수정',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w500,
+            if (hasEditAuthority)
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                  NavigatorHelper.push(context, EditBoardWidget(clubId: widget.clubId, boardDetail: boardDetail, authority: widget.authority!, reload: _boardReload),
+                    fullscreenDialog: true
+                  );
+                },
+                child: Text('게시글 수정',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            CupertinoActionSheetAction(
-              onPressed: () {
-                Navigator.pop(context);
-                tryDelete();
-              },
-              child: Text('게시글 삭제',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w500,
+
+            if (hasDeleteAuthority)
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                  tryDelete();
+                },
+                child: Text('게시글 삭제',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: () {
@@ -658,7 +678,7 @@ class _CommentPageWidgetState extends State<CommentPageWidget> {
                     setReply: widget.setReply,
                     authority: widget.authority,
                     clubId: widget.clubId,
-                    boardId: widget.boardDetail.boardId,
+                    boardDetail: widget.boardDetail,
                     reload: reload,
                   );
                 },

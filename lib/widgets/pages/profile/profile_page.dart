@@ -165,7 +165,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
                               ),
                         Positioned(
                           bottom: 0, right: 0,
-                          child: SvgPicture.asset('assets/icons/edit.svg', width: 30,),
+                          child: SvgPicture.asset('assets/icons/edit.svg', width: 25,),
                         ),
                       ]
                   ),
@@ -291,10 +291,15 @@ class ExtraInfoWidget extends StatelessWidget {
       flex: 1,
       child: Column(
         children: [
-          Text(count.toString(),  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+          Text(count.toString(),
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           Text(title,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: Theme.of(context).textTheme.displaySmall!.fontSize,
               fontWeight: FontWeight.w400,
               letterSpacing: 1.2,
             ),

@@ -155,7 +155,8 @@ class BoardWidget extends ConsumerWidget {
                       const SizedBox(width: 10,),
                       Text(board.user.nickname,
                         style: TextStyle(
-                            fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
+                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                          fontWeight: FontWeight.w500
                         ),
                       )
                     ],
@@ -172,7 +173,7 @@ class BoardWidget extends ConsumerWidget {
                           children: [
                             Text(board.title,
                               style: TextStyle(
-                                  fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                  fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                                   fontWeight: FontWeight.w600,
                                   color: Theme.of(context).colorScheme.primary,
                                   overflow: TextOverflow.ellipsis
@@ -183,7 +184,7 @@ class BoardWidget extends ConsumerWidget {
                               maxLines: 2,
                               style: TextStyle(
                                   color: Theme.of(context).colorScheme.secondary,
-                                  fontSize: Theme.of(context).textTheme.bodySmall!.fontSize
+                                  fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
                               ),
                             ),
                           ],

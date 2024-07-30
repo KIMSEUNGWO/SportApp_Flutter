@@ -97,7 +97,7 @@ class _GroupDetailHomeWidgetState extends ConsumerState<ClubDetailHomeWidget> wi
                       )
                     : const BoxDecoration(),
                   width: double.infinity,
-                  height: 200,
+                  height: 170,
                   child: widget.club.image ?? Center(
                     child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
                     width: 40, height: 40, color: const Color(0xFF878181),

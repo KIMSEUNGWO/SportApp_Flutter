@@ -94,7 +94,7 @@ class BoardNoticeWidgetState extends State<BoardNoticeWidget> {
                   decoration: const BoxDecoration(),
                   child: Text('[공지]',
                     style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                        fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                         fontWeight: FontWeight.w600,
                         // color: Color(0xFFF35353),
                         color: Theme.of(context).colorScheme.onPrimary
@@ -107,7 +107,7 @@ class BoardNoticeWidgetState extends State<BoardNoticeWidget> {
                   child: Text(board.title,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                        fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
                         fontWeight: FontWeight.w500,
                         color: Theme.of(context).colorScheme.primary
                     ),

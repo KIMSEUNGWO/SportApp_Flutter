@@ -109,7 +109,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text('profile').tr(gender: 'editProfile'),
+        title: Text('profile',).tr(gender: 'editProfile'),
         scrolledUnderElevation: 0,
         actions: [
           GestureDetector(
@@ -118,9 +118,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
               margin: EdgeInsets.only(right: 20),
               child: Text('save',
                 style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                  fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
                   color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
               ).tr(),
             ),
@@ -161,7 +161,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                           Positioned(
                             bottom: 0, right: 0,
                             child: Container(
-                              padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
                                 color: Colors.black,

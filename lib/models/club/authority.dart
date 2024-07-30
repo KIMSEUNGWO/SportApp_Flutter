@@ -20,4 +20,8 @@ enum Authority {
   bool isOwner() {
     return this == Authority.OWNER;
   }
+
+  bool isUser() {
+    return this == Authority.USER;
+  }
 }

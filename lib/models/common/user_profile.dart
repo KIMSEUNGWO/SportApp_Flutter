@@ -37,7 +37,6 @@ Widget clubImage(BuildContext context, {
   double? circle,
   EdgeInsets? margin,
 }) {
-  final iconSize = (width + height) / 2 * 0.8;
   return Container(
       width: width, height: height,
       margin: margin,
@@ -48,7 +47,7 @@ Widget clubImage(BuildContext context, {
       ),
       child: image ?? Center(
           child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-            width: iconSize, height: iconSize, color: const Color(0xFF878181),
+            width: 30, height: 30, color: const Color(0xFF878181),
           )
       )
   );
