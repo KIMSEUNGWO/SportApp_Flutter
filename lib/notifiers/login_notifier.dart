@@ -83,6 +83,26 @@ class UserNotifier extends StateNotifier<UserProfile?> {
     return state?.id;
   }
 
+  Image? getImage() {
+    return state?.image;
+  }
+
+  String? getIntro() {
+    return state?.intro;
+  }
+
+  String? getName() {
+    return state?.name;
+  }
+
+  String? getSex() {
+    return state?.sex;
+  }
+
+  String? getBirth() {
+    return state?.birth;
+  }
+
 }
 
 final loginProvider = StateNotifierProvider<UserNotifier, UserProfile?>((ref) => UserNotifier(),);

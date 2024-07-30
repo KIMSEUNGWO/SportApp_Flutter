@@ -56,7 +56,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
       return;
     } else if (responseResult.resultCode == ResultCode.MAX_UPLOAD_SIZE_EXCEED) {
       setState(() {
-        editImage = ref.read(loginProvider.notifier).state?.image;
+        editImage = ref.read(loginProvider.notifier).getImage();
       });
       Alert.message(context: context, text: Text('이미지 용량이 초과되었습니다.'));
     }
@@ -89,9 +89,9 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
   void initState() {
     _textNicknameController = TextEditingController();
     _textIntroController = TextEditingController(
-      text: ref.read(loginProvider.notifier).state!.intro ?? ''
+      text: ref.read(loginProvider.notifier).getIntro() ?? ''
     );
-    editImage = ref.read(loginProvider.notifier).state!.image;
+    editImage = ref.read(loginProvider.notifier).getImage();
     super.initState();
   }
 
@@ -187,17 +187,17 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                     ).tr(gender: 'nickname'),
                     TextField(
                       controller: _textNicknameController,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 21,
                       ),
                       decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
+                          enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                           ),
-                          focusedBorder: UnderlineInputBorder(
+                          focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                           ),
-                          hintText: ref.read(loginProvider.notifier).state!.name
+                          hintText: ref.read(loginProvider.notifier).getName()
                       ),
 
                     ),
@@ -217,13 +217,13 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                       maxLines: null,
                       style: const TextStyle(fontSize: 17),
                       decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
+                        enabledBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Color(0xFFE4E2E2), width: 1.5),
                         ),
-                        hintText: ref.read(loginProvider.notifier).state!.intro ?? '자기소개를 적어주세요.',
+                        hintText: ref.read(loginProvider.notifier).getIntro() ?? '자기소개를 적어주세요.',
                         counterText: '$introCurrentCount / $introMaxCount',
                         counterStyle: const TextStyle(fontSize: 14),
                       ),
@@ -245,7 +245,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                 color: Theme.of(context).colorScheme.primary
                               ),
                             ).tr(gender: 'sex'),
-                            SizedBox(height: 15,),
+                            const SizedBox(height: 15,),
                             Container(
                               width: 150,
                               height: 55,
@@ -261,15 +261,15 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                   Expanded(
                                     flex: 1,
                                     child: Container(
-                                      margin: EdgeInsets.all(5),
-                                      decoration: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myBoxDecoration(context) : youBoxDecoration(context) ,
+                                      margin: const EdgeInsets.all(5),
+                                      decoration: (ref.read(loginProvider.notifier).getSex() == 'F') ? myBoxDecoration(context) : youBoxDecoration(context) ,
                                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                       child: Center(
                                         child: Text('female',
                                           style: TextStyle(
                                             fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                                             fontWeight: FontWeight.w600,
-                                            color: (ref.read(loginProvider.notifier).state!.sex == 'F') ? myTextColor : youTextColor,
+                                            color: (ref.read(loginProvider.notifier).getSex() == 'F') ? myTextColor : youTextColor,
                                           ),
                                         ).tr(),
                                       ),
@@ -278,15 +278,15 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                   Expanded(
                                     flex: 1,
                                     child: Container(
-                                      margin: EdgeInsets.all(5),
-                                      decoration: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myBoxDecoration(context) : youBoxDecoration(context),
+                                      margin: const EdgeInsets.all(5),
+                                      decoration: (ref.read(loginProvider.notifier).getSex() == 'M') ? myBoxDecoration(context) : youBoxDecoration(context),
                                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                       child: Center(
                                           child: Text('male',
                                             style: TextStyle(
                                               fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
                                               fontWeight: FontWeight.w600,
-                                              color: (ref.read(loginProvider.notifier).state!.sex == 'M') ? myTextColor : youTextColor,
+                                              color: (ref.read(loginProvider.notifier).getSex() == 'M') ? myTextColor : youTextColor,
                                             ),
                                           ).tr()
                                       ),
@@ -320,7 +320,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                                   color: Theme.of(context).colorScheme.secondaryContainer
                                 ),
                                 child: Center(
-                                  child: Text('${ref.read(loginProvider.notifier).state!.birth}',
+                                  child: Text('${ref.read(loginProvider.notifier).getBirth()}',
                                     style: TextStyle(
                                       // color: Color(0xFF3E3E3E),
                                       // fontSize: 18,
