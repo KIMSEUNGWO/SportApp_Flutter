@@ -297,7 +297,7 @@ class _ProfileEditPageState extends ConsumerState<ProfileEditPage> {
                             ),
                           ],
                         ),
-                        SizedBox(width: 15,),
+                        const SizedBox(width: 15,),
 
                         Expanded(
                           child: Column(
