@@ -32,7 +32,7 @@ class _RecentlyVisitPagesState extends ConsumerState<RecentlyVisitPages> {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: Text('최근 본 모임'),
+        title: Text('최근 본 모임',),
       ),
       body: Container(
         margin: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 30),

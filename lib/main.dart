@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/notifiers/region_notifier.dart';
 import 'package:flutter_sport/widgets/initPage.dart';
 
-import 'package:flutter_line_sdk/flutter_line_sdk.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sport/widgets/mainPage.dart';
 import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_page.dart';
-import 'package:flutter_sport/widgets/pages/profile/profile_page.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
+
 import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   const String channelId = '2005763087';
@@ -23,6 +23,9 @@ void main() async {
 
   // 언어팩
   await EasyLocalization.ensureInitialized();
+
+  // iOS 시뮬레이터 스크린 사이즈 보정
+  await ScreenUtil.ensureScreenSize();
 
   runApp(
     EasyLocalization(
@@ -108,6 +111,36 @@ class _AppState extends ConsumerState<App> {
       currentCardColor = darkCardColor;
     });
   }
+
+  themeData() {
+    return ThemeData(
+      fontFamily: 'Pretendard',
+      colorScheme: currentColorScheme,
+      cardColor: currentCardColor,
+      textTheme: TextTheme(
+        displayLarge: TextStyle(
+          fontSize: 21,
+        ),
+        displayMedium: TextStyle(
+          fontSize: 16,
+        ),
+        displaySmall: TextStyle(
+          fontSize: 13,
+        ),
+
+        bodyLarge: TextStyle(
+          fontSize: 14
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 12
+        ),
+        bodySmall: TextStyle(
+          fontSize: 10,
+        ),
+      ),
+
+    );
+  }
   init() async {
     await ref.read(loginProvider.notifier).readUser();
     await ref.read(regionProvider.notifier).init();
@@ -172,28 +205,7 @@ class _AppState extends ConsumerState<App> {
     //     fontFamily: 'Pretendard',
     //     colorScheme: currentColorScheme,
     //     cardColor: currentCardColor,
-    //     textTheme: const TextTheme(
-    //       displayLarge: TextStyle(
-    //         fontSize: 21,
-    //       ),
-    //       displayMedium: TextStyle(
-    //         fontSize: 17,
-    //       ),
-    //       displaySmall: TextStyle(
-    //         fontSize: 13,
-    //       ),
-    //
-    //       bodyLarge: TextStyle(
-    //           fontSize: 18
-    //       ),
-    //       bodyMedium: TextStyle(
-    //           fontSize: 16
-    //       ),
-    //       bodySmall: TextStyle(
-    //         fontSize: 14,
-    //       ),
-    //     ),
-    //
+    //     textTheme: themeData(),
     //   ),
     // );
     return MaterialApp(
@@ -201,33 +213,7 @@ class _AppState extends ConsumerState<App> {
       supportedLocales: context.supportedLocales,
       home: InitPage(themeLight: themeLight, themeDark: themeDark),
       locale: context.locale,
-      theme: ThemeData(
-        fontFamily: 'Pretendard',
-        colorScheme: currentColorScheme,
-        cardColor: currentCardColor,
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            fontSize: 21,
-          ),
-          displayMedium: TextStyle(
-            fontSize: 16,
-          ),
-          displaySmall: TextStyle(
-            fontSize: 13,
-          ),
-
-          bodyLarge: TextStyle(
-            fontSize: 14
-          ),
-          bodyMedium: TextStyle(
-            fontSize: 12
-          ),
-          bodySmall: TextStyle(
-            fontSize: 10,
-          ),
-        ),
-
-      ),
+      theme: themeData(),
     );
   }
 }

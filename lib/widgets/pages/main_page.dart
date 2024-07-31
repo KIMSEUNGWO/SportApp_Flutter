@@ -62,8 +62,8 @@ class _MainPageState extends ConsumerState<MainPage> with AutomaticKeepAliveClie
                   children: [
                     Text('recentlySearchGroups',
                       style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w500,
+                        fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                        fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.primary
                       ),
                     ).tr(),

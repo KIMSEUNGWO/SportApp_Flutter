@@ -32,7 +32,7 @@ class _ClubProvider {
 
   Future<ClubDetail?> clubData({required BuildContext context, required int clubId}) async {
     ResponseResult response = await ApiService.get(
-      uri: '/club/$clubId',
+      uri: '/public/club/$clubId',
       authorization: true,
     );
     clubError.defaultErrorHandle(response, ClubPath(clubId: clubId));
@@ -100,7 +100,7 @@ class _ClubProvider {
 
   Future<List<ClubUser>> getClubUsers({required int clubId}) async {
 
-    ResponseResult response = await ApiService.get(uri: '/club/$clubId/users', authorization: false);
+    ResponseResult response = await ApiService.get(uri: '/public/club/$clubId/users', authorization: false);
     clubError.defaultErrorHandle(response, ClubPath(clubId: clubId));
 
     if (response.resultCode != ResultCode.OK) return [];

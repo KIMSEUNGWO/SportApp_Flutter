@@ -75,8 +75,8 @@ class _MyGroupPageState extends ConsumerState<MyClubPage> with AutomaticKeepAliv
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text('내 모임',
                       style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
-                        fontWeight: FontWeight.w500,
+                        fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
+                        fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.primary
                       ),
                     ),

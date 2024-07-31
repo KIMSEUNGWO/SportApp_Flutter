@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
+import 'package:flutter_sport/common/open_app.dart';
 import 'package:flutter_sport/main.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
@@ -101,75 +102,80 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 10, bottom: 10),
-                        child: Text('2024-09-01 (화) 20:00 ~ 24:00',
+                        child: Text('2024-09-01 (화) 20:00',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.primary,
-                            fontSize: Theme.of(context).textTheme.displayMedium!.fontSize
+                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize
                           ),
                         ),
                       ),
-                      Container(
-                        height: 130,
-                        margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: const Color(0xFFD7D7D7),
-                            width: 0.2
-                          ),
-                          boxShadow: const [
-                            BoxShadow(color: Color(0xFFE4E4E4), offset: Offset(4, 4), blurRadius: 10)
-                          ]
-                        ),
-                        child: Row(
-                          children: [
-                            clubImage(context, width: 110, height: double.infinity, image: null, circle: 10),
-                            const SizedBox(width: 15,),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text('일정이름일정이름일정이름일정이름일정이름',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.primary,
-                                          fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                                          fontWeight: FontWeight.w600
-                                        ),
-                                      ),
-                                      Text('인천광역시 남동구 간석동 772',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.secondary,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      userProfile(context, diameter: 20, image: null),
-                                      const SizedBox(width: 5,),
-                                      Text('이름이름',
-                                        style: TextStyle(
-                                          color: Theme.of(context).colorScheme.secondary,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                      GestureDetector(
+                        onTap: () {
+
+                        },
+                        child: Container(
+                          height: 130,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(0xFFD7D7D7),
+                              width: 0.2
                             ),
-                          ],
+                            boxShadow: const [
+                              BoxShadow(color: Color(0xFFE4E4E4), offset: Offset(4, 4), blurRadius: 10)
+                            ]
+                          ),
+                          child: Row(
+                            children: [
+                              clubImage(context, width: 110, height: double.infinity, image: null, circle: 10),
+                              const SizedBox(width: 15,),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('일정이름일정이름일정이름일정이름일정이름',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.primary,
+                                            fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                                            fontWeight: FontWeight.w600
+                                          ),
+                                        ),
+                                        Text('인천광역시 남동구 간석동 772',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.secondary,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        userProfile(context, diameter: 20, image: null),
+                                        const SizedBox(width: 5,),
+                                        Text('이름이름',
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.secondary,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: Theme.of(context).textTheme.bodyMedium!.fontSize
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       _JoinUsersWidget(users: testData),

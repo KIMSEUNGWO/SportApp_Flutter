@@ -61,6 +61,7 @@ class _GroupDetailWidgetState extends ConsumerState<ClubDetailWidget> with Singl
 
   readClub() async {
     club = await ClubService.of(context).clubData(context: context, clubId: widget.id);
+    print('club authority : ${club?.authority}');
     if (club == null) return;
     setState(() {
       isLoading = false;

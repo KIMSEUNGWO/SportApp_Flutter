@@ -123,6 +123,7 @@ class _RegisterWidgetState extends ConsumerState<RegisterWidget> {
                   child: CupertinoDatePicker(
                     mode: CupertinoDatePickerMode.date, //CupertinoDatePickerMode에서 일시, 시간 등 고름
                     initialDateTime: _selectedDate,
+                    minimumYear: DateTime.now().year - 70,
                     maximumYear: DateTime.now().year - 16,
                     onDateTimeChanged: (DateTime date) {
                       setState(() {

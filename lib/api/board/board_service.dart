@@ -75,7 +75,7 @@ class _BoardProvider {
 
   Future<ResponseResult> getBoards({required int clubId, required int page, required int size, required String? boardType}) async {
     final response = await ApiService.get(
-      uri: '/club/$clubId/board?boardType=$boardType&page=$page&size=$size',
+      uri: '/public/club/$clubId/board?boardType=$boardType&page=$page&size=$size',
       authorization: false
     );
 
