@@ -9,7 +9,6 @@ import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_page.dart';
 import 'package:flutter_sport/widgets/pages/search_page.dart';
 
 import 'package:go_router/go_router.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,9 +22,6 @@ void main() async {
 
   // 언어팩
   await EasyLocalization.ensureInitialized();
-
-  // iOS 시뮬레이터 스크린 사이즈 보정
-  await ScreenUtil.ensureScreenSize();
 
   runApp(
     EasyLocalization(
@@ -119,7 +115,7 @@ class _AppState extends ConsumerState<App> {
       cardColor: currentCardColor,
       textTheme: TextTheme(
         displayLarge: TextStyle(
-          fontSize: 21,
+          fontSize: 19,
         ),
         displayMedium: TextStyle(
           fontSize: 16,

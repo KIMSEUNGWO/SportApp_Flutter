@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/api/googlemaps/google_maps.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/common/open_app.dart';
 import 'package:flutter_sport/main.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/models/response_user.dart';
+import 'package:flutter_sport/widgets/pages/meeting/meeting_detail_page.dart';
 
 class ClubDetailMeetingWidget extends StatefulWidget {
 
@@ -112,7 +114,12 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
                       ),
                       GestureDetector(
                         onTap: () {
-
+                          NavigatorHelper.push(context,
+                            MeetingDetailWidget(
+                              clubId: widget.club.id,
+                              meetingId: 1,
+                            ),
+                          );
                         },
                         child: Container(
                           height: 130,
