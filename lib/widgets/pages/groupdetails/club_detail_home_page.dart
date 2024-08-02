@@ -15,6 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/models/user/club_member.dart';
+import 'package:flutter_sport/widgets/lists/user_list_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ClubDetailHomeWidget extends ConsumerStatefulWidget {
@@ -89,26 +90,17 @@ class _GroupDetailHomeWidgetState extends ConsumerState<ClubDetailHomeWidget> wi
                 },
               ),
               SliverToBoxAdapter(
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: widget.club.image == null
-                    ? BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                      )
-                    : const BoxDecoration(),
+                child: clubImage(context,
                   width: double.infinity,
                   height: 170,
-                  child: widget.club.image ?? Center(
-                    child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-                    width: 40, height: 40, color: const Color(0xFF878181),
-                    ),
-                  ),
+                  image: widget.club.image,
+                  margin: const EdgeInsets.only(bottom: 10)
                 ),
               ),
               SliverToBoxAdapter(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
-                  constraints: BoxConstraints(
+                  constraints: const BoxConstraints(
                     minHeight: 300
                   ),
                   child: Column(
@@ -296,64 +288,15 @@ class _ClubUserListWidgetState extends State<ClubUserListWidget> {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ListView.separated(
+        child: ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          separatorBuilder: (context, index) => Container(
-            height: 1.5,
-            decoration: BoxDecoration(
-              // color: Color(0xFFE4DDDD),
-                color: Theme.of(context).colorScheme.outline
-            ),
-          ),
           itemCount: _userList.length,
           itemBuilder: (context, index) {
             ClubUser clubUser = _userList[index];
-            return ClubUserWidget(clubUser: clubUser);
+            return UserSimpWidget(user: clubUser.user, authority: clubUser.authority,);
           },
         ),
-      ),
-    );
-  }
-}
-
-class ClubUserWidget extends StatelessWidget {
-
-  final ClubUser clubUser;
-  const ClubUserWidget({super.key, required this.clubUser,});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          userProfile(context, diameter: 40, image: clubUser.user.thumbnailUser),
-          const SizedBox(width: 15,),
-          Expanded(
-            child: Text(clubUser.user.nickname,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: Theme.of(context).textTheme.displayMedium!.fontSize
-              ),
-            ),
-          ),
-          const SizedBox(width: 15,),
-          if (clubUser.authority != Authority.USER)
-            Container(
-            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Theme.of(context).colorScheme.secondaryContainer,
-            ),
-            child: Text('authority',
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme.displaySmall!.fontSize
-              ),
-            ).tr(gender: clubUser.authority.lang),
-          ),
-        ],
       ),
     );
   }

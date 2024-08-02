@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sport/api/api_result.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
@@ -17,6 +16,8 @@ import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 import 'package:flutter_sport/widgets/pages/create_club_page.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

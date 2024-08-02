@@ -2,7 +2,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/common/open_app.dart';
 import 'package:flutter_sport/models/common/user_profile.dart';
+import 'package:flutter_sport/models/response_user.dart';
 import 'package:flutter_sport/widgets/lists/user_list_widget.dart';
 
 class MeetingDetailWidget extends StatefulWidget {
@@ -46,25 +49,30 @@ class _MeetingDetailWidgetState extends State<MeetingDetailWidget> {
                         letterSpacing: 0.4,
                     ),
                   ),
-                  Text('일정타이틀자리일정타이틀자리일정타이틀자리일정타이틀자리일정타이틀자리',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
-                      letterSpacing: 0.4,
-                      height: 2
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 5),
+                    child: Text('일정타이틀자리일정타이틀자리일정타이틀자리일정타이틀자리일정타이틀자리',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: Theme.of(context).textTheme.displayLarge!.fontSize,
+                        letterSpacing: 0.4,
+                      ),
                     ),
                   ),
-                  Text('인천광역시 남동구 간석동 772',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.tertiary,
-                      letterSpacing: 0.4,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Theme.of(context).colorScheme.tertiary,
+                  GestureDetector(
+                    onTap: () {
+                      OpenApp().openMaps();
+                    },
+                    child: Text('인천광역시 남동구 간석동 772',
+                      style: TextStyle(
+                        fontSize: Theme.of(context).textTheme.bodyLarge!.fontSize,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.tertiary,
+                        letterSpacing: 0.4,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Theme.of(context).colorScheme.tertiary,
+                      ),
                     ),
                   ),
 
@@ -79,7 +87,6 @@ class _MeetingDetailWidgetState extends State<MeetingDetailWidget> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: Text('설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글설명글',
-                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
                   fontSize: Theme.of(context).textTheme.displayMedium!.fontSize,
@@ -99,11 +106,18 @@ class _MeetingDetailWidgetState extends State<MeetingDetailWidget> {
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: ListView(
+              child: ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                children: [
-                ],
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  UserSimp user = UserSimp.fromJson({
+                    "nickname" : "asdf",
+                    "userId" : 1,
+                    "thumbnailUser" : null
+                  });
+                  return UserSimpWidget(user: user,);
+                },
               ),
             )
           ],

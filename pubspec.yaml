@@ -31,6 +31,7 @@ dev_dependencies:
   go_router: ^14.2.1 # 라우터
   image_cropper: ^7.1.0 # 이미지 편집
   google_maps_flutter: ^2.6.1 # 구글맵스
+  flutter_screenutil: ^5.9.3 # 스크린 사이즈 동적 UI
 
 flutter:
   uses-material-design: true

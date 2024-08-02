@@ -62,11 +62,29 @@ class _MyGroupPageState extends ConsumerState<MyClubPage> with AutomaticKeepAliv
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    height: 120,
+                    height: 70,
                     margin: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: const Color(0xFFDCD7D7)
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFF6663E8),
+                    ),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('함께하고 싶은 친구에게 공유해보세요.',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),

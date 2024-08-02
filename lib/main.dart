@@ -13,6 +13,8 @@ import 'package:flutter_line_sdk/flutter_line_sdk.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 void main() async {
   const String channelId = '2005763087';
 
@@ -115,23 +117,23 @@ class _AppState extends ConsumerState<App> {
       cardColor: currentCardColor,
       textTheme: TextTheme(
         displayLarge: TextStyle(
-          fontSize: 19,
+          fontSize: 19.h,
         ),
         displayMedium: TextStyle(
-          fontSize: 16,
+          fontSize: 16.h,
         ),
         displaySmall: TextStyle(
-          fontSize: 13,
+          fontSize: 13.h,
         ),
 
         bodyLarge: TextStyle(
-          fontSize: 14
+          fontSize: 14.h
         ),
         bodyMedium: TextStyle(
-          fontSize: 12
+          fontSize: 12.h
         ),
         bodySmall: TextStyle(
-          fontSize: 10,
+          fontSize: 10.h,
         ),
       ),
 
@@ -204,12 +206,19 @@ class _AppState extends ConsumerState<App> {
     //     textTheme: themeData(),
     //   ),
     // );
-    return MaterialApp(
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      home: InitPage(themeLight: themeLight, themeDark: themeDark),
-      locale: context.locale,
-      theme: themeData(),
+    return ScreenUtilInit(
+      designSize: const Size(393, 852), // 피그마에 디자인된 앱 프레임 사이즈
+      minTextAdapt: true, // 텍스트 크기를 자동으로 조정해서 화면에 맞추는 기능 활성화
+      splitScreenMode: true, // 분할 화면 모드 활성화
+      builder: (context, child) {
+        return MaterialApp(
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          home: InitPage(themeLight: themeLight, themeDark: themeDark),
+          locale: context.locale,
+          theme: themeData(),
+        );
+      },
     );
   }
 }

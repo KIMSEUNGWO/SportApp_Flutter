@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  static const String server = "http://192.168.1.79:8080";
+  static const String server = "http://localhost:8080";
 
   static const Map<String, String> defaultHeader = {
     "Sport-Authorization" : "NnJtQTdJcTU3SnF3N0tleDdLZXg2NmVv",

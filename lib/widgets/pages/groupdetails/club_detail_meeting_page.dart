@@ -4,10 +4,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sport/api/googlemaps/google_maps.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
-import 'package:flutter_sport/common/open_app.dart';
-import 'package:flutter_sport/main.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/models/common/user_profile.dart';
@@ -123,7 +120,7 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
                         },
                         child: Container(
                           height: 130,
-                          margin: const EdgeInsets.only(bottom: 10),
+                          margin: const EdgeInsets.only(bottom: 10, left: 5, right: 5),
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.background,
