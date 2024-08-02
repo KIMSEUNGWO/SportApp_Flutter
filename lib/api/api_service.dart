@@ -54,7 +54,7 @@ class ApiService {
 
   static Future<ResponseResult> patch({required String uri, required bool authorization, Map<String, String>? header, Object? body}) async {
     Map<String, String> requestHeader = {};
-    getHeaders(requestHeader, authorization, header);
+    await getHeaders(requestHeader, authorization, header);
 
     final response = await http.patch(Uri.parse('$server$uri'), headers: requestHeader, body: body);
     return _decode(response);
@@ -62,7 +62,7 @@ class ApiService {
 
   static Future<ResponseResult> delete({required String uri, required bool authorization, Map<String, String>? header, Object? body}) async {
     Map<String, String> requestHeader = {};
-    getHeaders(requestHeader, authorization, header);
+    await getHeaders(requestHeader, authorization, header);
 
     final response = await http.delete(Uri.parse('$server$uri'), headers: requestHeader, body: body);
     return _decode(response);
@@ -71,7 +71,7 @@ class ApiService {
   static Future<ResponseResult> multipart(String uri, {required MethodType method, required String? multipartFilePath, required Map<String, dynamic> data}) async {
     var request = http.MultipartRequest(method.name, Uri.parse('$server$uri'));
     request.headers.addAll({"Content-Type": "application/json; charset=UTF-8"});
-    getHeaders(request.headers, true, null);
+    await getHeaders(request.headers, true, null);
 
     if (multipartFilePath != null) {
       request.files.add(await http.MultipartFile.fromPath('image', multipartFilePath));
@@ -91,7 +91,7 @@ class ApiService {
   static Future<ResponseResult> multipartList(String uri, {required MethodType method, required List<String> multipartFilePathList, required Map<String, dynamic> data}) async {
     var request = http.MultipartRequest(method.name, Uri.parse('$server$uri'));
     request.headers.addAll({"Content-Type": "application/json; charset=UTF-8"});
-    getHeaders(request.headers, true, null);
+    await getHeaders(request.headers, true, null);
 
     for (var multipartFilePath in multipartFilePathList) {
       request.files.add(await http.MultipartFile.fromPath('image', multipartFilePath));

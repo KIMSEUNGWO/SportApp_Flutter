@@ -47,7 +47,7 @@ class LargeListWidget extends StatelessWidget {
         NavigatorHelper.push(context, ClubDetailWidget(id: id));
       },
       child: SizedBox(
-        width: 170,
+        width: 180,
         child: Column(
           children: [
             Container(

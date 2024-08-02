@@ -14,7 +14,6 @@ import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 
-import 'package:flutter_sport/common/secure_strage.dart';
 import 'package:flutter_sport/models/user/club_member.dart';
 import 'package:go_router/go_router.dart';
 
@@ -35,7 +34,7 @@ class _ClubProvider {
       uri: '/public/club/$clubId',
       authorization: true,
     );
-    clubError.defaultErrorHandle(response, ClubPath(clubId: clubId));
+    await clubError.defaultErrorHandle(response, ClubPath(clubId: clubId));
     return ClubDetail.fromJson(response.data);
   }
 
@@ -124,6 +123,17 @@ class _ClubProvider {
     return result;
   }
 
+  Future<ResponseResult> exitClub({required int clubId}) async {
+
+    ResponseResult response = await ApiService.delete(
+      uri: '/club/$clubId/exit',
+      authorization: true,
+    );
+
+    clubError.defaultErrorHandle(response, ClubPath(clubId: clubId));
+    return response;
+  }
+
 
 }
 
@@ -135,7 +145,7 @@ class ClubError extends ErrorHandler {
 
 
   @override
-  bool defaultErrorHandle(ResponseResult response, ClubPath clubPath) {
+  Future<bool> defaultErrorHandle(ResponseResult response, ClubPath clubPath) async {
     if (context.mounted) {
       if (response.resultCode == ResultCode.CLUB_NOT_EXISTS) {
         Alert.message(context: context, text: Text('존재하지 않는 모임입니다.'),

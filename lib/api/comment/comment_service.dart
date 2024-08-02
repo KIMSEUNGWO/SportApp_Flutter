@@ -81,8 +81,8 @@ class CommentError extends BoardError {
   CommentError(super.context);
 
   @override
-  bool defaultErrorHandle(ResponseResult response, ClubPath clubPath) {
-    if (!super.defaultErrorHandle(response, clubPath)) {
+  Future<bool> defaultErrorHandle(ResponseResult response, ClubPath clubPath) async {
+    if (!await super.defaultErrorHandle(response, clubPath)) {
       return false;
     }
 

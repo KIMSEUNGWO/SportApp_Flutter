@@ -129,8 +129,9 @@ class _ClubDetailMeetingWidgetState extends State<ClubDetailMeetingWidget> with 
                               color: const Color(0xFFD7D7D7),
                               width: 0.2
                             ),
-                            boxShadow: const [
-                              BoxShadow(color: Color(0xFFE4E4E4), offset: Offset(4, 4), blurRadius: 10)
+                            boxShadow: [
+                              BoxShadow(color: Colors.black.withOpacity(0.04), offset: const Offset(0, 2), blurRadius: 4)
+                              // BoxShadow(color: Color(0xFFE4E4E4), offset: Offset(4, 4), blurRadius: 10)
                             ]
                           ),
                           child: Row(

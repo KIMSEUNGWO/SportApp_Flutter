@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sport/api/club/club_service.dart';
+import 'package:flutter_sport/api/result_code.dart';
+import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
 import 'package:flutter_sport/models/club/authority.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
@@ -76,6 +78,34 @@ class _GroupDetailWidgetState extends ConsumerState<ClubDetailWidget> with Singl
     ClubSimp clubSimp = ClubSimp(club!.id, club!.thumbnail, club!.title, club!.intro, club!.sport, club!.region, club!.personCount, club!.createDate);
     ref.read(recentlyClubNotifier.notifier).add(clubSimp);
 
+  }
+
+  tryExitClub() async {
+    if (club == null) return;
+    if (club?.authority == Authority.OWNER) {
+      Alert.confirmMessageTemplate(
+        context: context,
+        onPressedText: '나가기',
+        onPressed: _exitClub,
+        message: '모임장의 권한은 남은 회원에게 랜덤으로 위임됩니다.\n위임할 회원이 없다면 모임이 삭제됩니다.\n 진행하시겠습니까?',
+      );
+    } else {
+      Alert.confirmMessageTemplate(
+        context: context,
+        onPressedText: '나가기',
+        onPressed: _exitClub,
+        message: '모임을 나가시겠습니까?',
+      );
+    }
+  }
+
+  _exitClub() async {
+    final response = await ClubService.of(context).exitClub(clubId: widget.id);
+
+    if (response.resultCode == ResultCode.OK) {
+      Navigator.pop(context);
+      Alert.message(context: context, text: Text('모임을 탈퇴했습니다.'));
+    }
   }
 
   @override
@@ -252,13 +282,26 @@ class _GroupDetailWidgetState extends ConsumerState<ClubDetailWidget> with Singl
                 Navigator.of(context).pop();
                 NavigatorHelper.push(context, ClubEditWidget(club: club!, reload: readClub));
               },
-              child: Text('방 설정 변경',
+              child: Text('모임 설정 변경',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
+            if (club!.authority != null)
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  tryExitClub();
+                },
+                child: Text('모임 나가기',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: () {

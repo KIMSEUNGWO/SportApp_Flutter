@@ -31,7 +31,7 @@ class _BoardProvider {
       uri: '/club/$clubId/board/$boardId',
       authorization: true
     );
-    boardError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
+    await boardError.defaultErrorHandle(response, ClubPath(clubId: clubId, boardId: boardId));
     return response;
   }
 
@@ -90,8 +90,8 @@ class BoardError extends ClubError {
   BoardError(super.context);
 
   @override
-  bool defaultErrorHandle(ResponseResult response, ClubPath clubPath) {
-    if (!super.defaultErrorHandle(response, clubPath)) {
+  Future<bool> defaultErrorHandle(ResponseResult response, ClubPath clubPath) async {
+    if (!await super.defaultErrorHandle(response, clubPath)) {
       return false;
     }
 
@@ -101,7 +101,7 @@ class BoardError extends ClubError {
         Alert.message(context: context, text: Text('삭제된 게시글입니다.'), onPressed: () => context.pop());
         return false;
       } else if (resultCode == ResultCode.ACCESS_TOKEN_REQUIRE) {
-        Alert.message(context: context, text: Text('참여한 회원만 열람할 수 있습니다.'), onPressed: () => context.pop());
+        Alert.message(context: context, text: Text('권한이 없습니다.'), onPressed: () => context.pop());
         return false;
       }
 
