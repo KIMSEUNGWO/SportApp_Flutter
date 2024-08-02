@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_sport/common/svg_icon.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -103,7 +103,11 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
                       ),
                       SizedBox(
                         height: 250,
-                        child: SvgPicture.asset('assets/icons/loginLogo.svg', fit: BoxFit.contain,),
+                        child: SvgIcon.asset(sIcon: SIcon.loginLogo,
+                          style: SvgIconStyle(
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
 
                     ],
@@ -123,9 +127,11 @@ class _LoginPageWidgetState extends ConsumerState<LoginPageWidget> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              SvgPicture.asset(
-                                'assets/line_logo.svg',
-                                width: 40,
+                              SvgIcon.asset(
+                                sIcon: SIcon.line,
+                                style: SvgIconStyle(
+                                  width: 40,
+                                ),
                               ),
                               Text(
                                 'Sign in with LINE',

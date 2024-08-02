@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_sport/common/svg_icon.dart';
 
 
 class UserImageWidget extends StatelessWidget {
@@ -46,8 +46,10 @@ Widget clubImage(BuildContext context, {
         borderRadius: BorderRadius.circular(circle ?? 10),
       ),
       child: image ?? Center(
-          child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-            width: 30, height: 30, color: const Color(0xFF878181),
+          child: SvgIcon.asset(sIcon: SIcon.emptyGroupImage,
+            style: SvgIconStyle(
+              width: 30, height: 30, color: const Color(0xFF878181),
+            ),
           )
       )
   );

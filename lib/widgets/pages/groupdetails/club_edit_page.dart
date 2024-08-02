@@ -11,6 +11,7 @@ import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/image.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
+import 'package:flutter_sport/common/svg_icon.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
@@ -18,7 +19,6 @@ import 'package:flutter_sport/widgets/pages/create_club_page.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ClubEditWidget extends ConsumerStatefulWidget {
@@ -218,8 +218,10 @@ class _ClubEditWidgetState extends ConsumerState<ClubEditWidget> {
                         width: double.infinity,
                         height: 200,
                         child: editImage ?? Center(
-                          child: SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-                            width: 40, height: 40, color: Color(0xFF878181),
+                          child: SvgIcon.asset(sIcon: SIcon.emptyGroupImage,
+                            style: SvgIconStyle(
+                              width: 40, height: 40, color: const Color(0xFF878181),
+                            ),
                           ),
                         ),
                       ),

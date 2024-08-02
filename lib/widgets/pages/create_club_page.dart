@@ -9,6 +9,7 @@ import 'package:flutter_sport/api/club/club_service.dart';
 import 'package:flutter_sport/api/result_code.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
+import 'package:flutter_sport/common/svg_icon.dart';
 import 'package:flutter_sport/models/club/region_data.dart';
 import 'package:flutter_sport/models/club/sport_type.dart';
 
@@ -16,7 +17,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/widgets/pages/groupdetails/club_detail_page.dart';
 import 'package:flutter_sport/widgets/pages/region_settings.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateClubWidget extends ConsumerStatefulWidget {
@@ -473,21 +473,21 @@ class _SelectSportTypeWidgetState extends State<SelectSportTypeWidget> {
           children: [
             SelectMenu(
               select: widget.select,
-              assetSvg: 'assets/icons/soccer.svg',
+              svgIcon: SvgIcon.asset(sIcon: SIcon.soccer),
               label: 'soccer',
               sportType: SportType.SOCCER,
               target: widget.sportType,
             ),
             SelectMenu(
               select: widget.select,
-              assetSvg: 'assets/icons/baseball.svg',
+              svgIcon: SvgIcon.asset(sIcon: SIcon.baseball),
               label: 'baseball',
               sportType: SportType.BASEBALL,
               target: widget.sportType,
             ),
             SelectMenu(
               select: widget.select,
-              assetSvg: 'assets/icons/badminton.svg',
+              svgIcon: SvgIcon.asset(sIcon: SIcon.badminton),
               label: 'badminton',
               sportType: SportType.BADMINTON,
               target: widget.sportType,
@@ -500,21 +500,21 @@ class _SelectSportTypeWidgetState extends State<SelectSportTypeWidget> {
           children: [
             SelectMenu(
               select: widget.select,
-              assetSvg: 'assets/icons/tennis.svg',
+              svgIcon: SvgIcon.asset(sIcon: SIcon.tennis),
               label: 'tennis',
               sportType: SportType.TENNIS,
               target: widget.sportType,
             ),
             SelectMenu(
               select: widget.select,
-              assetSvg: 'assets/icons/basketball.svg',
+              svgIcon: SvgIcon.asset(sIcon: SIcon.basketball),
               label: 'basketball',
               sportType: SportType.BASKETBALL,
               target: widget.sportType,
             ),
             SelectMenu(
               select: widget.select,
-              assetSvg: 'assets/icons/trainers.svg',
+              svgIcon: SvgIcon.asset(sIcon: SIcon.trainers),
               label: 'running',
               sportType: SportType.RUNNING,
               target: widget.sportType,
@@ -530,12 +530,12 @@ class _SelectSportTypeWidgetState extends State<SelectSportTypeWidget> {
 class SelectMenu extends StatefulWidget {
 
   final SportType sportType;
-  final String assetSvg;
+  final SvgIcon svgIcon;
   final String label;
   final Function(SportType) select;
   SportType? target;
 
-  SelectMenu({super.key, required this.sportType, required this.assetSvg, required this.label, required this.select, required this.target});
+  SelectMenu({super.key, required this.sportType, required this.svgIcon, required this.label, required this.select, required this.target});
 
   @override
   State<SelectMenu> createState() => _SelectMenuState();
@@ -559,7 +559,7 @@ class _SelectMenuState extends State<SelectMenu> {
         width: 100,
         child: Column(
           children: [
-            SvgPicture.asset(widget.assetSvg),
+            widget.svgIcon,
             const SizedBox(height: 10,),
             Text('sportTitle',
               style: TextStyle(

@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/dateformat.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
+import 'package:flutter_sport/common/svg_icon.dart';
 import 'package:flutter_sport/models/board/board.dart';
 import 'package:flutter_sport/models/board/board_type.dart';
 import 'package:flutter_sport/models/club/authority.dart';
@@ -15,7 +16,6 @@ import 'package:flutter_sport/widgets/lists/board_list_widget.dart';
 import 'package:flutter_sport/widgets/pages/board/board_detail_page.dart';
 import 'package:flutter_sport/widgets/lists/board_notice_widget.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -221,9 +221,10 @@ class BoardWidget extends ConsumerWidget {
                       Text(' · ',
                         style: detailStyle(context),
                       ),
-                      SvgPicture.asset('assets/icons/emptyGroupImage.svg',
-                        color: Colors.grey,
-                        width: 20,
+                      SvgIcon.asset(sIcon: SIcon.emptyGroupImage,
+                        style: SvgIconStyle(
+                          width: 20
+                        )
                       ),
                       Text(board.commentCount.toString(),
                         style: detailStyle(context),

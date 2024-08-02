@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
+import 'package:flutter_sport/common/svg_icon.dart';
 import 'package:flutter_sport/models/club/club_data.dart';
 import 'package:flutter_sport/notifiers/recentlyClubNotifier.dart';
 import 'package:flutter_sport/widgets/lists/small_list_widget.dart';
@@ -14,8 +15,6 @@ import 'package:flutter_sport/widgets/pages/common/common_sliver_appbar.dart';
 import 'package:flutter_sport/widgets/pages/recently_visit_group.dart';
 import 'package:flutter_sport/widgets/pages/sport/soccer_page.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:vector_graphics/vector_graphics.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -129,17 +128,17 @@ class Menus extends StatelessWidget {
               children: [
                 Menu(
                   page: SoccerPage(label : 'soccer'),
-                  assetSvg: 'assets/icons/soccer.svg',
+                  svgIcon: SvgIcon.asset(sIcon: SIcon.soccer),
                   label: 'soccer',
                 ),
                 Menu(
                   page: SoccerPage(label : 'baseball'),
-                  assetSvg: 'assets/icons/baseball.svg',
+                  svgIcon: SvgIcon.asset(sIcon: SIcon.baseball),
                   label: 'baseball',
                 ),
                 Menu(
                   page: SoccerPage(label : 'badminton'),
-                  assetSvg: 'assets/icons/badminton.svg',
+                  svgIcon: SvgIcon.asset(sIcon: SIcon.badminton),
                   label: 'badminton',
                 ),
               ],
@@ -150,17 +149,17 @@ class Menus extends StatelessWidget {
               children: [
                 Menu(
                   page: SoccerPage(label : 'tennis'),
-                  assetSvg: 'assets/icons/tennis.svg',
+                  svgIcon: SvgIcon.asset(sIcon: SIcon.tennis),
                   label: 'tennis',
                 ),
                 Menu(
                   page: SoccerPage(label : 'basketball'),
-                  assetSvg: 'assets/icons/basketball.svg',
+                  svgIcon: SvgIcon.asset(sIcon: SIcon.basketball),
                   label: 'basketball',
                 ),
                 Menu(
                   page: SoccerPage(label : 'running'),
-                  assetSvg: 'assets/icons/trainers.svg',
+                  svgIcon: SvgIcon.asset(sIcon: SIcon.trainers),
                   label: 'running',
                 ),
               ],
@@ -206,10 +205,10 @@ class Menus extends StatelessWidget {
 class Menu extends StatelessWidget {
 
   final Widget page;
-  final String assetSvg;
+  final SvgIcon svgIcon;
   final String label;
 
-  const Menu({super.key, required this.page, required this.assetSvg, required this.label});
+  const Menu({super.key, required this.page, required this.svgIcon, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +220,7 @@ class Menu extends StatelessWidget {
         width: 100,
         child: Column(
           children: [
-            SvgPicture.asset(assetSvg),
+            svgIcon,
             const SizedBox(height: 8,),
             Text('sportTitle',
               style: TextStyle(
@@ -255,14 +254,14 @@ class _InfinityBannerState extends State<InfinityBanner> {
       subtitle: '전 현직 직접 추천',
       boldTitle: '"높은 연봉',
       title: '연봉으로 보상받아요”',
-      image: SvgPicture(AssetBytesLoader('assets/banners/icon1.svg.vec'),),
+      image: SvgIcon.assetBytes(sIcon: SIcon.banner1),
     ),
     BannerCard(
       color: const Color(0xFF6663E8),
       subtitle: '어쩌구저쩌구소제목',
       boldTitle: '"강조글임',
       title: '나머지 제목내용임”',
-      image: SvgPicture(AssetBytesLoader('assets/banners/icon2.svg.vec')),
+      image: SvgIcon.assetBytes(sIcon: SIcon.banner2),
       top: 0,
     ),
     BannerCard(
@@ -270,7 +269,11 @@ class _InfinityBannerState extends State<InfinityBanner> {
       subtitle: '어쩌구저쩌구소제목',
       boldTitle: '"강조글임',
       title: '나머지 제목내용임”',
-      image: SvgPicture(AssetBytesLoader('assets/banners/icon3.svg.vec'), width: 100,),
+      image: SvgIcon.assetBytes(sIcon: SIcon.banner1,
+        style: SvgIconStyle(
+          width: 100,
+        )
+      ),
       top: 15,
       right: 20,
     ),
@@ -339,7 +342,7 @@ class BannerCard extends StatelessWidget {
   final String boldTitle;
   final String title;
   final String subtitle;
-  final SvgPicture image;
+  final SvgIcon image;
   double? top;
   double? right;
 

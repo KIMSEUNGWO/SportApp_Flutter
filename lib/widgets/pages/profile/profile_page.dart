@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sport/common/alert.dart';
 import 'package:flutter_sport/common/navigator_helper.dart';
+import 'package:flutter_sport/common/svg_icon.dart';
 import 'package:flutter_sport/models/common/user_profile.dart';
 import 'package:flutter_sport/notifiers/login_notifier.dart';
 import 'package:flutter_sport/models/user/profile.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_sport/widgets/pages/profile/language_settings.dart';
 import 'package:flutter_sport/widgets/pages/profile/profile_edit_page.dart';
 import 'package:flutter_sport/widgets/pages/profile/settings.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -165,7 +165,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> with AutomaticKeepAli
                               ),
                         Positioned(
                           bottom: 0, right: 0,
-                          child: SvgPicture.asset('assets/icons/edit.svg', width: 25,),
+                          child: SvgIcon.asset(sIcon: SIcon.pen,
+                            style: SvgIconStyle(
+                              width: 25,
+                            ),
+                          ),
                         ),
                       ]
                   ),
